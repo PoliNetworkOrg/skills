@@ -22,6 +22,28 @@
   }[LANG] || {};
 
   const stage = document.getElementById("stage");
+  // sezioni: danno il nome in alto a destra, la slide a cui porta ogni voce dell'indice e il
+  // sottotitolo della voce. Una sezione la apre un divisore .section (e la voce porta lì) oppure,
+  // senza divisori, la sua prima slide con data-section="Titolo" (e data-sub="frase").
+  // Indice, divisori e nome in alto sono scelte di chi scrive: ognuna funziona anche senza le altre.
+  const sections = [];
+  {
+    const esc = (t) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+    let title = "";
+    stage.querySelectorAll(":scope > .slide").forEach((s) => {
+      if (s.classList.contains("section")) {
+        title = (s.querySelector(":scope > h1")?.textContent || "").trim();
+        sections.push({ sub: s.querySelector(":scope > .sub")?.innerHTML || "", start: s });
+        return;
+      }
+      if (s.dataset.section) {
+        title = s.dataset.section;
+        sections.push({ sub: esc(s.dataset.sub || ""), start: s });
+      }
+      if (sections.length && !sections.at(-1).start) sections.at(-1).start = s;
+      if (title && !s.dataset.crumb) s.dataset.crumb = title;
+    });
+  }
   const slides = [...stage.querySelectorAll(":scope > .slide")];
   const total = slides.length;
   const icon = (name) => `<svg class="ico" aria-hidden="true"><use href="#i-${name}"/></svg>`;
@@ -47,7 +69,7 @@
     if (s.classList.contains("section")) sectionTitle = (s.querySelector(":scope > h1")?.textContent || "").trim();
     // lettura: in alto a destra la sezione in cui si è
     const crumb = s.dataset.crumb === "off" ? "" : s.dataset.crumb || sectionTitle;
-    if (READ && !centered && crumb) s.insertAdjacentHTML("afterbegin", `<div class="crumb">${crumb.replace(/</g, "&lt;")}</div>`);
+    if (!centered && crumb && root.dataset.crumb !== "off") s.insertAdjacentHTML("afterbegin", `<div class="crumb">${crumb.replace(/</g, "&lt;")}</div>`);
     // contenuto sotto il titolo in un .body centrato in verticale
     if (!centered && !s.querySelector(":scope > .body")) {
       const body = document.createElement("div");
@@ -117,20 +139,54 @@
   // colonne esplicite
   document.querySelectorAll("[data-cols]").forEach((el) => el.style.setProperty("--cols", el.dataset.cols));
   // agenda: tessere fino a 6 voci, poi righe su due colonne;
-  // in lettura ogni voce porta alla sezione corrispondente e ne riprende il sottotitolo
-  const sections = slides.filter((s) => s.classList.contains("section"));
+  // ogni voce porta alla sezione corrispondente e ne riprende il sottotitolo (voci in più, come "Domande", no)
   document.querySelectorAll(".agenda").forEach((el) => {
     const n = el.children.length;
     if (n > 6) {
       el.classList.add("long");
       el.style.setProperty("--rows", Math.ceil(n / 2));
-    } else if (!el.dataset.cols) el.style.setProperty("--cols", n > 4 ? 3 : n);
-    if (READ && sections.length >= n)
-      [...el.children].forEach((li, i) => {
-        li.setAttribute("data-goto", slides.indexOf(sections[i]));
-        const sub = sections[i].querySelector(":scope > .sub");
-        if (n <= 6 && sub && !li.querySelector("small")) li.insertAdjacentHTML("beforeend", `<small>${sub.innerHTML}</small>`);
-      });
+    } else {
+      if (!el.dataset.cols) el.style.setProperty("--cols", n > 4 ? 3 : n);
+      [...el.children].forEach((li, i) => li.insertAdjacentHTML("afterbegin", `<span class="num">${String(i + 1).padStart(2, "0")}</span>`));
+    }
+    [...el.children].forEach((li, i) => {
+      if (!sections[i]) return;
+      const { start, sub } = sections[i];
+      if (start) li.setAttribute("data-goto", slides.indexOf(start));
+      if (n <= 6 && sub && !li.querySelector("small")) li.insertAdjacentHTML("beforeend", `<small>${sub}</small>`);
+    });
+  });
+  // numeri a contorno (divisori, indice): un SVG sopra il testo, così il contorno si può tracciare.
+  // Il testo resta (trasparente) per l'impaginazione; la linea di base si misura con un elemento sonda.
+  document.fonts.ready.then(() => {
+    // <mark> diviso in parole: un solo gradiente su tutta l'evidenziazione (vedi theme.css)
+    document.querySelectorAll("mark").forEach((m) => {
+      const ws = [...m.querySelectorAll(".w")];
+      if (!ws.length) return;
+      const left = Math.min(...ws.map((w) => w.offsetLeft));
+      const right = Math.max(...ws.map((w) => w.offsetLeft + w.offsetWidth));
+      m.style.setProperty("--gw", `${right - left}px`);
+      ws.forEach((w) => w.style.setProperty("--gx", `${w.offsetLeft - left}px`));
+    });
+    document.querySelectorAll(".slide.section > .n, .agenda > li > .num").forEach((el) => {
+      if (el.querySelector("svg.draw")) return;
+      const probe = document.createElement("i");
+      probe.style.cssText = "display:inline-block;width:0;height:0;vertical-align:baseline";
+      el.append(probe);
+      const base = probe.offsetTop;
+      probe.remove();
+      const NS = "http://www.w3.org/2000/svg";
+      const svg = document.createElementNS(NS, "svg");
+      svg.setAttribute("class", "draw");
+      svg.setAttribute("aria-hidden", "true");
+      const text = document.createElementNS(NS, "text");
+      text.setAttribute("x", "0");
+      text.setAttribute("y", base);
+      text.textContent = el.textContent.trim();
+      svg.appendChild(text);
+      el.appendChild(svg);
+      el.classList.add("outlined");
+    });
   });
   document.addEventListener("click", (e) => {
     const li = e.target.closest("[data-goto]");
@@ -439,7 +495,7 @@
       }
       if (READ && s.querySelector(".sticker")) issues.push("sticker nella versione da leggere: toglilo");
       const ag = s.querySelector(".agenda");
-      if (READ && ag && ag.children.length > sections.length) issues.push(`indice con ${ag.children.length} voci ma ${sections.length} divisori: serve un divisore (.section) per voce, altrimenti l'indice non è cliccabile`);
+      if (READ && ag && ag.children.length > sections.length) issues.push(`indice con ${ag.children.length} voci ma ${sections.length} sezioni: serve una slide con data-section per voce, altrimenti l'indice non è cliccabile`);
       if (s.querySelector(".ph")) issues.push(`immagini mancanti: ${[...s.querySelectorAll(".ph span:last-child")].map((x) => x.textContent).join(", ")}`);
       const todos = [...s.querySelectorAll(".todo")].map((x) => x.textContent.trim());
       if (todos.length) issues.push(`dati da completare (.todo): ${todos.join(" · ")}`);

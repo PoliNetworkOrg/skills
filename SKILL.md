@@ -34,18 +34,36 @@ standard di `references/brand.md` (codice fiscale, sito, link al recruiting, tes
 Fai **una sola domanda** con tutto quello che non sai già dalla richiesta. Non chiedere quello
 che l'utente ha già detto.
 
-1. **Versione:**
-   - **breve**, ~8 slide: aggiornamento veloce o riunione;
-   - **lunga**, ~25 slide: assemblea dei soci completa, con team, bilancio, votazione e 5x1000;
-   - **autoesplicativa**, ~15-20 slide dense: da mandare a chi non c'era o da leggere in differita,
-     senza nessuno che presenta. Ogni slide si capisce da sola (vedi
-     [Versione autoesplicativa](#versione-autoesplicativa)).
-2. **Lingua:** italiano o inglese. Tutta la presentazione è in una lingua sola.
-3. **Occasione:** che cosa è (Assemblea dei Soci, General Meeting…), data e luogo.
-4. **Contenuti:** argomenti, numeri, persone, eventi, scadenze, oppure materiale da cui partire
+1. **Si presenta a voce o si legge?** È la prima domanda, perché decide tutto il resto:
+   - **a voce:** qualcuno la proietta e ci parla sopra. Poco testo, parole chiave, animazioni;
+   - **da leggere:** si manda a chi non c'era o si legge in differita, senza nessuno che presenta.
+     Ogni slide si capisce da sola (vedi [Versione autoesplicativa](#versione-autoesplicativa)).
+2. **Quanto densa?** Da questa risposta e dalla prima viene la versione:
+
+   | | Essenziale | Completa |
+   |---|---|---|
+   | **A voce** | **breve**, ~8 slide: aggiornamento veloce o riunione | **lunga**, ~25 slide: assemblea completa, con team, bilancio, votazione e 5x1000 |
+   | **Da leggere** | **autoesplicativa compatta**, ~8-12 slide: una slide per argomento, solo quello che serve per capire | **autoesplicativa completa**, ~15-20 slide: ogni argomento con contesto, perché e risultati |
+
+   Tutte e due le autoesplicative partono da `templates/autoesplicativa.slides.html` e seguono le
+   stesse regole di scrittura (frasi complete); la compatta unisce gli argomenti vicini e toglie
+   le slide che non servono.
+3. **Lingua:** italiano o inglese. Tutta la presentazione è in una lingua sola.
+4. **Occasione:** che cosa è (Assemblea dei Soci, General Meeting…), data e luogo.
+5. **Contenuti:** argomenti, numeri, persone, eventi, scadenze, oppure materiale da cui partire
    (appunti, verbale, documento, vecchia presentazione).
-5. **Immagini:** foto, sticker e screenshot che vuole usare. Vanno messi nella cartella `img/`.
+6. **Immagini:** foto, sticker e screenshot che vuole usare. Vanno messi nella cartella `img/`.
    Nella versione autoesplicativa niente sticker.
+7. **Struttura**, con il default della versione scelta già proposto:
+   - **indice** (`ol.agenda`, cliccabile, con il sottotitolo di ogni sezione): sì in breve e
+     lunga, no in autoesplicativa;
+   - **divisori di sezione** (slide "Parte 1"): sì in breve e lunga, no in autoesplicativa;
+   - **nome della sezione in alto a destra:** sì in tutte.
+
+   Come si applicano: senza indice si toglie la slide dell'indice. Senza divisori si tolgono le
+   slide `.section` e la prima slide di ogni sezione porta `data-section="Titolo"` e
+   `data-sub="una frase su cosa contiene"`. Senza nome in alto si scrive `crumb: no` nel commento
+   in testa al file. Le tre scelte sono indipendenti.
 
 Se i contenuti sono troppo pochi per la versione scelta, dillo e chiedi di più, oppure proponi la
 versione breve. Non riempire i buchi da solo.
@@ -156,14 +174,16 @@ cliccabili che portano alle sezioni, contatori delle votazioni fermi.
 - **Spiegare** con `.cols` (perché / cosa abbiamo fatto / risultato), `dl.facts` (quando, dove,
   chi) e `.next` (prossimo passo o cosa chiediamo a chi legge).
 - **Struttura fissa:** copertina con `.intro` (cos'è il documento e per chi), "In sintesi"
-  (`ol.points`), indice, poi le sezioni; in fondo "Cosa puoi fare tu", glossario delle sigle
-  (`dl.terms`) e a chi scrivere per domande.
+  (`ol.points`), poi le sezioni (indice solo se l'utente lo vuole); in fondo "Cosa puoi fare tu",
+  glossario delle sigle (`dl.terms`) e a chi scrivere per domande.
 - **Votazioni:** riporta l'esito finale (numeri e timbro "Approvato" o "Respinto"), non i
   contatori da cliccare.
 - **Niente "Domande?"** come slide a sé: al suo posto la chiusura "Per domande e contatti".
-- **Un divisore (`.section`) per ogni voce dell'indice**, nello stesso ordine: servono per l'indice
-  cliccabile e per il nome della sezione in alto a destra. Le slide finali fuori dalle sezioni
-  ("Cosa puoi fare tu", glossario) hanno `data-crumb="off"`.
+- **Di default niente indice né divisori di sezione** (servono a chi parla, non a chi legge), a
+  meno che l'utente non li chieda. Una sezione inizia dalla sua prima slide, con
+  `data-section="Titolo"` e `data-sub="una frase su cosa contiene"`: da lì viene il nome della
+  sezione in alto a destra (e, se c'è l'indice, la voce e il suo sottotitolo). Le slide finali
+  fuori dalle sezioni ("Cosa puoi fare tu", glossario) hanno `data-crumb="off"`.
 - **Etichette in inglese:** vedi la tabella "Versione autoesplicativa" in `brand.md`.
 - I limiti di testo per la lettura sono nel catalogo, sezione "Versione autoesplicativa".
 
@@ -175,8 +195,9 @@ cliccabili che portano alle sezioni, contatori delle votazioni fermi.
 2. **Fonti:** testo delle slide, note di chi parla (`<aside class="notes">`, se ci sono), verbale e
    materiali dati dall'utente. Non c'è altro: niente sticker, niente "Domande?", niente
    contatori di voto da cliccare.
-3. **Ricostruisci le sezioni:** una voce dell'indice per ogni gruppo di argomenti, con il suo
-   divisore. Togli dall'indice voci come "Domande" o "Q&A".
+3. **Ricostruisci le sezioni:** una per ogni gruppo di argomenti. Se l'utente non vuole i divisori
+   (il default), il loro titolo e sottotitolo vanno in `data-section` e `data-sub` sulla prima
+   slide della sezione. Se vuole l'indice, togli voci come "Domande" o "Q&A".
 4. **Chiedi quello che manca, in un solo messaggio, prima di scrivere:** il perché delle scelte,
    i risultati, le date, gli esiti e i numeri delle votazioni, le definizioni delle sigle. Se la
    presentazione non ha note, quasi tutte le spiegazioni arriveranno da queste risposte. Quello

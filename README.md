@@ -7,9 +7,11 @@ esporta in PDF.
 I contenuti li decide sempre chi usa la skill: i template sono scalette con soli segnaposto e
 l'agente non aggiunge fatti, numeri o nomi che l'utente non ha dato.
 
-All'avvio l'agente chiede tre cose:
-- **la versione:** breve (~8 slide), lunga (~25 slide) o autoesplicativa (~15-20 slide dense,
-  da leggere senza nessuno che presenta; si può anche ricavare da una già fatta);
+All'avvio l'agente chiede:
+- **a voce o da leggere:** se qualcuno la presenta o se si manda da leggere senza nessuno che
+  presenta (la versione da leggere si può anche ricavare da una già fatta);
+- **quanto densa:** essenziale o completa. A voce diventa breve (~8 slide) o lunga (~25 slide),
+  da leggere diventa autoesplicativa compatta (~8-12 slide) o completa (~15-20 slide);
 - **la lingua:** italiano o inglese;
 - **i contenuti:** argomenti, numeri, persone, date.
 

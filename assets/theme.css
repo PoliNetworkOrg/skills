@@ -50,6 +50,10 @@
     0 8px 22px -14px rgb(17 86 174 / 0.22);
 
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* ingresso a cascata: durata, passo tra un elemento e l'altro, attesa iniziale */
+  --anim-dur: 0.9s;
+  --anim-step: 90ms;
+  --anim-base: 160ms;
   --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
   --W: 1600px;
   --H: 900px;
@@ -506,11 +510,15 @@ dl.terms > div {
   color: var(--title);
   text-wrap: balance;
 }
-/* <mark> nel titolo: la parte da evidenziare, in gradiente */
-.cover h1 mark .w,
-.cover h1 mark:not(:has(.w)) {
+/* <mark> nei testi grandi: la parte da evidenziare, in gradiente.
+   Se il titolo è diviso in parole (.w), deck.js dà a ogni parola larghezza (--gw) e posizione (--gx)
+   dell'intera evidenziazione, così il gradiente è uno solo e non ricomincia a ogni parola. */
+:is(.cover h1, .statement, .slide.section > h1, .slide.thanks > h1) mark:not(:has(.w)),
+:is(.cover h1, .statement, .slide.section > h1, .slide.thanks > h1) mark .w {
   color: transparent;
-  background: linear-gradient(100deg, var(--blue-2), var(--blue-ink));
+  background: linear-gradient(100deg, var(--blue-2), var(--blue-ink)) no-repeat;
+  background-size: var(--gw, 100%) 100%;
+  background-position: calc(-1 * var(--gx, 0px)) 0;
   -webkit-background-clip: text;
   background-clip: text;
 }
@@ -678,9 +686,6 @@ dl.terms > div {
   max-width: 1250px;
   text-wrap: balance;
 }
-.statement mark {
-  color: var(--blue-ink);
-}
 
 /* ================= Indice (agenda) ================= */
 /* fino a 6 voci: tessere con il numero grande come nei divisori di sezione */
@@ -703,9 +708,10 @@ dl.terms > div {
   color: var(--title);
   text-wrap: balance;
 }
-.agenda > li::before {
-  content: counter(ag, decimal-leading-zero);
-  padding-bottom: 34px;
+.agenda > li > .num {
+  position: relative;
+  align-self: flex-start;
+  margin-bottom: 34px;
   font: 600 84px/0.85 var(--font-display);
   letter-spacing: -0.05em;
   color: transparent;
@@ -737,11 +743,7 @@ dl.terms > div {
   line-height: 1.25;
 }
 .agenda.long > li::before {
-  padding-bottom: 0;
-  -webkit-text-stroke: 0;
-  -webkit-background-clip: border-box;
-  background-clip: border-box;
-  letter-spacing: 0;
+  content: counter(ag, decimal-leading-zero);
   flex: none;
   width: 58px;
   height: 58px;
@@ -1256,15 +1258,16 @@ table.status td small {
 .gallery > figure {
   position: relative;
   min-height: 0;
+  overflow: hidden;
+  border-radius: var(--r-rect);
+  border: 4px solid rgb(255 255 255 / 0.9);
+  box-shadow: 0 30px 60px -34px rgb(17 86 174 / 0.55);
 }
 .gallery > figure > img,
 .gallery > figure > .ph {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: var(--r-rect);
-  border: 4px solid rgb(255 255 255 / 0.9);
-  box-shadow: 0 30px 60px -34px rgb(17 86 174 / 0.55);
 }
 .gallery > figure > figcaption {
   position: absolute;
@@ -1625,8 +1628,8 @@ table.status td small {
 /* ================= Animazioni d'ingresso (automatiche) ================= */
 .slide.active [data-anim],
 .slide.active .anim {
-  animation: rise 0.9s var(--ease) both;
-  animation-delay: calc(var(--i, 0) * 90ms + 160ms);
+  animation: rise var(--anim-dur) var(--ease) both;
+  animation-delay: calc(var(--i, 0) * var(--anim-step) + var(--anim-base));
 }
 .slide.active [data-anim="pop"] {
   animation-name: pop;
@@ -1689,6 +1692,90 @@ table.status td small {
   }
 }
 
+/* ---- animazioni decorative: partono insieme all'elemento che le contiene (--i) ---- */
+
+/* icone a linea che si disegnano (pathLength="1" lo mette build.py) */
+.slide.active :is(.irows .tile, .cards > *, .cols h3) > svg.ico {
+  stroke-dasharray: 1 1.1;
+  animation: draw 0.95s cubic-bezier(0.45, 0, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * var(--anim-step) + var(--anim-base) + 120ms);
+}
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1.05;
+  }
+}
+
+/* numeri a contorno che si tracciano (l'SVG lo crea deck.js sopra il testo) */
+.outlined {
+  color: transparent !important;
+  -webkit-text-stroke: 0 !important;
+  background: none !important;
+}
+.outlined > svg.draw {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.outlined > svg.draw text {
+  stroke-dasharray: 6em;
+  paint-order: stroke;
+}
+.slide.section > .n.outlined > svg.draw {
+  filter: drop-shadow(0 20px 60px rgb(17 86 174 / 0.12));
+}
+.slide.section > .n.outlined text {
+  fill: transparent;
+  stroke: rgb(255 255 255 / 0.95);
+  stroke-width: 2px;
+}
+.agenda > li > .num.outlined text {
+  fill: rgb(116 212 255 / 0.22);
+  stroke: var(--blue);
+  stroke-width: 1.5px;
+}
+.slide.active .outlined text {
+  animation:
+    trace 1.6s cubic-bezier(0.65, 0, 0.35, 1) both,
+    fillIn 0.8s ease both;
+  animation-delay:
+    calc(var(--i, 0) * var(--anim-step) + var(--anim-base) + 200ms),
+    calc(var(--i, 0) * var(--anim-step) + var(--anim-base) + 1.2s);
+}
+.slide.active.section .outlined text {
+  animation-delay: 0.45s, 1.4s;
+}
+@keyframes trace {
+  from {
+    stroke-dashoffset: 6em;
+  }
+}
+@keyframes fillIn {
+  from {
+    fill-opacity: 0;
+  }
+}
+
+/* foto della galleria: zoom lento mentre si guarda la slide */
+.slide.active .gallery > figure > img {
+  animation: kenburns 16s cubic-bezier(0.25, 0.1, 0.25, 1) both;
+  animation-delay: calc(var(--i, 0) * var(--anim-step) + var(--anim-base));
+}
+.gallery > figure:nth-child(odd) > img {
+  transform-origin: 30% 40%;
+}
+.gallery > figure:nth-child(even) > img {
+  transform-origin: 70% 60%;
+}
+@keyframes kenburns {
+  from {
+    transform: scale(1.12);
+  }
+}
+
 /* comparsa a passi (.reveal): un elemento per pressione di → */
 .reveal {
   transition:
@@ -1719,12 +1806,16 @@ html.read .slide:not(.cover) > .sub {
   font-size: 24px;
 }
 html.read .slide > .body {
-  gap: 20px;
-  padding-top: 22px;
+  gap: 24px;
+  padding-top: 32px;
 }
 html.read :is(p, li, dt, dd, td) {
   font-size: 21px;
   line-height: 1.5;
+}
+html.read .summary > p {
+  font-size: 25px;
+  line-height: 1.4;
 }
 html.read .irows > li > p b {
   font-size: 24px;
@@ -1737,6 +1828,27 @@ html.read .irows > li > .tile {
 }
 html.read .cards > * {
   padding: 26px 30px;
+}
+/* in lettura l'icona sta accanto al titolo: card più basse, più aria intorno */
+html.read .cards > :has(> svg.ico) {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  align-content: start;
+  column-gap: 16px;
+  row-gap: 10px;
+}
+html.read .cards > * > svg.ico {
+  width: 48px;
+  height: 48px;
+  padding: 12px;
+  margin: 0;
+}
+html.read .cards > :has(> svg.ico) > h3 {
+  margin: 0;
+}
+html.read .cards > :has(> svg.ico) > :not(svg, h3) {
+  grid-column: 1 / -1;
 }
 html.read .cards > * > p,
 html.read .teams > * li,
@@ -1760,9 +1872,10 @@ html.read .slide.section > .sub {
   max-width: 1000px;
   font-size: 26px;
 }
-html.read .slide.active [data-anim] {
-  animation-duration: 0.75s;
-  animation-delay: calc(var(--i, 0) * 60ms + 120ms);
+html.read {
+  --anim-dur: 0.75s;
+  --anim-step: 60ms;
+  --anim-base: 120ms;
 }
 html.read .slide.active .w {
   animation-duration: 0.75s;
@@ -1771,17 +1884,17 @@ html.read .slide.active .w {
 html.read .vote > button {
   pointer-events: none;
 }
-html.read .agenda > li[data-goto] {
+.agenda > li[data-goto] {
   cursor: pointer;
   transition:
     transform 0.35s var(--ease),
     box-shadow 0.35s var(--ease);
 }
-html.read .agenda > li[data-goto]:hover {
+.agenda > li[data-goto]:hover {
   transform: translateY(-4px);
   box-shadow: var(--glass-shadow), 0 26px 50px -30px rgb(17 86 174 / 0.5);
 }
-html.read .agenda > li[data-goto]::after {
+.agenda > li[data-goto]::after {
   content: "→";
   position: absolute;
   top: 26px;
@@ -1798,11 +1911,11 @@ html.read .agenda > li[data-goto]::after {
     background 0.35s var(--ease),
     color 0.35s var(--ease);
 }
-html.read .agenda > li[data-goto]:hover::after {
+.agenda > li[data-goto]:hover::after {
   background: var(--blue-ink);
   color: #fff;
 }
-html.read .agenda.long > li[data-goto]::after {
+.agenda.long > li[data-goto]::after {
   position: static;
   margin-left: auto;
   width: auto;
@@ -1837,33 +1950,31 @@ html.read .agenda.long > li {
 }
 
 /* "In breve": la frase da leggere per prima */
+/* niente riquadro: un attacco editoriale con la barra a gradiente, distinto dalle card sotto */
 .summary {
   position: relative;
-  padding: 20px 30px 22px 36px;
-  border-radius: var(--r-rect);
-  background: linear-gradient(145deg, rgb(116 212 255 / 0.3), rgb(81 162 255 / 0.14));
-  border: 1.5px solid rgb(255 255 255 / 0.85);
-  -webkit-backdrop-filter: var(--glass-blur);
-  backdrop-filter: var(--glass-blur);
-  box-shadow: var(--glass-shadow);
+  padding: 2px 0 4px 30px;
+  margin-bottom: 16px;
+  max-width: 1200px;
 }
 .summary::before {
   content: "";
   position: absolute;
-  left: 14px;
-  top: 20px;
-  bottom: 20px;
-  width: 5px;
-  border-radius: 5px;
-  background: linear-gradient(var(--blue-3), var(--blue-2));
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 4px;
+  background: linear-gradient(var(--blue-3), var(--blue));
 }
 .summary > .label {
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   color: var(--blue-2);
 }
 .summary > p {
-  font: 400 23px/1.45 var(--font-headline);
+  font: 400 26px/1.4 var(--font-headline);
   color: var(--title);
+  text-wrap: pretty;
 }
 
 /* colonne di spiegazione: titolo + paragrafi */
@@ -2202,7 +2313,10 @@ html.presenter .progress {
   .bg .shape > i,
   .bg .wire g,
   .orbit .ring,
-  .cloud > span > i {
+  .cloud > span > i,
+  svg.ico,
+  .outlined text,
+  .gallery img {
     animation: none !important;
   }
 }

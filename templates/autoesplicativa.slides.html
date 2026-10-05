@@ -4,10 +4,14 @@ lang: it
 mode: lettura
 -->
 
-<!-- TEMPLATE AUTOESPLICATIVO: ~19 slide da LEGGERE senza chi presenta (da mandare dopo l'assemblea
-     o a chi non c'era). Ogni slide deve capirsi da sola: frasi complete, contesto, sigle spiegate.
+<!-- TEMPLATE AUTOESPLICATIVO: slide da LEGGERE senza chi presenta (da mandare dopo l'assemblea
+     o a chi non c'era). Completa ~15-20 slide; compatta ~8-12: una slide per argomento, si uniscono
+     gli argomenti vicini e si tolgono le slide che non servono. Ogni slide deve capirsi da sola: frasi complete, contesto, sigle spiegate.
      Contiene solo segnaposto (.todo): ogni testo va sostituito con i contenuti dati dall'utente.
-     Niente sticker. Le slide che non servono si eliminano. Fissi: 5x1000. -->
+     Niente sticker. Di default niente indice né divisori di sezione: una sezione inizia dalla slide
+     con data-section="Titolo" data-sub="frase" (serve al nome della sezione in alto a destra).
+     Se l'utente li vuole, si aggiungono come nella versione lunga.
+     Le slide che non servono si eliminano. Fissi: 5x1000. -->
 
 <section class="slide cover">
   <div class="brand"><span class="logo"></span>PoliNetwork</div>
@@ -28,27 +32,9 @@ mode: lettura
   </ol>
 </section>
 
-<!-- Indice: una voce per sezione, nello stesso ordine dei divisori (clic = vai alla sezione) -->
-<section class="slide">
-  <h1>Indice</h1>
-  <ol class="agenda">
-    <li><span class="todo">[sezione 1]</span></li>
-    <li><span class="todo">[sezione 2]</span></li>
-    <li><span class="todo">[sezione 3]</span></li>
-    <li><span class="todo">[sezione 4]</span></li>
-  </ol>
-</section>
-
 <!-- ============ SEZIONE 1 ============ -->
-<section class="slide section">
-  <p class="kicker">Parte 1</p>
-  <h1><span class="todo">[Titolo della sezione 1]</span></h1>
-  <p class="sub"><span class="todo">[Una frase: di cosa parla questa parte]</span></p>
-  <span class="n">01</span>
-</section>
-
 <!-- Spiegazione: in breve + colonne (perché / cosa / risultato) + prossimo passo -->
-<section class="slide">
+<section class="slide" data-section="[Titolo della sezione 1]" data-sub="[Una frase: di cosa parla questa parte]">
   <h1><span class="todo">[Titolo che dice già la conclusione]</span></h1>
   <div class="summary"><span class="label">In breve</span><p><span class="todo">[La frase da leggere per prima: cosa è successo e perché conta]</span></p></div>
   <div class="cols">
@@ -89,15 +75,8 @@ mode: lettura
 </section>
 
 <!-- ============ SEZIONE 2 ============ -->
-<section class="slide section">
-  <p class="kicker">Parte 2</p>
-  <h1><span class="todo">[Titolo della sezione 2]</span></h1>
-  <p class="sub"><span class="todo">[Una frase: di cosa parla questa parte]</span></p>
-  <span class="n">02</span>
-</section>
-
 <!-- Team: chi fa cosa, con i compiti dati dall'utente -->
-<section class="slide">
+<section class="slide" data-section="[Titolo della sezione 2]" data-sub="[Una frase: di cosa parla questa parte]">
   <h1><span class="todo">[Titolo]</span></h1>
   <div class="teams">
     <div><span class="n">1</span><h3><span class="todo">[team]</span></h3><ul><li><span class="todo">[compito]</span></li><li><span class="todo">[compito]</span></li></ul></div>
@@ -124,15 +103,8 @@ mode: lettura
 </section>
 
 <!-- ============ SEZIONE 3 ============ -->
-<section class="slide section">
-  <p class="kicker">Parte 3</p>
-  <h1>Bilancio e 5x1000</h1>
-  <p class="sub"><span class="todo">[Una frase: cosa contiene questa parte]</span></p>
-  <span class="n">03</span>
-</section>
-
 <!-- Bilancio: SOLO cifre fornite dall'utente, con spiegazione -->
-<section class="slide">
+<section class="slide" data-section="Bilancio e 5x1000" data-sub="[Una frase: cosa contiene questa parte]">
   <h1>Bilancio <span class="todo">[anno]</span></h1>
   <div class="summary"><span class="label">In breve</span><p><span class="todo">[da dove arrivano i soldi, dove vanno e com'è il saldo, in una frase]</span></p></div>
   <div class="budget">
@@ -186,15 +158,8 @@ mode: lettura
 </section>
 
 <!-- ============ SEZIONE 4 ============ -->
-<section class="slide section">
-  <p class="kicker">Parte 4</p>
-  <h1><span class="todo">[Titolo della sezione 4]</span></h1>
-  <p class="sub"><span class="todo">[Una frase: di cosa parla questa parte]</span></p>
-  <span class="n">04</span>
-</section>
-
 <!-- Timeline: tappe CON data, con una frase ciascuna -->
-<section class="slide">
+<section class="slide" data-section="[Titolo della sezione 4]" data-sub="[Una frase: di cosa parla questa parte]">
   <h1>Prossimi passi</h1>
   <ol class="timeline">
     <li><span class="when"><span class="todo">[quando]</span></span><h3><span class="todo">[tappa 1]</span></h3><p><span class="todo">[cosa succede e chi è coinvolto]</span></p></li>

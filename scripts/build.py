@@ -12,6 +12,7 @@ con i metadati:
     title: Assemblea dei Soci – 28 aprile 2026
     lang: it
     mode: lettura        (facoltativo: versione autoesplicativa)
+    crumb: no            (facoltativo: niente nome della sezione in alto a destra)
     -->
 
 Il risultato include tema, motore, font, logo, forme di sfondo, le sole icone
@@ -123,6 +124,8 @@ def icon_symbols(names: list[str]) -> str:
             attrs = 'fill="currentColor" stroke="none"'
         else:
             attrs = 'fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"'
+            # lunghezza normalizzata: l'animazione che disegna l'icona fa finire tutti i tratti insieme
+            inner = re.sub(r"<(path|line|polyline|polygon|circle|rect|ellipse)\b", r'<\1 pathLength="1"', inner)
         out.append(f'<symbol id="i-{name}" viewBox="{vb}" {attrs}>{inner}</symbol>')
     return "".join(out)
 
@@ -200,6 +203,11 @@ def main() -> int:
     if mode not in ("", "presentazione", "lettura"):
         errors.append(f'mode "{mode}" non valido: usa "presentazione" (default) o "lettura"')
     html_class = ' class="read"' if mode == "lettura" else ""
+    crumb = meta.get("crumb", "").lower()
+    if crumb not in ("", "si", "sì", "yes", "no"):
+        errors.append(f'crumb "{crumb}" non valido: usa "sì" (default) o "no"')
+    if crumb == "no":
+        html_class += ' data-crumb="off"'
 
     # icone: <i data-icon="nome"></i> → <svg><use/></svg>
     known = set(available_icons())
@@ -244,7 +252,7 @@ def main() -> int:
     n_slides = len(re.findall(r'<section\b[^>]*class="[^"]*\bslide\b', text))
     if n_slides == 0:
         errors.append('nessuna <section class="slide"> trovata')
-    n_todo = len(re.findall(r'class="todo"', text))
+    n_todo = len(re.findall(r'class="todo"', text)) + len(re.findall(r'data-(?:section|sub)="\[', text))
     if n_todo:
         warnings.append(f"{n_todo} segnaposto .todo ancora da completare")
 

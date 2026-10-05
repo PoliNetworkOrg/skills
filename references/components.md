@@ -88,6 +88,19 @@ Variante solo logo, per aprire o chiudere:
 </section>
 ```
 
+### Sezioni, indice, nome in alto
+
+Tre scelte indipendenti, da chiedere all'utente (default: tutte sì in breve e lunga, solo il nome
+in alto nell'autoesplicativa).
+- **Divisori:** una slide `.section` apre la sezione. Senza divisori, la sezione la apre la sua
+  prima slide: `<section class="slide" data-section="Chi siamo" data-sub="frase su cosa contiene">`.
+- **Indice** (`ol.agenda`): ogni voce porta alla sua sezione (al divisore, o alla slide con
+  `data-section`) e mostra sotto il sottotitolo (`.sub` del divisore o `data-sub`). Voci in più
+  senza sezione, come "Domande", restano non cliccabili.
+- **Nome della sezione in alto a destra:** automatico dall'ultima sezione aperta. `crumb: no` nel
+  commento in testa al file lo toglie dappertutto; `data-crumb="off"` su una slide lo toglie lì,
+  `data-crumb="Altro testo"` lo sostituisce.
+
 ### Divisore di sezione: `section`
 ```html
 <section class="slide section">
@@ -128,7 +141,7 @@ Max ~25 parole. Senza `h1`.
 ```
 Numerato da solo. Fino a 6 voci sono tessere col numero grande (4 o meno su una riga, 5-6 su
 tre colonne; `data-cols` per forzare), oltre diventano righe su due colonne. Max 10 voci,
-max ~5 parole per voce. In lettura ogni tessera riprende da sola il `.sub` del divisore.
+max ~5 parole per voce. Ogni tessera riprende da sola il sottotitolo della sua sezione.
 
 ### Righe con icona: `ul.irows` (il layout più usato)
 ```html
@@ -368,12 +381,7 @@ Se l'utente chiede un termine che non compare, prima inseriscilo dove serve nel 
 
 ### Altro in lettura
 - **Copertina:** `<p class="intro">…</p>` dopo `.meta`, una o due frasi su cos'è il documento.
-- **Divisori:** `<p class="sub">` con una frase su cosa contiene la sezione.
-- **Indice:** le voci di `ol.agenda` portano alle sezioni nell'ordine dei divisori, quindi tieni
-  lo stesso numero di voci e di divisori (`check.py` lo segnala). Con meno di 4 sezioni,
-  valuta di togliere l'indice: "In sintesi" basta.
-- **Nome della sezione in alto a destra:** automatico, preso dall'ultimo divisore.
-  `data-crumb="off"` sulla section lo toglie, `data-crumb="Altro testo"` lo sostituisce.
+- **Indice e divisori:** di default no (vedi "Sezioni, indice, nome in alto").
 - **Timeline:** vale la regola di sempre, solo tappe con una data o un periodo.
 - **Esito di una votazione:** `div.vote` con i numeri finali e `<span class="stamp ok">Approvato</span>`
   (o `<span class="stamp">Respinto</span>`) dentro il `div.vote`.
@@ -381,7 +389,9 @@ Se l'utente chiede un termine che non compare, prima inseriscilo dove serve nel 
 ## Animazioni
 
 Sono automatiche: ogni elemento dei componenti entra a cascata, i titoli di
-copertina/sezione parola per parola, i numeri contano, le barre si riempiono.
+copertina/sezione parola per parola, i numeri contano, le barre si riempiono, le icone a linea
+si disegnano, i numeri a contorno (divisori, indice) si tracciano e le
+foto della galleria fanno uno zoom lento. Con "riduci movimento" del sistema le decorative si spengono.
 - `data-anim="pop|left|right|fade|none"` su un elemento cambia l'ingresso.
 - `class="reveal"` su un elemento lo fa comparire alla pressione successiva di →
   (es. una `<li>` alla volta). Usalo poco, solo per svelare una risposta o un numero.
