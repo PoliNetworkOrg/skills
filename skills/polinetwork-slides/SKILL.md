@@ -1,6 +1,6 @@
 ---
 name: polinetwork-slides
-description: "Crea presentazioni HTML animate con il tema ufficiale PoliNetwork (glass, forme del sito, font DM Sans/Poppins/Red Hat Text), per assemblee dei soci, general meeting e riunioni dell'associazione. Usala quando qualcuno chiede slide, una presentazione, un deck o un'assemblea PoliNetwork, anche in inglese (slides, presentation, general meeting). Produce un unico file .html che funziona offline e si esporta in PDF. Offre tre versioni: breve, lunga e autoesplicativa (densa, da leggere senza chi presenta o da mandare a chi non c'era, anche ricavata da una presentazione già fatta), in italiano o in inglese."
+description: "Crea presentazioni HTML animate con il tema ufficiale PoliNetwork (glass, forme del sito, font DM Sans/Poppins/Red Hat Text), per assemblee dei soci, general meeting e riunioni dell'associazione. Usala quando qualcuno chiede slide, una presentazione, un deck o un'assemblea PoliNetwork, anche in inglese (slides, presentation, general meeting). Produce un unico file .html che funziona offline e si esporta in PDF. Offre due versioni: parlata (da proiettare mentre qualcuno presenta) e autoesplicativa (da leggere senza chi presenta o da mandare a chi non c'era, anche ricavata da una presentazione già fatta), con o senza sticker meme, più o meno densa, in italiano o in inglese."
 metadata:
   short-description: Presentazioni HTML animate con il tema PoliNetwork
 ---
@@ -21,9 +21,9 @@ standard di `references/brand.md` (codice fiscale, sito, link al recruiting, tes
 
 | File | A cosa serve |
 |---|---|
-| `templates/breve.slides.html` | Scaletta breve, ~8 slide (10-15 minuti), solo segnaposto |
-| `templates/lunga.slides.html` | Scaletta lunga, ~25 slide (assemblea completa), solo segnaposto |
-| `templates/autoesplicativa.slides.html` | Scaletta da leggere da soli, ~19 slide dense, solo segnaposto |
+| `templates/parlata.slides.html` | Base per la versione parlata (da proiettare), solo segnaposto |
+| `templates/autoesplicativa.slides.html` | Base per la versione da leggere da soli, solo segnaposto |
+| `assets/memes/` | Sticker meme pronti (gatti scontornati), da usare se l'utente vuole i meme |
 | `references/components.md` | Catalogo dei componenti con markup e limiti. **Leggilo prima di scrivere.** |
 | `references/brand.md` | Tono, dati fissi (codice 5x1000, link), testi standard IT/EN |
 | `scripts/build.py` | Compila il sorgente in un unico HTML autonomo |
@@ -34,20 +34,19 @@ standard di `references/brand.md` (codice fiscale, sito, link al recruiting, tes
 Fai **una sola domanda** con tutto quello che non sai già dalla richiesta. Non chiedere quello
 che l'utente ha già detto.
 
-1. **Si presenta a voce o si legge?** È la prima domanda, perché decide tutto il resto:
-   - **a voce:** qualcuno la proietta e ci parla sopra. Poco testo, parole chiave, animazioni;
-   - **da leggere:** si manda a chi non c'era o si legge in differita, senza nessuno che presenta.
-     Ogni slide si capisce da sola (vedi [Versione autoesplicativa](#versione-autoesplicativa)).
-2. **Quanto densa?** Da questa risposta e dalla prima viene la versione:
+1. **Parlata o autoesplicativa?** È la prima domanda, perché decide tutto il resto:
+   - **parlata:** qualcuno la proietta e ci parla sopra. Poco testo, animazioni. Parte da
+     `templates/parlata.slides.html`;
+   - **autoesplicativa:** si manda a chi non c'era o si legge in differita, senza nessuno che
+     presenta. Ogni slide si capisce da sola (vedi [Versione autoesplicativa](#versione-autoesplicativa)).
+     Parte da `templates/autoesplicativa.slides.html`.
 
-   | | Essenziale | Completa |
-   |---|---|---|
-   | **A voce** | **breve**, ~8 slide: aggiornamento veloce o riunione | **lunga**, ~25 slide: assemblea completa, con team, bilancio, votazione e 5x1000 |
-   | **Da leggere** | **autoesplicativa compatta**, ~8-12 slide: una slide per argomento, solo quello che serve per capire | **autoesplicativa completa**, ~15-20 slide: ogni argomento con contesto, perché e risultati |
-
-   Tutte e due le autoesplicative partono da `templates/autoesplicativa.slides.html` e seguono le
-   stesse regole di scrittura (frasi complete); la compatta unisce gli argomenti vicini e toglie
-   le slide che non servono.
+   Non esistono una versione breve e una lunga: quante slide servono lo decidono i contenuti.
+2. **Quanto densa?** Quanto testo per slide, indipendentemente da quante sono:
+   - **essenziale:** parlata con parole chiave e una cosa per slide; autoesplicativa con una slide
+     per argomento e solo quello che serve per capire (gli argomenti vicini si uniscono);
+   - **dettagliata:** parlata con frasi brevi e più contesto per slide; autoesplicativa con ogni
+     argomento spiegato con contesto, perché e risultati.
 3. **Lingua:** italiano o inglese. Tutta la presentazione è in una lingua sola.
 4. **Occasione:** che cosa è (Assemblea dei Soci, General Meeting…), data e luogo.
 5. **Contenuti:** argomenti, numeri, persone, eventi, scadenze, oppure materiale da cui partire
@@ -55,13 +54,14 @@ che l'utente ha già detto.
 6. **Immagini:** foto e screenshot che vuole usare. Vanno messi nella cartella `img/`. Gli
    screenshot di app meglio in tema chiaro. Per i link da aprire in sala (sito, iscrizione,
    recruiting) proponi un QR.
-7. **Sticker (meme)?** Solo nelle versioni a voce: vuole gli sticker ironici (meme o personaggi
-   scontornati)? Se dice sì, proponi dove metterli. Se dice no, niente sticker: togli tutti gli
-   `<img class="sticker">` dei template. Nella versione autoesplicativa non si chiede: niente sticker.
+7. **Con sticker meme o senza?** Si chiede sempre, sia per la parlata sia per l'autoesplicativa.
+   Se dice sì, proponi dove metterli (vedi il punto 4): usa quelli che fornisce l'utente oppure i
+   meme pronti di `assets/memes/`. Se dice no, niente sticker: togli tutti gli
+   `<img class="sticker">` del template.
 8. **Struttura**, con il default della versione scelta già proposto:
-   - **indice** (`ol.agenda`, cliccabile, con il sottotitolo di ogni sezione): sì in breve e
-     lunga, no in autoesplicativa;
-   - **divisori di sezione** (slide "Parte 1"): sì in breve e lunga, no in autoesplicativa;
+   - **indice** (`ol.agenda`, cliccabile, con il sottotitolo di ogni sezione): sì nella parlata,
+     no nell'autoesplicativa;
+   - **divisori di sezione** (slide "Parte 1"): sì nella parlata, no nell'autoesplicativa;
    - **nome della sezione in alto a destra:** sì in tutte.
 
    Come si applicano: senza indice si toglie la slide dell'indice. Senza divisori si tolgono le
@@ -69,8 +69,9 @@ che l'utente ha già detto.
    `data-sub="una frase su cosa contiene"`. Senza nome in alto si scrive `crumb: no` nel commento
    in testa al file. Le tre scelte sono indipendenti.
 
-Se i contenuti sono troppo pochi per la versione scelta, dillo e chiedi di più, oppure proponi la
-versione breve. Non riempire i buchi da solo.
+La presentazione è lunga quanto servono i contenuti: con pochi contenuti vengono poche slide, e va
+bene così. Se mancano informazioni per capire un argomento (soprattutto nell'autoesplicativa),
+chiedile. Non riempire i buchi da solo.
 
 ## 2. Proponi la scaletta
 
@@ -87,12 +88,12 @@ Lavora nella cartella indicata dall'utente. Se non ne indica una, lavora in quel
 
 1. Copia il template scelto in un nome parlante che finisce in `.slides.html`, per esempio:
    ```bash
-   cp "$SKILL_DIR/templates/lunga.slides.html" assemblea-2026-04-28.slides.html
+   cp "$SKILL_DIR/templates/parlata.slides.html" assemblea-2026-04-28.slides.html
    mkdir -p img
    ```
 2. Aggiorna il commento in testa al file con `title:` (titolo della scheda del browser) e
    `lang: it` oppure `lang: en`. Cancella il secondo commento, quello che inizia con
-   "TEMPLATE BREVE", "TEMPLATE LUNGO" o "TEMPLATE AUTOESPLICATIVO". Nella versione autoesplicativa
+   "TEMPLATE PARLATO" o "TEMPLATE AUTOESPLICATIVO". Nella versione autoesplicativa
    lascia `mode: lettura`.
 
 ## 4. Scrivi le slide
@@ -139,8 +140,9 @@ Lavora nella cartella indicata dall'utente. Se non ne indica una, lavora in quel
 - **Inglese:** traduci anche le etichette fisse (vedi la tabella in `brand.md`). I nomi propri
   (team, eventi) restano come li scrive l'utente.
 - **Sticker:** solo se l'utente li ha voluti (domanda 7 del punto 1); altrimenti nessuno. Al
-  massimo uno per slide, mai su bilancio, votazioni e 5x1000. Usa solo immagini fornite
-  dall'utente: se non ne ha, lascia il segnaposto `img/sticker-….png` oppure togli lo sticker.
+  massimo uno per slide, non in tutte, mai su bilancio, votazioni e 5x1000. Nell'autoesplicativa
+  ancora meno e solo su slide leggere. Usa quelli forniti dall'utente o i meme pronti di
+  `assets/memes/` (copiali in `img/`, vedi "Sticker" nel catalogo); non scaricare immagini di terzi.
 - **Note per chi parla:** quando servono, mettile in `<aside class="notes">`. Si vedono con il tasto P.
 
 ## 5. Compila e controlla (obbligatorio)
@@ -200,7 +202,7 @@ c'era, e deve capirsi tutto senza nessuno che parla. Usa le stesse regole sui co
 quello che dà l'utente, mai fatti inventati.
 
 **Come si attiva:** `mode: lettura` nel commento in testa al file. Testo più piccolo e più denso,
-niente sticker, numero di pagina "05 / 19", nome della sezione in alto a destra, voci dell'indice
+sticker solo se l'utente li vuole, numero di pagina "05 / 19", nome della sezione in alto a destra, voci dell'indice
 cliccabili che portano alle sezioni, contatori delle votazioni fermi.
 
 **Come si scrive:**
@@ -227,14 +229,14 @@ cliccabili che portano alle sezioni, contatori delle votazioni fermi.
 - **Etichette in inglese:** vedi la tabella "Versione autoesplicativa" in `brand.md`.
 - I limiti di testo per la lettura sono nel catalogo, sezione "Versione autoesplicativa".
 
-**Trasformare una presentazione già fatta** (breve o lunga):
+**Trasformare una presentazione già fatta** (una parlata):
 1. **Parti dal template autoesplicativo**, non dal vecchio file: copia
    `templates/autoesplicativa.slides.html` in un nuovo nome, per esempio
    `assemblea-2026-04-28-lettura.slides.html`, e versaci dentro i contenuti della presentazione
    originale. Il sorgente originale non si tocca.
 2. **Fonti:** testo delle slide, note di chi parla (`<aside class="notes">`, se ci sono), verbale e
-   materiali dati dall'utente. Non c'è altro: niente sticker, niente "Domande?", niente
-   contatori di voto da cliccare.
+   materiali dati dall'utente. Non c'è altro: niente "Domande?", niente contatori di voto da
+   cliccare. Gli sticker restano solo se l'utente li vuole anche qui.
 3. **Ricostruisci le sezioni:** una per ogni gruppo di argomenti. Se l'utente non vuole i divisori
    (il default), il loro titolo e sottotitolo vanno in `data-section` e `data-sub` sulla prima
    slide della sezione. Se vuole l'indice, togli voci come "Domande" o "Q&A".

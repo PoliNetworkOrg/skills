@@ -1141,6 +1141,22 @@ table.status td small {
 .teams > * li {
   font-size: 22px;
 }
+/* chi guida il team: sotto il nome, staccato dall'elenco dei compiti */
+.teams > * > .lead {
+  margin-bottom: 22px;
+  padding-bottom: 20px;
+  border-bottom: 1.5px solid rgb(17 86 174 / 0.14);
+}
+.teams > * > .lead .label {
+  font-weight: 600;
+  color: var(--blue-ink);
+  margin-bottom: 8px;
+}
+.teams > * > .lead p {
+  min-height: 2.7em; /* due nomi: le linee restano allineate tra le colonne */
+  font: 500 22px/1.35 var(--font-headline);
+  color: var(--title);
+}
 .teams > *.extra {
   background: linear-gradient(145deg, rgb(116 212 255 / 0.32), rgb(81 162 255 / 0.16));
 }
@@ -1168,7 +1184,7 @@ table.status td small {
   flex-direction: column;
   align-items: center;
   gap: 14px;
-  width: 200px;
+  min-width: 200px;
   text-align: center;
 }
 .person > img,
@@ -1184,6 +1200,7 @@ table.status td small {
 .person figcaption {
   font: 400 23px/1.25 var(--font-headline);
   color: var(--title);
+  white-space: nowrap; /* nome e cognome su una riga */
 }
 .person figcaption small {
   display: block;
@@ -1863,7 +1880,7 @@ table.status td small {
 }
 
 /* ================= Versione autoesplicativa (mode: lettura) =================
-   Slide da leggere senza chi presenta: più testo, frasi complete, niente sticker. */
+   Slide da leggere senza chi presenta: più testo, frasi complete, sticker solo se richiesti. */
 html.read .slide:not(.cover) {
   padding: 70px 110px 100px;
 }
@@ -1914,12 +1931,16 @@ html.read .timeline > li > p {
 html.read .teams > * > h3 {
   min-height: 0;
 }
+html.read .teams > * > .lead p {
+  font-size: 19px;
+}
 html.read table.status td {
   padding: 12px 10px;
   font-size: 21px;
 }
+/* sticker ammessi anche da leggere (se l'utente vuole i meme), ma più piccoli */
 html.read .sticker {
-  display: none;
+  height: 280px;
 }
 html.read .slide.section > h1 {
   font-size: 88px;

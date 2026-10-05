@@ -92,7 +92,7 @@ claude
 
 Poi scrivi la richiesta in linguaggio normale:
 
-> Fammi la presentazione per l'assemblea dei soci del 15 novembre, versione lunga.
+> Fammi la presentazione per l'assemblea dei soci del 15 novembre, versione parlata, con i meme.
 > I contenuti sono in appunti.md.
 
 Oppure richiama la skill per nome con `/polinetwork-slides`, seguito dalla richiesta.
@@ -138,7 +138,7 @@ Claude Code. Poi chiudi e riapri Codex.
 Apri Codex nella cartella dove vuoi salvare la presentazione e scrivi la richiesta in linguaggio
 normale:
 
-> Fammi la presentazione per il General Meeting del 12 ottobre, versione breve, in inglese.
+> Fammi la presentazione per il General Meeting del 12 ottobre, versione parlata, essenziale, in inglese.
 
 Oppure richiama la skill per nome con `$polinetwork-slides`, seguito dalla richiesta.
 
@@ -153,25 +153,22 @@ Con Git: `cd ~/polinetwork-skills && git pull`. Con `npx skills`: `npx skills up
 
 ### Cosa ti chiede l'assistente
 
-1. **Si presenta a voce o si legge?** A voce: qualcuno la proietta e ci parla sopra. Da leggere:
+1. **Parlata o autoesplicativa?** Parlata: qualcuno la proietta e ci parla sopra. Autoesplicativa:
    si manda a chi non c'era o si legge in differita, e ogni slide si capisce da sola, con frasi
    complete, un riquadro "In breve" dove serve, una sintesi iniziale e il glossario delle sigle.
-   Niente sticker.
-2. **Quanto densa?** Essenziale o completa. Insieme alla risposta di prima decide la versione:
-   - a voce, essenziale: **breve**, circa 8 slide, per aggiornamenti e riunioni da 10-15 minuti;
-   - a voce, completa: **lunga**, circa 25 slide, assemblea completa con team, bilancio,
-     votazione e 5x1000;
-   - da leggere, essenziale: **autoesplicativa compatta**, circa 8-12 slide, una per argomento;
-   - da leggere, completa: **autoesplicativa completa**, circa 15-20 slide con contesto, perché e
-     risultati di ogni argomento.
+   Non c'è una versione breve e una lunga: le slide sono quante servono per i tuoi contenuti.
+2. **Quanto densa?** Essenziale: poche parole per slide, solo i punti chiave (nell'autoesplicativa,
+   una slide per argomento). Dettagliata: più contesto per slide (nell'autoesplicativa, ogni
+   argomento con contesto, perché e risultati).
 3. **Lingua:** italiano o inglese.
 4. **Occasione:** che incontro è, data e luogo.
 5. **Contenuti:** argomenti, numeri, persone, eventi, scadenze.
-6. **Immagini:** foto, screenshot.
-7. **Sticker (meme):** solo nelle versioni a voce. Se li vuoi, l'assistente propone dove metterli
-   e tu li carichi; se no, la presentazione non ne ha.
+6. **Immagini:** foto, screenshot (delle app meglio in tema chiaro). Per i link da aprire in sala
+   l'assistente propone un QR.
+7. **Con sticker meme o senza?** In tutte e due le versioni. Se li vuoi, l'assistente propone dove
+   metterli e usa i tuoi oppure i gatti meme già pronti nella skill; se no, la presentazione non ne ha.
 8. **Struttura:** se vuoi l'indice, i divisori di sezione ("Parte 1") e il nome della sezione in
-   alto a destra. Di default tutti e tre nella breve e nella lunga, solo il nome della sezione
+   alto a destra. Di default tutti e tre nella parlata, solo il nome della sezione
    nell'autoesplicativa.
 
 **I contenuti li decidi tu.** L'assistente impagina e riformula, ma non inventa numeri, nomi o

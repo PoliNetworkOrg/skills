@@ -8,10 +8,11 @@ I contenuti li decide sempre chi usa la skill: i template sono scalette con soli
 l'agente non aggiunge fatti, numeri o nomi che l'utente non ha dato.
 
 All'avvio l'agente chiede:
-- **a voce o da leggere:** se qualcuno la presenta o se si manda da leggere senza nessuno che
-  presenta (la versione da leggere si può anche ricavare da una già fatta);
-- **quanto densa:** essenziale o completa. A voce diventa breve (~8 slide) o lunga (~25 slide),
-  da leggere diventa autoesplicativa compatta (~8-12 slide) o completa (~15-20 slide);
+- **parlata o autoesplicativa:** se qualcuno la presenta o se si manda da leggere senza nessuno
+  che presenta (l'autoesplicativa si può anche ricavare da una parlata già fatta). Quante slide
+  servono lo decidono i contenuti, non c'è una versione breve e una lunga;
+- **quanto densa:** essenziale (parole chiave, una cosa per slide) o dettagliata (più contesto);
+- **con o senza sticker meme**, in tutte e due le versioni;
 - **la lingua:** italiano o inglese;
 - **i contenuti:** argomenti, numeri, persone, date.
 
@@ -37,7 +38,7 @@ che è facoltativo.
 Dalla cartella della skill (`skills/polinetwork-slides/`):
 
 ```bash
-cp templates/breve.slides.html ~/assemblea.slides.html   # sostituisci i segnaposto
+cp templates/parlata.slides.html ~/assemblea.slides.html # sostituisci i segnaposto
 python3 scripts/build.py ~/assemblea.slides.html          # → ~/assemblea.html
 python3 scripts/check.py ~/assemblea.html --shots ~/shots # controllo + screenshot
 ```
@@ -48,7 +49,8 @@ Il markup di ogni componente è in [references/components.md](references/compone
 
 ```
 SKILL.md                  istruzioni per l'agente (procedura, regole)
-templates/                breve, lunga, autoesplicativa (.slides.html, scalette con soli segnaposto)
+templates/                parlata, autoesplicativa (.slides.html, basi con soli segnaposto)
+assets/memes/             sticker meme pronti (gatti scontornati)
 references/components.md  catalogo dei layout con markup e limiti
 references/brand.md       tono, dati fissi, testi standard IT/EN
 assets/theme.css          tema: token del sito, glass, layout, animazioni, stampa
@@ -72,7 +74,7 @@ GUIDA.md                  guida all'installazione e all'uso per i membri
   1. aggiungi il CSS in `theme.css`;
   2. se serve, aggiungi il suo selettore all'elenco `ANIM` in `deck.js`, per farlo animare;
   3. documentalo in `components.md`, con markup e limiti;
-  4. provalo nel template lungo con `check.py`.
+  4. provalo nel template parlato con `check.py`.
 - **Dati fissi** (codice fiscale, link): tienili aggiornati in `references/brand.md`.
 - **Dopo ogni modifica** rigenera lo ZIP con `python3 scripts/package.py` (finisce in `dist/`
   nella radice della repo) e ricaricalo su claude.ai. Chi usa Git aggiorna con `git pull`, chi usa

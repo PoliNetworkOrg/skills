@@ -518,7 +518,6 @@
         }
         if (worst) issues.push(`il contenuto copre il titolo (${px(worst)}px): accorcia, dividi la slide o usa un componente più compatto`);
       }
-      if (READ && s.querySelector(".sticker")) issues.push("sticker nella versione da leggere: toglilo");
       const ag = s.querySelector(".agenda");
       if (READ && ag && ag.children.length > sections.length) issues.push(`indice con ${ag.children.length} voci ma ${sections.length} sezioni: serve una slide con data-section per voce, altrimenti l'indice non è cliccabile`);
       if (s.querySelector(".ph")) issues.push(`immagini mancanti: ${[...s.querySelectorAll(".ph span:last-child")].map((x) => x.textContent).join(", ")}`);

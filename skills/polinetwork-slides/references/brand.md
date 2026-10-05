@@ -24,7 +24,8 @@
   si usano solo se l'utente li vuole (lo si chiede all'inizio):
   - vanno bene su indice, divisori, "Domande?" e qualche slide leggera;
   - **non** vanno su bilancio, votazioni, 5x1000 e slide formali.
-  - Li fornisce l'utente: proponi dove metterli, non scaricare immagini di terzi.
+  - Usa quelli forniti dall'utente o i meme pronti di `assets/memes/`: proponi dove metterli,
+    non scaricare immagini di terzi.
 - Numeri sempre concreti e veri, dati dall'utente. Se manca un dato, lascia un segnaposto `.todo` invece di inventarlo.
 
 ## Dati fissi (confermati)

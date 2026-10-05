@@ -86,9 +86,16 @@ Un nome sbagliato fa fallire `build.py`, che suggerisce i nomi più vicini.
   `.media` con `<img class="cutout tilt" src="img/x.png" alt="">`, non come sticker attaccato al
   bordo. Ritaglia prima i bordi trasparenti: `magick x.png -trim +repage -resize x760 img/x.png`.
 - **Sticker** (meme o personaggi scontornati, PNG trasparente): `<img class="sticker" src="img/x.png" alt="">`.
-  In basso a destra, alto 380 px; il contenuto si restringe per fargli spazio.
-  Varianti: `sticker left`, `sticker small` (240 px, non sposta il contenuto), `sticker top`.
-  Al massimo uno per slide, e non in tutte.
+  Solo se l'utente ha detto sì ai meme. In basso a destra, alto 380 px; il contenuto si restringe
+  per fargli spazio. Varianti: `sticker left`, `sticker small` (240 px, non sposta il contenuto),
+  `sticker top`. Al massimo uno per slide, e non in tutte; mai su bilancio, votazioni e 5x1000.
+- **Meme pronti** in `assets/memes/` (la cartella cresce: guarda cosa c'è con `ls`). Scegli il
+  gatto che ha l'espressione giusta per la slide, per esempio: quello che supplica per le richieste
+  al pubblico (associati, candidati), quello sorpreso per numeri e risultati, quello imbronciato per
+  ritardi, problemi o "Domande?", quello in giacca e cravatta per organizzazione e team. Copialo in
+  `img/` ridimensionato, così non appesantisce il file finale:
+  `magick "$SKILL_DIR/assets/memes/PleaseCat.png" -trim +repage -resize x760 img/sticker-richieste.png`.
+  Quelli non scontornati (con lo sfondo) vanno come `sticker small`.
 
 ## Tipi di slide
 
@@ -114,7 +121,7 @@ Variante solo logo, per aprire o chiudere:
 
 ### Sezioni, indice, nome in alto
 
-Tre scelte indipendenti, da chiedere all'utente (default: tutte sì in breve e lunga, solo il nome
+Tre scelte indipendenti, da chiedere all'utente (default: tutte sì nella parlata, solo il nome
 in alto nell'autoesplicativa).
 - **Divisori:** una slide `.section` apre la sezione. Senza divisori, la sezione la apre la sua
   prima slide: `<section class="slide" data-section="Chi siamo" data-sub="frase su cosa contiene">`.
@@ -268,6 +275,9 @@ per passi senza data usa `ul.irows`.
 ```
 Max 5 colonne, max 4 voci brevi per team. L'elenco `<ul>` è facoltativo: se l'utente non dà
 i compiti, lascia solo numero e nome.
+Per mostrare anche chi guida ogni team (al posto di una slide a parte), metti sotto `h3` un blocco
+`.lead`, staccato dall'elenco da una linea; max 2 nomi:
+`<div><span class="n">1</span><h3>IT</h3><div class="lead"><span class="label">Lead</span><p>Nome Cognome<br>Nome Cognome</p></div><ul>…</ul></div>`.
 
 ### Team: dettaglio `div.team` + persone
 ```html
@@ -372,7 +382,8 @@ Testo standard in `brand.md`: copialo così com'è. A sinistra i tre passi, a de
 ## Versione autoesplicativa (`mode: lettura`)
 
 Con `mode: lettura` nel commento in testa al file tutti i componenti sopra restano validi, con
-testo più piccolo e limiti più larghi. In più ci sono i componenti qui sotto. Niente sticker.
+testo più piccolo e limiti più larghi. In più ci sono i componenti qui sotto. Sticker solo se
+l'utente ha voluto i meme: più piccoli (280 px), pochi e solo su slide leggere.
 `div.cols`, `ol.points`, `dl.facts` e `p.next` funzionano anche nelle versioni a voce, con testo
 più corto: usali per variare i layout.
 
