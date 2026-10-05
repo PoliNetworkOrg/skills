@@ -1,0 +1,76 @@
+# Brand PoliNetwork per le presentazioni
+
+## Identità visiva (già nel tema, non ridefinire)
+
+- **Font** (gli stessi del sito):
+  - DM Sans per i titoli;
+  - Poppins per sottotitoli, card e wordmark;
+  - Red Hat Text per il testo.
+- **Colori** (token del Figma del sito):
+  - sfondo slate-100;
+  - blu primario `--blue` (blue-400), blu secondario `--blue-2` (sky-700), azzurro `--blue-3` (sky-300);
+  - blu del logo `--pn-blue` #1156AE;
+  - accenti `--green`, `--red`, `--amber`, `--violet`.
+- **Glass:** card bianche semitrasparenti con sfocatura, bordo bianco, angoli da 20 px. È lo stile da usare per tutti i contenuti.
+- **Sfondo:** le forme sfocate del sito (big-blue, big-teal, small-blue) e il looper, cioè le linee bianche. Si muovono piano e cambiano posizione a ogni slide.
+- **Logo:** cerchio blu con la rete, accanto al wordmark "PoliNetwork" in Poppins blu. Il motore lo mette nel footer di ogni slide.
+- **Solo tema chiaro.**
+
+## Tono
+
+- Diretto e informale: da studenti a studenti, con il "tu" e il "noi".
+- Frasi brevi, una idea per slide. Titoli come affermazioni ("Rebranding avviato") o domande ("Cosa succede adesso?").
+- Gli sticker ironici (meme e personaggi scontornati) fanno parte dello stile delle assemblee:
+  - vanno bene su indice, divisori, "Domande?" e qualche slide leggera;
+  - **non** vanno su bilancio, votazioni, 5x1000 e slide formali.
+  - Li fornisce l'utente: proponi dove metterli, non scaricare immagini di terzi.
+- Numeri sempre concreti e veri, dati dall'utente. Se manca un dato, lascia un segnaposto `.todo` invece di inventarlo.
+
+## Dati fissi (confermati)
+
+| Dato | Valore |
+|---|---|
+| Codice fiscale (5x1000) | **97927490157** |
+| Sito | polinetwork.org |
+| Recruiting | polinet.cc/recruiting |
+
+Tutto il resto (numeri, team e compiti, persone, quote, account social, eventi) è contenuto:
+lo fornisce l'utente ogni volta, perché cambia. Non riprenderlo da presentazioni vecchie.
+
+## Testi standard
+
+### 5x1000 (IT)
+- Titolo: **5x1000: non ti costa nulla**
+- Cos'è? Una quota IRPEF che puoi destinare liberamente a un ente del Terzo Settore. Non è una spesa aggiuntiva: è già trattenuta. Scegli tu dove va.
+- Come farlo? Nella dichiarazione dei redditi, firma in "Sostegno degli enti del Terzo Settore" e scrivi il codice fiscale di PoliNetwork.
+- Il nostro codice fiscale: 97927490157. Passalo anche ai tuoi familiari: anche loro possono farlo, a costo zero.
+
+### 5x1000 (EN)
+- Title: **5x1000: it won't cost you a thing**
+- What is it? A portion of your IRPEF tax that you can freely allocate to a third-sector organisation. It's not an extra cost: it's already deducted. You decide where it goes.
+- How do you do that? On your tax return, sign the box "Support for third-sector organisations" and enter PoliNetwork's tax code.
+- Our tax code: 97927490157. Share it with your family too: they can do it at no cost.
+
+### Etichette ricorrenti
+
+| IT | EN |
+|---|---|
+| Assemblea dei Soci | General Meeting |
+| Di cosa parleremo | What we'll be discussing |
+| Chi siamo | About us |
+| Cosa abbiamo fatto | What we did |
+| A che punto siamo / Cosa stiamo facendo | What we are working on |
+| Prossimi passi | Next steps |
+| I nostri team | Our teams |
+| Capo dipartimento / Capi dipartimento | Team leader / Team leaders |
+| Di cosa ci occupiamo | What we do |
+| Bilancio | Financial statement |
+| Relazione di missione | Mission report |
+| Da approvare / Approvato | To be approved / Approved |
+| Favorevoli · Contrari · Astenuti | In favour · Against · Abstained |
+| Come puoi contribuire | How you can help |
+| Domande? · Domande e risposte | Questions? · Q&A |
+| Grazie dell'attenzione | Thank you |
+| In sviluppo · Live · Pubblicata · Da iniziare | In progress · Live · Published · Not started |
+
+Una presentazione è tutta in una lingua: niente slide miste, a parte i nomi propri (anche quelli dei team, se l'utente li dà in inglese).
