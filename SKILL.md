@@ -1,6 +1,6 @@
 ---
 name: polinetwork-slides
-description: Crea presentazioni HTML animate con il tema ufficiale PoliNetwork (glass, forme del sito, font DM Sans/Poppins/Red Hat Text), per assemblee dei soci, general meeting e riunioni dell'associazione. Usala quando qualcuno chiede slide, una presentazione, un deck o un'assemblea PoliNetwork, anche in inglese (slides, presentation, general meeting). Produce un unico file .html che funziona offline e si esporta in PDF. Offre tre versioni: breve, lunga e autoesplicativa (densa, da leggere senza chi presenta o da mandare a chi non c'era, anche ricavata da una presentazione già fatta), in italiano o in inglese.
+description: "Crea presentazioni HTML animate con il tema ufficiale PoliNetwork (glass, forme del sito, font DM Sans/Poppins/Red Hat Text), per assemblee dei soci, general meeting e riunioni dell'associazione. Usala quando qualcuno chiede slide, una presentazione, un deck o un'assemblea PoliNetwork, anche in inglese (slides, presentation, general meeting). Produce un unico file .html che funziona offline e si esporta in PDF. Offre tre versioni: breve, lunga e autoesplicativa (densa, da leggere senza chi presenta o da mandare a chi non c'era, anche ricavata da una presentazione già fatta), in italiano o in inglese."
 metadata:
   short-description: Presentazioni HTML animate con il tema PoliNetwork
 ---

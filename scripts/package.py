@@ -32,6 +32,21 @@ def main() -> int:
     if not desc or len(desc.group(1)) > 1024:
         print("ERRORE: SKILL.md senza description o description oltre 1024 caratteri", file=sys.stderr)
         return 1
+    # YAML rigoroso (CLI "skills", claude.ai): ": " in un valore senza virgolette rompe il file
+    for line in fm.group(1).splitlines():
+        m = re.match(r"^\s*[\w-]+:\s+(.+)$", line)
+        if m and not m.group(1).startswith(('"', "'", "|", ">")) and (": " in m.group(1) or " #" in m.group(1)):
+            print(f"ERRORE: in SKILL.md metti tra virgolette il valore di: {line.split(':')[0].strip()}", file=sys.stderr)
+            return 1
+    try:
+        import yaml  # facoltativo: verifica completa se PyYAML è installato
+
+        yaml.safe_load(fm.group(1))
+    except ImportError:
+        pass
+    except yaml.YAMLError as e:
+        print(f"ERRORE: frontmatter di SKILL.md non valido: {e}", file=sys.stderr)
+        return 1
 
     out = args.out.resolve()
     if SKILL in out.parents:
