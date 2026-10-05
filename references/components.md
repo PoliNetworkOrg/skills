@@ -78,7 +78,9 @@ Un nome sbagliato fa fallire `build.py`, che suggerisce i nomi più vicini.
   <div class="meta"><span><i data-icon="calendar"></i>28 aprile 2026</span><span><i data-icon="map-pin"></i>Politecnico di Milano</span></div>
 </section>
 ```
-L'emblema con il logo negli anelli di vetro viene aggiunto da solo a destra.
+L'emblema con il logo negli anelli di vetro viene aggiunto da solo a destra, e sotto il titolo
+compare da sola una barra a gradiente. Per evidenziare una parte del titolo (in gradiente blu):
+`<h1>Da studenti, <mark>per studenti</mark></h1>`; al massimo 2-3 parole, facoltativo.
 Variante solo logo, per aprire o chiudere:
 ```html
 <section class="slide cover brand-only">
