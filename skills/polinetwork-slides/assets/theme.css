@@ -1117,6 +1117,90 @@ table.status td small {
   }
 }
 
+/* ================= Grafico a colonne: confronto prima/dopo ================= */
+/* altezze calcolate da deck.js: --h = valore / massimo, --b = parte "prima" (data-from) */
+.columns {
+  --plot: 340px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 150px;
+  align-self: center;
+  padding: 44px 120px 34px;
+}
+/* spazio a destra per l'etichetta della crescita accanto all'ultima colonna */
+.columns:has(> .col[data-delta]) {
+  padding-right: 250px;
+}
+.columns > .col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font: 400 26px/1.2 var(--font-headline);
+  color: var(--title);
+}
+.columns > .col > em {
+  margin-bottom: 14px;
+  font: 500 54px/1 var(--font-display);
+  font-style: normal;
+  color: var(--title);
+}
+.columns > .col > i {
+  position: relative;
+  width: 170px;
+  height: calc(var(--h, 0) * var(--plot));
+  border-radius: 12px 12px 0 0; /* arrotondata in cima, dritta sulla base */
+  background: var(--blue-3);
+  transform-origin: bottom;
+}
+/* la crescita: parte alta più scura, staccata da 2px di superficie */
+.columns > .col[data-from] > i {
+  background: linear-gradient(
+    to top,
+    var(--blue-3) 0 calc(var(--b) * 100% - 1px),
+    rgb(255 255 255 / 0.95) 0 calc(var(--b) * 100% + 1px),
+    var(--blue-2) 0
+  );
+}
+.columns > .col > span {
+  margin-top: 18px;
+  padding-top: 16px;
+  white-space: nowrap;
+}
+/* linea di base comune sotto le colonne */
+.columns > .col > span::before {
+  content: "";
+  position: absolute;
+  left: -75px;
+  right: -75px;
+  margin-top: -17px;
+  height: 1.5px;
+  background: rgb(17 86 174 / 0.22);
+}
+.columns > .col > b {
+  position: absolute;
+  left: calc(50% + 85px + 22px);
+  bottom: calc(18px + 16px + 1.2em + var(--h) * var(--plot) * (1 + var(--b)) / 2);
+  translate: 0 50%;
+  font: 500 40px/1 var(--font-display);
+  color: var(--pn-blue);
+  white-space: nowrap;
+}
+.slide.active .columns > .col > i {
+  animation: colIn 1.1s var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 160ms + 350ms);
+}
+.slide.active .columns > .col > b {
+  animation: fade 0.6s var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 160ms + 1.2s);
+}
+@keyframes colIn {
+  from {
+    transform: scaleY(0);
+  }
+}
+
 /* ================= Team ================= */
 .teams {
   display: grid;

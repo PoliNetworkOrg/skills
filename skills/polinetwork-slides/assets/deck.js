@@ -59,7 +59,7 @@
     ".agenda > li", ".irows > li > *", ".cards > *", ".stats > *", ".teams > *", ".timeline > li", ".compare > *",
     ".team > *", ".split > *", ".budget > .glass", ".fivex > *", ".vote > *", ".gallery > figure", ".screens > figure", ".people > .person",
     ".links > li", ".cover .meta > span", ".cover .orbit", ".cover .brand", ".lockup", ".media > *", ".legend > li", "table.status tr",
-    ".bars > .bar", ".cloud > span", ".thanks .qr", ".body > .summary", ".body > .next", ".body > dl", ".cols > *",
+    ".bars > .bar", ".body > .columns", ".cloud > span", ".thanks .qr", ".body > .summary", ".body > .next", ".body > dl", ".cols > *",
     "ol.points > li", "dl.terms > div", ".cover .intro",
   ].join(",");
 
@@ -201,6 +201,27 @@
       const label = b.innerHTML;
       b.innerHTML = `<span>${label}</span><i></i><em>${b.dataset.label || v + "%"}</em>`;
     }
+  });
+  // colonne: altezze relative al valore più alto del grafico; data-from = parte "prima"
+  document.querySelectorAll(".columns").forEach((c) => {
+    const cols = [...c.querySelectorAll(":scope > .col")];
+    const num = (x) => parseFloat(x || "0");
+    const max = Math.max(...cols.map((col) => num(col.dataset.value)), 1);
+    const desc = [];
+    cols.forEach((col, i) => {
+      const v = num(col.dataset.value);
+      col.style.setProperty("--h", v / max);
+      col.style.setProperty("--i", i);
+      if (col.dataset.from) col.style.setProperty("--b", Math.min(1, num(col.dataset.from) / (v || 1)));
+      if (!col.querySelector("i")) {
+        const name = col.innerHTML;
+        const delta = col.dataset.delta ? `<b>${col.dataset.delta}</b>` : "";
+        col.innerHTML = `<em>${col.dataset.label || v}</em><i></i><span>${name}</span>${delta}`;
+      }
+      desc.push(`${col.querySelector("span").textContent}: ${col.dataset.label || v}`);
+    });
+    c.setAttribute("role", "img");
+    c.setAttribute("aria-label", desc.join(", "));
   });
   // nuvola: posti attorno al titolo, riempiti in modo bilanciato (max 16)
   const SLOTS = [
@@ -520,6 +541,7 @@
       }
       const ag = s.querySelector(".agenda");
       if (READ && ag && ag.children.length > sections.length) issues.push(`indice con ${ag.children.length} voci ma ${sections.length} sezioni: serve una slide con data-section per voce, altrimenti l'indice non è cliccabile`);
+      if (!READ && s.querySelector(".body > p.small")) issues.push("riga piccola (p.small): da lontano non si legge, toglila e mettila nelle note");
       if (s.querySelector(".ph")) issues.push(`immagini mancanti: ${[...s.querySelectorAll(".ph span:last-child")].map((x) => x.textContent).join(", ")}`);
       const todos = [...s.querySelectorAll(".todo")].map((x) => x.textContent.trim());
       if (todos.length) issues.push(`dati da completare (.todo): ${todos.join(" · ")}`);

@@ -122,7 +122,8 @@ Lavora nella cartella indicata dall'utente. Se non ne indica una, lavora in quel
     non vuol dire eliminare un componente, ma usarne tanti, ognuno poche volte.
 
   Scegli in base alla forma del contenuto: elenco di punti con icona → `ul.irows`, numeri →
-  `stats`, passi → `ol.points`, tappe con data → `timeline`, oggi/domani → `compare`,
+  `stats`, una crescita o un confronto prima/dopo → `columns` (un grafico si capisce subito, tre
+  numeri vanno letti), passi → `ol.points`, tappe con data → `timeline`, oggi/domani → `compare`,
   perché/cosa/risultato → `cols`, chi/quando/dove → `dl.facts`, voci affiancate → `cards`, un
   evento con foto → `split`, più schermate di un'app → `screens`, un messaggio → frase a effetto. Già nella scaletta (punto 2) indica il
   componente di ogni slide, il lato dell'immagine o dello sticker se c'è, e controlla che nessuno
@@ -143,6 +144,8 @@ Lavora nella cartella indicata dall'utente. Se non ne indica una, lavora in quel
   con il link verificato, senza didascalia, nello stesso riquadro del testo (`.has-qr`).
   Un progetto o un'app si mostra con più schermate, anche su più slide (`split` con la schermata
   principale, poi `div.screens` con le altre, oppure una slide per funzione).
+- **Niente testo piccolo nella parlata:** proiettato, `p.small` e le righe di contorno non si
+  leggono da lontano. Quello che non sta nel componente va nelle note per chi parla.
 - **Titoli corti:** al massimo ~6 parole, senza punto finale.
 - **Inglese:** traduci anche le etichette fisse (vedi la tabella in `brand.md`). I nomi propri
   (team, eventi) restano come li scrive l'utente.

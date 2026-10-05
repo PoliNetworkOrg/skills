@@ -26,7 +26,9 @@ nella slide senza rimpicciolirsi: se il contenuto è di più, dividilo in due sl
   un contenitore centrato in verticale sotto il titolo.
 - Testo in evidenza: `<mark>parola</mark>` (blu; nei testi grandi come `.lead`, titoli di copertina
   e frasi a effetto diventa il gradiente del brand) e `<b>parola</b>` (scuro, grassetto).
-- Testo secondario sotto un componente: `<p class="small">…</p>`.
+- Testo secondario sotto un componente: `<p class="small">…</p>`. **Solo nella versione
+  autoesplicativa:** proiettato non si legge da lontano. A voce quello che non sta nel componente
+  va nelle note (`aside.notes`), e `check.py` segnala ogni `p.small` rimasto.
 - Elenco puntato semplice: `<ul><li>…</li></ul>` (puntini blu del brand, max 6 voci).
 - Paragrafo introduttivo grande: `<p class="lead">…</p>`.
 - Card di vetro generica: `<div class="glass">…</div>`; varianti `glass tint`
@@ -88,6 +90,10 @@ Un nome sbagliato fa fallire `build.py`, che suggerisce i nomi più vicini.
 - **Inclinazione:** telefono e immagini scontornate stanno meglio un po' storti che dritti:
   `class="phone tilt"`, `class="cutout tilt"` (8°, `tilt-left` per −8°). A destra `tilt`, a
   sinistra (`split media-left`) `tilt-left`, così l'immagine pende sempre verso l'esterno.
+  **Eccezione:** un oggetto già in prospettiva o in 3D (il mockup di una scatola, un prodotto
+  fotografato di tre quarti, un oggetto appoggiato su un piano) resta dritto, senza `tilt`:
+  inclinato sembra che stia cadendo. `tilt` solo per telefoni e oggetti piatti o visti di fronte
+  (una lattina, un adesivo, un logo).
 - **Lato delle immagini:** alterna `split` e `split media-left` lungo la presentazione, invece di
   mettere tutte le foto a destra. Il telefono a sinistra sale fino al sottotitolo: se la slide ha un
   `.sub` lungo, tienilo a destra e gira un'altra slide.
@@ -228,7 +234,7 @@ stare su una riga: se vanno a capo, usa meno colonne (2×2 invece di 4 in fila).
   <div><b>20 000+</b><span>studenti raggiunti</span></div>
   …
 </div>
-<p class="small">Facoltativo: riga di sintesi</p>
+<p class="small">Facoltativo, solo da leggere: riga di sintesi</p>
 ```
 Parola chiave facoltativa, ben visibile tra numero e descrizione:
 `<div><b>150+</b><h3>Admin</h3><span>moderano i gruppi</span></div>`.
@@ -278,6 +284,20 @@ annullato, rosso). Il pallino della riga prende il colore della pill. Max 7 righ
 </div>
 ```
 `data-value` da 0 a 100; `data-label` cambia il testo a destra (di default "80%"). Max 7 barre.
+
+### Grafico a colonne: `div.columns`
+```html
+<div class="columns glass">
+  <div class="col" data-value="5000" data-label="5.000">Scorsa assemblea</div>
+  <div class="col" data-value="7500" data-label="7.500" data-from="5000" data-delta="+2.500">Oggi</div>
+</div>
+```
+Per un confronto o una crescita che si deve capire a colpo d'occhio (prima/dopo, anno per anno):
+meglio di due o tre numeri in `div.stats`, che vanno letti e confrontati a mente. 2-4 colonne,
+alte in proporzione (`data-value` è il numero vero, non una percentuale; si parte da zero). Sopra
+ogni colonna `data-label`, sotto il nome (max ~3 parole). `data-from` sull'ultima colonna colora
+solo la parte cresciuta rispetto a quel valore, e `data-delta` la scrive accanto. **Solo cifre
+date dall'utente.** Per tante voci o percentuali c'è `div.bars`.
 
 ### Timeline: `ol.timeline`
 ```html
@@ -375,7 +395,7 @@ Larghezza di default 170 px; se il testo accanto va a capo, stringilo con `style
 ```
 3-4 telefoni in fila, inclinati da soli a destra e a sinistra, con sotto cosa mostra ogni
 schermata (max ~4 parole, `<small>` facoltativo con ~6 parole). Senza altro componente nella
-slide, al massimo un `.sub` o un `p.small`. Ogni schermata deve mostrare una cosa diversa.
+slide, al massimo un `.sub`. Ogni schermata deve mostrare una cosa diversa.
 Con **2 schermate** da sole la slide resta vuota ai lati: mettile in un `div.split` al posto di
 `.media`, accanto a un `ul.irows` con quello che si vede nelle schermate, senza didascalie:
 ```html
