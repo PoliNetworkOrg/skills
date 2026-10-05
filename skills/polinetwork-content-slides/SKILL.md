@@ -1,11 +1,11 @@
 ---
-name: polinetwork-contenuti-slide
+name: polinetwork-content-slides
 description: "Prepara i CONTENUTI di una presentazione PoliNetwork (assemblea dei soci, general meeting, riunione, evento, recruiting, report) partendo da un ordine del giorno, da appunti o da una bozza, e consegna un file .md pronto da passare alla skill polinetwork-slides, che ne farà le slide. Usala quando l'utente vuole preparare, organizzare, rivedere o completare i contenuti di una presentazione o di un ordine del giorno, o chiede il file da dare all'AI delle slide, anche se parla di slide: questa skill decide cosa dire, non come mostrarlo. Se l'utente vuole direttamente il file HTML delle slide e ha già i contenuti pronti, usa polinetwork-slides."
 metadata:
   short-description: Contenuti delle presentazioni PoliNetwork, pronti per polinetwork-slides
 ---
 
-# PoliNetwork Contenuti Slide
+# PoliNetwork Content Slides
 
 Il tuo compito è decidere **cosa** va comunicato, non **come** mostrarlo. Impaginazione, numero di
 slide, componenti, grafica e immagini spettano alla skill `polinetwork-slides`, che riceverà il tuo
