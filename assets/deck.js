@@ -138,14 +138,15 @@
   });
   // colonne esplicite
   document.querySelectorAll("[data-cols]").forEach((el) => el.style.setProperty("--cols", el.dataset.cols));
-  // agenda: tessere fino a 6 voci, poi righe su due colonne;
+  // agenda: tessere fino a 9 voci (7-9: tessere compatte su tre colonne), poi righe su due colonne;
   // ogni voce porta alla sezione corrispondente e ne riprende il sottotitolo (voci in più, come "Domande", no)
   document.querySelectorAll(".agenda").forEach((el) => {
     const n = el.children.length;
-    if (n > 6) {
+    if (n > 9) {
       el.classList.add("long");
       el.style.setProperty("--rows", Math.ceil(n / 2));
     } else {
+      if (n > 6) el.classList.add("dense");
       if (!el.dataset.cols) el.style.setProperty("--cols", n > 4 ? 3 : n);
       [...el.children].forEach((li, i) => li.insertAdjacentHTML("afterbegin", `<span class="num">${String(i + 1).padStart(2, "0")}</span>`));
     }
@@ -153,7 +154,7 @@
       if (!sections[i]) return;
       const { start, sub } = sections[i];
       if (start) li.setAttribute("data-goto", slides.indexOf(start));
-      if (n <= 6 && sub && !li.querySelector("small")) li.insertAdjacentHTML("beforeend", `<small>${sub}</small>`);
+      if (n <= 9 && sub && !li.querySelector("small")) li.insertAdjacentHTML("beforeend", `<small>${sub}</small>`);
     });
   });
   // numeri a contorno (divisori, indice): un SVG sopra il testo, così il contorno si può tracciare.

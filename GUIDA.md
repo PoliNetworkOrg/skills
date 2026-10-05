@@ -158,8 +158,10 @@ Con Git: `cd ~/polinetwork-slides && git pull`. Con `$skill-installer`: cancella
 3. **Lingua:** italiano o inglese.
 4. **Occasione:** che incontro è, data e luogo.
 5. **Contenuti:** argomenti, numeri, persone, eventi, scadenze.
-6. **Immagini:** foto, sticker, screenshot.
-7. **Struttura:** se vuoi l'indice, i divisori di sezione ("Parte 1") e il nome della sezione in
+6. **Immagini:** foto, screenshot.
+7. **Sticker (meme):** solo nelle versioni a voce. Se li vuoi, l'assistente propone dove metterli
+   e tu li carichi; se no, la presentazione non ne ha.
+8. **Struttura:** se vuoi l'indice, i divisori di sezione ("Parte 1") e il nome della sezione in
    alto a destra. Di default tutti e tre nella breve e nella lunga, solo il nome della sezione
    nell'autoesplicativa.
 

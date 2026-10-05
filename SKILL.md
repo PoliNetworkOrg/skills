@@ -52,9 +52,11 @@ che l'utente ha già detto.
 4. **Occasione:** che cosa è (Assemblea dei Soci, General Meeting…), data e luogo.
 5. **Contenuti:** argomenti, numeri, persone, eventi, scadenze, oppure materiale da cui partire
    (appunti, verbale, documento, vecchia presentazione).
-6. **Immagini:** foto, sticker e screenshot che vuole usare. Vanno messi nella cartella `img/`.
-   Nella versione autoesplicativa niente sticker.
-7. **Struttura**, con il default della versione scelta già proposto:
+6. **Immagini:** foto e screenshot che vuole usare. Vanno messi nella cartella `img/`.
+7. **Sticker (meme)?** Solo nelle versioni a voce: vuole gli sticker ironici (meme o personaggi
+   scontornati)? Se dice sì, proponi dove metterli. Se dice no, niente sticker: togli tutti gli
+   `<img class="sticker">` dei template. Nella versione autoesplicativa non si chiede: niente sticker.
+8. **Struttura**, con il default della versione scelta già proposto:
    - **indice** (`ol.agenda`, cliccabile, con il sottotitolo di ogni sezione): sì in breve e
      lunga, no in autoesplicativa;
    - **divisori di sezione** (slide "Parte 1"): sì in breve e lunga, no in autoesplicativa;
@@ -103,8 +105,9 @@ Lavora nella cartella indicata dall'utente. Se non ne indica una, lavora in quel
 - **Titoli corti:** al massimo ~6 parole, senza punto finale.
 - **Inglese:** traduci anche le etichette fisse (vedi la tabella in `brand.md`). I nomi propri
   (team, eventi) restano come li scrive l'utente.
-- **Sticker:** al massimo uno per slide, mai su bilancio, votazioni e 5x1000. Usa solo immagini
-  fornite dall'utente: se non ne ha, lascia il segnaposto `img/sticker-….png` oppure togli lo sticker.
+- **Sticker:** solo se l'utente li ha voluti (domanda 7 del punto 1); altrimenti nessuno. Al
+  massimo uno per slide, mai su bilancio, votazioni e 5x1000. Usa solo immagini fornite
+  dall'utente: se non ne ha, lascia il segnaposto `img/sticker-….png` oppure togli lo sticker.
 - **Note per chi parla:** quando servono, mettile in `<aside class="notes">`. Si vedono con il tasto P.
 
 ## 5. Compila e controlla (obbligatorio)

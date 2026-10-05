@@ -726,7 +726,38 @@ dl.terms > div {
   text-wrap: pretty;
 }
 
-/* oltre 6 voci: righe compatte su due colonne */
+/* 7-9 voci: tessere compatte su tre colonne, numero a sinistra di titolo e sottotitolo */
+.agenda.dense {
+  gap: 18px 22px;
+}
+.agenda.dense > li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: start;
+  gap: 6px 22px;
+  min-height: 0;
+  padding: 24px 76px 26px 26px;
+  font-size: 26px;
+}
+.agenda.dense > li > .num {
+  grid-row: 1 / span 2;
+  margin-bottom: 0;
+  font-size: 58px;
+}
+.agenda.dense > li > small {
+  grid-column: 2;
+  font-size: 18px;
+  line-height: 1.35;
+}
+.agenda.dense > li[data-goto]::after {
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  font-size: 19px;
+}
+
+/* oltre 9 voci: righe compatte su due colonne */
 .agenda.long {
   grid-template-columns: none;
   grid-auto-flow: column;
@@ -1926,6 +1957,9 @@ html.read .vote > button {
 html.read .agenda > li {
   font-size: 30px;
   line-height: 1.2;
+}
+html.read .agenda.dense > li {
+  font-size: 26px;
 }
 html.read .agenda.long > li {
   font-size: 26px;

@@ -139,8 +139,9 @@ Max ~25 parole. Senza `h1`.
 ```html
 <ol class="agenda"><li>Chi siamo</li><li>Cosa abbiamo fatto</li>…</ol>
 ```
-Numerato da solo. Fino a 6 voci sono tessere col numero grande (4 o meno su una riga, 5-6 su
-tre colonne; `data-cols` per forzare), oltre diventano righe su due colonne. Max 10 voci,
+Numerato da solo. Fino a 9 voci sono tessere col numero grande (4 o meno su una riga, 5-6 su
+tre colonne, 7-9 tessere più compatte su tre colonne; `data-cols` per forzare), oltre diventano
+righe su due colonne. Con 7-9 voci togli lo sticker dalla slide dell'indice. Max 10 voci,
 max ~5 parole per voce. Ogni tessera riprende da sola il sottotitolo della sua sezione.
 
 ### Righe con icona: `ul.irows` (il layout più usato)

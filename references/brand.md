@@ -20,7 +20,8 @@
 
 - Diretto e informale: da studenti a studenti, con il "tu" e il "noi".
 - Frasi brevi, una idea per slide. Titoli come affermazioni ("Rebranding avviato") o domande ("Cosa succede adesso?").
-- Gli sticker ironici (meme e personaggi scontornati) fanno parte dello stile delle assemblee:
+- Gli sticker ironici (meme e personaggi scontornati) fanno parte dello stile delle assemblee, ma
+  si usano solo se l'utente li vuole (lo si chiede all'inizio):
   - vanno bene su indice, divisori, "Domande?" e qualche slide leggera;
   - **non** vanno su bilancio, votazioni, 5x1000 e slide formali.
   - Li fornisce l'utente: proponi dove metterli, non scaricare immagini di terzi.
