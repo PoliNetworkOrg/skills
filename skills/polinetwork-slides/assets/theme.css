@@ -513,8 +513,8 @@ dl.terms > div {
 /* <mark> nei testi grandi: la parte da evidenziare, in gradiente.
    Se il titolo è diviso in parole (.w), deck.js dà a ogni parola larghezza (--gw) e posizione (--gx)
    dell'intera evidenziazione, così il gradiente è uno solo e non ricomincia a ogni parola. */
-:is(.cover h1, .statement, .slide.section > h1, .slide.thanks > h1) mark:not(:has(.w)),
-:is(.cover h1, .statement, .slide.section > h1, .slide.thanks > h1) mark .w {
+:is(.cover h1, .statement, .lead, .slide.section > h1, .slide.thanks > h1) mark:not(:has(.w)),
+:is(.cover h1, .statement, .lead, .slide.section > h1, .slide.thanks > h1) mark .w {
   color: transparent;
   background: linear-gradient(100deg, var(--blue-2), var(--blue-ink)) no-repeat;
   background-size: var(--gw, 100%) 100%;
@@ -846,17 +846,28 @@ dl.terms > div {
   flex-direction: column;
   gap: 4px;
 }
+/* icona accanto al titolo, il resto della card sotto su tutta la larghezza */
+.cards > :has(> svg.ico) {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  align-content: start;
+  column-gap: 14px;
+  row-gap: 10px;
+}
 .cards > * > svg.ico {
-  width: 58px;
-  height: 58px;
-  padding: 14px;
-  border-radius: 16px;
-  background: var(--blue-soft);
-  color: var(--blue-ink);
-  margin-bottom: 16px;
+  width: 36px;
+  height: 36px;
+  color: var(--blue-2);
 }
 .cards > * > h3 {
   margin-bottom: 6px;
+}
+.cards > :has(> svg.ico) > h3 {
+  margin: 0;
+}
+.cards > :has(> svg.ico) > :not(svg, h3) {
+  grid-column: 1 / -1;
 }
 .cards > * > p {
   font-size: 22px;
@@ -890,6 +901,15 @@ dl.terms > div {
   margin-top: 14px;
   font: 400 23px/1.3 var(--font-headline);
   color: var(--text-2);
+}
+/* parola chiave facoltativa tra numero e descrizione */
+.stats > * > h3 {
+  margin-top: 16px;
+  font: 500 34px/1.15 var(--font-headline);
+  color: var(--title);
+}
+.stats > * > h3 + span {
+  margin-top: 8px;
 }
 .stats + .small,
 .stats + p {
@@ -1257,8 +1277,8 @@ table.status td small {
   z-index: 1;
 }
 .qr {
-  width: 210px;
-  padding: 14px;
+  width: 170px;
+  padding: 12px;
   border-radius: var(--r-rect);
   background: #fff;
   box-shadow: var(--glass-shadow);
@@ -1276,6 +1296,37 @@ table.status td small {
   font: 500 16px/1.2 var(--font-body);
   color: var(--text-3);
   text-align: center;
+}
+
+/* inclinazione per telefono e immagini scontornate (rotate non tocca le animazioni con transform) */
+.tilt {
+  rotate: 8deg;
+}
+.tilt-left {
+  rotate: -8deg;
+}
+/* immagine scontornata (prodotto, oggetto) in .media: niente riquadro né ombra rettangolare */
+.media img.cutout {
+  width: auto;
+  height: 520px;
+  border-radius: 0;
+  box-shadow: none;
+  object-fit: contain;
+  filter: drop-shadow(0 30px 40px rgb(15 23 42 / 0.22));
+}
+/* testo e QR affiancati dentro una card o un riquadro (il QR va dove lo metti: primo o ultimo) */
+.has-qr,
+.cards > .has-qr {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 28px;
+}
+.has-qr:has(> .qr:first-child) {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+.glass > * + .has-qr {
+  margin-top: 26px;
 }
 
 /* ================= Galleria ================= */
@@ -1851,26 +1902,9 @@ html.read .irows > li > .tile {
 html.read .cards > * {
   padding: 26px 30px;
 }
-/* in lettura l'icona sta accanto al titolo: card più basse, più aria intorno */
-html.read .cards > :has(> svg.ico) {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  align-content: start;
-  column-gap: 16px;
-  row-gap: 10px;
-}
 html.read .cards > * > svg.ico {
-  width: 48px;
-  height: 48px;
-  padding: 12px;
-  margin: 0;
-}
-html.read .cards > :has(> svg.ico) > h3 {
-  margin: 0;
-}
-html.read .cards > :has(> svg.ico) > :not(svg, h3) {
-  grid-column: 1 / -1;
+  width: 30px;
+  height: 30px;
 }
 html.read .cards > * > p,
 html.read .teams > * li,
@@ -2064,6 +2098,9 @@ dl.facts {
   gap: 0 28px;
   padding: 18px 32px;
 }
+.glass > dl.facts:not(.glass) {
+  padding: 0;
+}
 dl.facts > dt,
 dl.facts > dd {
   padding: 11px 0;
@@ -2089,6 +2126,9 @@ ol.points {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px 22px;
+}
+ol.points:has(> :nth-child(3):last-child) {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 ol.points > li {
   counter-increment: pt;
@@ -2128,6 +2168,10 @@ dl.terms > div {
 /* su due colonne, se gli elementi sono dispari l'ultimo occupa tutta la riga */
 :is(ol.points > li, dl.terms > div):last-child:nth-child(odd) {
   grid-column: 1 / -1;
+}
+/* con 3 punti stanno tutti su una riga */
+ol.points > li:nth-child(3):last-child {
+  grid-column: auto;
 }
 dl.terms dt {
   font: 500 24px/1.3 var(--font-display);

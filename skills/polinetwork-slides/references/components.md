@@ -24,12 +24,17 @@ nella slide senza rimpicciolirsi: se il contenuto è di più, dividilo in due sl
 
 - Tutto quello che non è `h1`, `.kicker`, `.sub`, `.sticker` o `.notes` finisce in
   un contenitore centrato in verticale sotto il titolo.
-- Testo in evidenza: `<mark>parola</mark>` (blu) e `<b>parola</b>` (scuro, grassetto).
+- Testo in evidenza: `<mark>parola</mark>` (blu; nei testi grandi come `.lead`, titoli di copertina
+  e frasi a effetto diventa il gradiente del brand) e `<b>parola</b>` (scuro, grassetto).
 - Testo secondario sotto un componente: `<p class="small">…</p>`.
 - Elenco puntato semplice: `<ul><li>…</li></ul>` (puntini blu del brand, max 6 voci).
 - Paragrafo introduttivo grande: `<p class="lead">…</p>`.
 - Card di vetro generica: `<div class="glass">…</div>`; varianti `glass tint`
-  (azzurrina, per evidenziare) e `glass solid` (più opaca, per testo lungo).
+  (azzurrina, solo per l'unico elemento da evidenziare, come il codice fiscale: mai per contenuti
+  normali) e `glass solid` (più opaca: resta bianca anche sopra le forme blu dello sfondo).
+- Elementi che vanno insieme (una scheda e il suo QR, un testo e la sua azione) stanno nello
+  stesso riquadro, con i bordi sinistri allineati: niente blocchi separati di peso diverso
+  impilati uno sotto l'altro.
 - `data-footer="off"` sulla section toglie footer e numero.
 - Copertina, divisori e chiusura non hanno il numero di pagina; nelle slide con uno sticker
   a destra il numero viene nascosto.
@@ -60,7 +65,26 @@ Un nome sbagliato fa fallire `build.py`, che suggerisce i nomi più vicini.
 - Se un file non esiste, al suo posto compare un riquadro tratteggiato con il nome
   del file, così si vede cosa manca. Non cancellare i `<img>` per immagini che
   l'utente fornirà dopo.
-- Ritaglia e comprimi le foto prima di metterle (sotto 500 KB l'una).
+- Ritaglia e comprimi le foto prima di metterle (sotto 500 KB l'una), con ImageMagick se c'è:
+  `magick foto.jpg -crop 960x720+0+300 +repage -quality 86 img/nome.jpg`. Ritaglia sul
+  soggetto e nel formato del riquadro che la ospita, non lasciarle in formato originale.
+- **Una foto per riquadro.** In `div.split` metti una sola foto orizzontale (4:3, per esempio
+  `style="width: 640px; height: 480px"`): due foto verticali strette affiancate sono brutte. Le
+  altre foto dello stesso evento vanno in una `div.gallery`. Non serve usarle tutte.
+- **Foto di persone:** ogni persona con la foto una volta sola nella presentazione (se i lead
+  sono anche nel Direttivo, foto solo in una delle due slide). Una foto di gruppo generica non va
+  accanto a un elenco di persone precise: sembra che siano loro.
+- **Screenshot di un'app** (nella cornice `.phone`): tema chiaro e la schermata che mostra di più
+  (per esempio l'elenco con ricerca e filtri, non il dettaglio). Taglia la barra del browser e
+  aggiungi in alto una striscia del colore dell'header, così il notch della cornice non copre
+  l'header dell'app:
+  `magick shot.jpg -crop 584x1176+0+104 +repage -background "<colore header>" -gravity north -splice 0x56 img/app.jpg`
+  (il colore si legge con `magick shot.jpg -format "%[pixel:p{3,120}]" info:`).
+- **Inclinazione:** telefono e immagini scontornate stanno meglio un po' storti che dritti:
+  `class="phone tilt"`, `class="cutout tilt"` (8°, `tilt-left` per −8°).
+- **Immagini scontornate** (un prodotto, un oggetto, PNG trasparente) dentro la slide, in
+  `.media` con `<img class="cutout tilt" src="img/x.png" alt="">`, non come sticker attaccato al
+  bordo. Ritaglia prima i bordi trasparenti: `magick x.png -trim +repage -resize x760 img/x.png`.
 - **Sticker** (meme o personaggi scontornati, PNG trasparente): `<img class="sticker" src="img/x.png" alt="">`.
   In basso a destra, alto 380 px; il contenuto si restringe per fargli spazio.
   Varianti: `sticker left`, `sticker small` (240 px, non sposta il contenuto), `sticker top`.
@@ -144,15 +168,15 @@ tre colonne, 7-9 tessere più compatte su tre colonne; `data-cols` per forzare),
 righe su due colonne. Con 7-9 voci togli lo sticker dalla slide dell'indice. Max 10 voci,
 max ~5 parole per voce. Ogni tessera riprende da sola il sottotitolo della sua sezione.
 
-### Righe con icona: `ul.irows` (il layout più usato)
+### Righe con icona: `ul.irows`
 ```html
 <ul class="irows">
   <li><i data-icon="monitor"></i><p>MVP: homepage, team, matricole</p></li>
   <li><i data-icon="calendar"></i><p><b>Titolo della riga</b><small>dettaglio facoltativo</small></p></li>
 </ul>
 ```
-Max 4 righe; max ~12 parole per riga. Per cosa abbiamo fatto, cosa stiamo facendo,
-prossimi passi o dettagli di un evento (dove, quando, cosa).
+Max 4 righe; max ~12 parole per riga. Buon layout di base, ma non in tutte le slide: mai in due
+slide di fila. Per passi numerati c'è `ol.points`, per chi/quando/dove `dl.facts`.
 
 ### Card in griglia: `div.cards`
 ```html
@@ -162,7 +186,10 @@ prossimi passi o dettagli di un evento (dove, quando, cosa).
 </div>
 ```
 2 o 4 card → 2 colonne; 3, 5, 6 → 3 colonne; 7-8 → 4. Forzare: `data-cols="3"`.
-Max ~20 parole per card. L'icona è facoltativa.
+Max ~20 parole per card. L'icona è facoltativa: sta sulla riga del titolo, accanto a `h3`.
+Per persone o voci brevi (per esempio chi guida ogni team) usa un'etichetta sopra al titolo:
+`<div><span class="label">IT</span><h3>Nome Cognome<br>Nome Cognome</h3></div>`. I nomi devono
+stare su una riga: se vanno a capo, usa meno colonne (2×2 invece di 4 in fila).
 
 ### Numeri in evidenza: `div.stats`
 ```html
@@ -172,6 +199,8 @@ Max ~20 parole per card. L'icona è facoltativa.
 </div>
 <p class="small">Facoltativo: riga di sintesi</p>
 ```
+Parola chiave facoltativa, ben visibile tra numero e descrizione:
+`<div><b>150+</b><h3>Admin</h3><span>moderano i gruppi</span></div>`.
 2-4 numeri (max 5). Con soli 2 numeri la slide resta vuota: aggiungi un `<p class="lead">`
 sopra, oppure usa la nuvola "Chi siamo". I numeri contano fino al valore quando la slide compare;
 il testo in `<b>` resta quello scritto (es. "20 000+", "3,8/5", "1000+").
@@ -267,8 +296,31 @@ Foto quadrate, ritagliate in cerchio da sole. Max 3 persone.
 ```
 Varianti: `split even` (metà e metà), `split media-left` (immagini a sinistra).
 In `.media`: foto (`img`, dimensioni con `style` se servono), cornice smartphone
-`.phone`, QR `.qr`. Legenda colorata: `<ul class="legend"><li style="--c: var(--green)">…</li></ul>`
-(colori: `--blue`, `--green`, `--red`, `--amber`, `--violet`, `--pn-blue`).
+`.phone` (meglio con `tilt`), immagine scontornata `img.cutout`, QR `.qr`. La colonna di testo
+deve essere alta circa come l'immagine accanto: se resta bassa, uniscila in un solo riquadro con
+quello che le sta sotto. Legenda colorata: `<ul class="legend"><li style="--c: var(--green)">…</li></ul>`
+(colori: `--blue`, `--green`, `--red`, `--amber`, `--violet`, `--pn-blue`): solo se i colori
+significano qualcosa (stati, categorie), mai come puntini decorativi.
+
+### QR code: `figure.qr` e `.has-qr`
+Per ogni link da aprire in sala (un sito, l'iscrizione, il recruiting) proponi un QR. Generalo
+con `qrencode -t PNG -s 16 -m 1 -o img/qr-nome.png "https://…"` e prima controlla che il link
+risponda (`curl -sI "https://…"`). Se `qrencode` manca, dillo all'utente e lascia il segnaposto.
+Niente didascalia sotto il QR e niente URL lunghi nel testo: basta il dominio corto.
+Il QR sta nello stesso riquadro del testo a cui si riferisce, affiancato con `.has-qr` (il QR va
+dove lo metti, primo o ultimo):
+```html
+<div class="cards">
+  <div class="has-qr"><div><h3>Entra in un team</h3><p>Candidati su polinet.cc/recruiting</p></div>
+    <figure class="qr"><img src="img/qr-recruiting.png" alt="QR code per il recruiting"></figure></div>
+  …
+</div>
+<div class="glass">
+  <dl class="facts">…</dl>
+  <div class="has-qr"><figure class="qr"><img src="img/qr-app.png" alt=""></figure><p class="lead">Provalo e <mark>mandaci feedback</mark></p></div>
+</div>
+```
+Larghezza di default 170 px; se il testo accanto va a capo, stringilo con `style="width: 150px"`.
 
 ### Galleria: `div.gallery`
 ```html
@@ -321,6 +373,8 @@ Testo standard in `brand.md`: copialo così com'è. A sinistra i tre passi, a de
 
 Con `mode: lettura` nel commento in testa al file tutti i componenti sopra restano validi, con
 testo più piccolo e limiti più larghi. In più ci sono i componenti qui sotto. Niente sticker.
+`div.cols`, `ol.points`, `dl.facts` e `p.next` funzionano anche nelle versioni a voce, con testo
+più corto: usali per variare i layout.
 
 | Componente | Limite in lettura |
 |---|---|
@@ -364,6 +418,8 @@ Una riga in fondo alla slide. Altre etichette: "Cosa ti chiediamo", "Scadenza", 
 </dl>
 ```
 Max 6 righe. Per eventi, iniziative, decisioni. Va bene anche dentro `div.split` accanto alle foto.
+Dentro un `div.glass` insieme ad altro (per esempio un `.has-qr`), scrivi `dl.facts` senza
+`glass`: il riquadro è quello esterno.
 
 ### Punti chiave: `ol.points`
 ```html
@@ -372,7 +428,8 @@ Max 6 righe. Per eventi, iniziative, decisioni. Va bene anche dentro `div.split`
   …
 </ol>
 ```
-Per la slide "In sintesi": 4-6 punti, numerati da soli, ~20 parole ciascuno.
+Per la slide "In sintesi": 4-6 punti, numerati da soli, ~20 parole ciascuno. A voce anche per
+3-4 passi in sequenza: 3 punti stanno su una riga, 4 su due.
 
 ### Glossario: `dl.terms`
 ```html

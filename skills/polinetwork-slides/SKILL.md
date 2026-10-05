@@ -52,7 +52,9 @@ che l'utente ha già detto.
 4. **Occasione:** che cosa è (Assemblea dei Soci, General Meeting…), data e luogo.
 5. **Contenuti:** argomenti, numeri, persone, eventi, scadenze, oppure materiale da cui partire
    (appunti, verbale, documento, vecchia presentazione).
-6. **Immagini:** foto e screenshot che vuole usare. Vanno messi nella cartella `img/`.
+6. **Immagini:** foto e screenshot che vuole usare. Vanno messi nella cartella `img/`. Gli
+   screenshot di app meglio in tema chiaro. Per i link da aprire in sala (sito, iscrizione,
+   recruiting) proponi un QR.
 7. **Sticker (meme)?** Solo nelle versioni a voce: vuole gli sticker ironici (meme o personaggi
    scontornati)? Se dice sì, proponi dove metterli. Se dice no, niente sticker: togli tutti gli
    `<img class="sticker">` dei template. Nella versione autoesplicativa non si chiede: niente sticker.
@@ -95,13 +97,44 @@ Lavora nella cartella indicata dall'utente. Se non ne indica una, lavora in quel
 
 ## 4. Scrivi le slide
 
-- Usa **solo** i componenti di `references/components.md`. Non aggiungere `<style>`, CSS inline
-  per colori o font, classi inventate o script.
+- Usa **solo** i componenti di `references/components.md`. Non aggiungere `<style>`, classi
+  inventate o script. Lo stile in linea serve solo per le dimensioni (`width`, `height`) di foto e
+  QR: per inclinare, affiancare un QR o impaginare ci sono le classi del catalogo (`tilt`,
+  `cutout`, `has-qr`).
 - **Segui la scaletta confermata.** Sostituisci ogni segnaposto `.todo` del template con i contenuti
   dell'utente, togli le slide che non servono e aggiungi quelle che mancano copiandole dal catalogo.
   Il template è solo una base di layout, non uno schema obbligato.
 - **Un'idea per slide.** Rispetta i limiti "max" del catalogo: se il contenuto è di più, dividilo in
   due slide invece di stringerlo.
+- **Varia i layout.** Nessun componente e nessuna impaginazione devono dominare la presentazione:
+  se le slide si somigliano tutte, sembra fatta in serie.
+  - Mai lo stesso componente in due slide di contenuto di fila.
+  - Nessun componente in più di circa un quarto delle slide di contenuto. Vale per tutti
+    (`ul.irows`, `div.cards`, `div.split`, `dl.facts`, `div.stats`…), non per uno solo.
+  - Lo stesso per le impaginazioni: per esempio non sempre riquadro a sinistra e immagine a destra,
+    anche se dentro cambia componente.
+  - Quando correggi una ripetizione, non spostare tutto su un altro componente: distribuisci. Variare
+    non vuol dire eliminare un componente, ma usarne tanti, ognuno poche volte.
+
+  Scegli in base alla forma del contenuto: elenco di punti con icona → `ul.irows`, numeri →
+  `stats`, passi → `ol.points`, tappe con data → `timeline`, oggi/domani → `compare`,
+  perché/cosa/risultato → `cols`, chi/quando/dove → `dl.facts`, voci affiancate → `cards`, un
+  evento con foto → `split`, un messaggio → frase a effetto. Già nella scaletta (punto 2) indica il
+  componente di ogni slide e controlla che nessuno si ripeta troppo.
+- **Componi con cura.** Ogni slide deve essere bilanciata, non solo corretta:
+  - riempi la larghezza: 3 voci stanno su una riga, non 2+1; niente riquadri piccoli in mezzo al
+    vuoto;
+  - testo e immagine affiancati sono alti circa uguali; elementi che vanno insieme stanno nello
+    stesso riquadro, con i bordi allineati, invece che in blocchi separati di peso diverso;
+  - nomi ed etichette stanno su una riga (se vanno a capo, meno colonne); niente URL lunghi;
+  - la parola chiave si deve vedere: in `div.stats` mettila in `<h3>` tra numero e descrizione;
+  - niente decorazioni senza significato: pallini colorati che non indicano niente, riquadri
+    azzurri (`glass tint`) su contenuti normali.
+- **Immagini e QR** (dettagli nella sezione "Immagini" del catalogo): una foto per riquadro,
+  ritagliata sul soggetto e nel formato del riquadro; le altre in una galleria. Telefono e
+  immagini scontornate inclinati (`tilt`); gli scontornati dentro la slide (`img.cutout`), non
+  attaccati al bordo. Ogni persona con la foto una volta sola. QR per i link da aprire in sala,
+  con il link verificato, senza didascalia, nello stesso riquadro del testo (`.has-qr`).
 - **Titoli corti:** al massimo ~6 parole, senza punto finale.
 - **Inglese:** traduci anche le etichette fisse (vedi la tabella in `brand.md`). I nomi propri
   (team, eventi) restano come li scrive l'utente.
@@ -118,8 +151,8 @@ python3 "$SKILL_DIR/scripts/check.py" assemblea-2026-04-28.html --shots shots/
 ```
 
 Il primo comando crea `assemblea-2026-04-28.html` con immagini e font incorporati. Il secondo
-segnala testo fuori dalla slide o dalle card, font troppo piccoli, segnaposto `.todo` rimasti e
-immagini mancanti. Tutti i `.todo` del template devono sparire: restano solo quelli dei dati che
+segnala testo fuori dalla slide o dalle card, contenuto che copre il titolo, font troppo piccoli,
+segnaposto `.todo` rimasti e immagini mancanti. Tutti i `.todo` del template devono sparire: restano solo quelli dei dati che
 l'utente fornirà dopo.
 
 1. **Errori di `build.py`** (per esempio un'icona sconosciuta): correggi il sorgente e ricompila.
@@ -134,6 +167,10 @@ l'utente fornirà dopo.
    a grandezza piena. `check.py` trova solo problemi di impaginazione; negli screenshot cerca il
    resto:
    - slide troppo vuote (unisci con un'altra o cambia componente) o troppo piene;
+   - troppe slide uguali: nel foglio riassuntivo non devono vedersi file di slide con lo stesso
+     layout. Conta quante volte compare ogni componente e ogni impaginazione, nessuno escluso;
+   - slide sbilanciate: un lato pieno e l'altro vuoto, blocchi staccati, testi corti spezzati su
+     due righe, foto strette o tagliate male, telefono o immagini dritti e rigidi;
    - ripetizioni (la stessa informazione nel riquadro "In breve", nel corpo e nel `.next`);
    - numeri e nomi diversi da come li ha dati l'utente, frasi che aggiungono cose non dette.
 4. **Senza Chrome/Chromium:** se `check.py` non trova il browser, dillo all'utente e indica che il
@@ -213,7 +250,11 @@ cliccabili che portano alle sezioni, contatori delle votazioni fermi.
 ## Modificare una presentazione esistente
 
 1. Modifica il sorgente `.slides.html` (mai l'HTML compilato).
-2. Ricompila con `build.py` e ricontrolla con `check.py`.
+2. Ricompila con `build.py` e ricontrolla con `check.py`, poi guarda lo screenshot della slide
+   cambiata a grandezza piena.
+3. Quando l'utente corregge una slide, cerca lo stesso problema nelle altre e correggilo anche lì.
+   Ma non esagerare nel verso opposto: se toglie un layout ripetuto, non sostituirlo ovunque con
+   un altro (vedi "Varia i layout").
 
 Se l'utente ha solo l'HTML compilato (per esempio l'ha ricevuto da qualcuno), ricava il sorgente:
 

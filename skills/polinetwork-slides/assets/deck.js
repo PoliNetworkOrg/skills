@@ -494,6 +494,30 @@
         const own = [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim());
         if (own && parseFloat(cs.fontSize) < MIN_FONT && !el.closest(".ph, .qr figcaption")) issues.push(`testo troppo piccolo (${cs.fontSize}): ${name}`);
       }
+      // contenuto troppo alto: centrato in verticale, risale sopra titolo e sottotitolo.
+      // Conta solo dove si sovrappone davvero al testo (un telefono alto a destra non copre il titolo a sinistra).
+      const body = s.querySelector(":scope > .body");
+      const headText = [...s.querySelectorAll(":scope > h1, :scope > .kicker, :scope > .sub")].map((h) => {
+        const range = document.createRange();
+        range.selectNodeContents(h);
+        return range.getBoundingClientRect();
+      });
+      if (body && headText.length) {
+        const boxes = [...body.querySelectorAll("*")].filter(
+          (el) => !el.closest(".crumb") && (el.children.length === 0 || el.matches("img, .phone, .qr")) && !el.matches("br, .w") && !el.closest("svg")
+        );
+        let worst = 0;
+        for (const el of boxes) {
+          const r = el.getBoundingClientRect();
+          if (!r.width || !r.height) continue;
+          for (const h of headText) {
+            const dx = Math.min(r.right, h.right) - Math.max(r.left, h.left);
+            const dy = Math.min(r.bottom, h.bottom) - Math.max(r.top, h.top);
+            if (dx > 2 && dy > 2) worst = Math.max(worst, dy);
+          }
+        }
+        if (worst) issues.push(`il contenuto copre il titolo (${px(worst)}px): accorcia, dividi la slide o usa un componente più compatto`);
+      }
       if (READ && s.querySelector(".sticker")) issues.push("sticker nella versione da leggere: toglilo");
       const ag = s.querySelector(".agenda");
       if (READ && ag && ag.children.length > sections.length) issues.push(`indice con ${ag.children.length} voci ma ${sections.length} sezioni: serve una slide con data-section per voce, altrimenti l'indice non è cliccabile`);
