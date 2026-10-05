@@ -194,13 +194,21 @@
     if (li && !root.classList.contains("overview")) go(+li.dataset.goto);
   });
   // barre: data-value
-  document.querySelectorAll(".bars > .bar").forEach((b) => {
-    const v = parseFloat(b.dataset.value || "0");
-    b.style.setProperty("--v", Math.max(0, Math.min(100, v)));
-    if (!b.querySelector("i")) {
-      const label = b.innerHTML;
-      b.innerHTML = `<span>${label}</span><i></i><em>${b.dataset.label || v + "%"}</em>`;
-    }
+  // data-scale="max" sul contenitore: la barra più lunga riempie la riga, le altre in proporzione
+  // (per confrontare voci tra loro, non per un avanzamento su 100) e il valore sta in fondo alla barra
+  document.querySelectorAll(".bars").forEach((c) => {
+    const bars = [...c.querySelectorAll(":scope > .bar")];
+    const rel = c.dataset.scale === "max";
+    const max = Math.max(...bars.map((b) => parseFloat(b.dataset.value || "0")), 1);
+    bars.forEach((b) => {
+      const v = parseFloat(b.dataset.value || "0");
+      b.style.setProperty("--v", rel ? (v / max) * 100 : Math.max(0, Math.min(100, v)));
+      if (!b.querySelector("i")) {
+        const label = b.innerHTML;
+        const em = `<em>${b.dataset.label || v + "%"}</em>`;
+        b.innerHTML = rel ? `<span>${label}</span><i>${em}</i>` : `<span>${label}</span><i></i>${em}`;
+      }
+    });
   });
   // 5x1000: il codice fiscale in caselle, una per cifra (il testo copiato resta il codice intero)
   document.querySelectorAll(".fivex .code > b").forEach((b) => {

@@ -284,6 +284,11 @@ annullato, rosso). Il pallino della riga prende il colore della pill. Max 7 righ
 </div>
 ```
 `data-value` da 0 a 100; `data-label` cambia il testo a destra (di default "80%"). Max 7 barre.
+Così sono barre di **avanzamento** (quanto manca a 100). Per **confrontare voci tra loro** (una
+distribuzione, una classifica: candidature per team, iscritti per corso) metti `data-scale="max"`
+sul contenitore: la voce più grande riempie la riga, le altre in proporzione, barre spesse e il
+valore in fondo a ogni barra, così si capisce a colpo d'occhio. Ordina le voci dalla più grande:
+`<div class="bars glass" data-scale="max">`.
 
 ### Grafico a colonne: `div.columns`
 ```html
