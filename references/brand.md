@@ -73,4 +73,33 @@ lo fornisce l'utente ogni volta, perché cambia. Non riprenderlo da presentazion
 | Grazie dell'attenzione | Thank you |
 | In sviluppo · Live · Pubblicata · Da iniziare | In progress · Live · Published · Not started |
 
+### Etichette della versione autoesplicativa
+
+| IT | EN |
+|---|---|
+| In breve | In short |
+| In sintesi | Key points |
+| Indice | Contents |
+| Parte 1, Parte 2… | Part 1, Part 2… |
+| Perché · Cosa abbiamo fatto · Risultato | Why · What we did · Outcome |
+| Prossimo passo · Cosa ti chiediamo · Scadenza · Contatto | Next step · What we ask you · Deadline · Contact |
+| Quando · Dove · Chi · Com'è andata | When · Where · Who · How it went |
+| Cosa puoi fare tu | What you can do |
+| Glossario | Glossary |
+| Per domande e contatti | Questions and contacts |
+| Verde: completato · Blu: in corso · Grigio: da iniziare | Green: done · Blue: in progress · Grey: not started |
+
+### Definizioni standard per il glossario
+
+Si possono usare senza chiedere, se il termine compare nel documento:
+
+| Termine | IT | EN |
+|---|---|---|
+| 5x1000 | Quota dell'IRPEF che ogni contribuente può destinare a un ente del Terzo Settore, senza costi aggiuntivi. | A share of IRPEF income tax that every taxpayer can give to a third-sector organisation, at no extra cost. |
+| IRPEF | L'imposta sul reddito delle persone fisiche. | Italy's personal income tax. |
+| Terzo Settore | Gli enti senza scopo di lucro che svolgono attività di interesse generale. | Non-profit organisations working for the common good. |
+| APS | Associazione di Promozione Sociale: una forma di ente del Terzo Settore. | Associazione di Promozione Sociale: a type of Italian third-sector association. |
+
+Le definizioni di termini interni (admin, nomi dei team, servizi) le dà sempre l'utente.
+
 Una presentazione è tutta in una lingua: niente slide miste, a parte i nomi propri (anche quelli dei team, se l'utente li dà in inglese).

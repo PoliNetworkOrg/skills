@@ -1,6 +1,6 @@
 ---
 name: polinetwork-slides
-description: Crea presentazioni HTML animate con il tema ufficiale PoliNetwork (glass, forme del sito, font DM Sans/Poppins/Red Hat Text), per assemblee dei soci, general meeting e riunioni dell'associazione. Usala quando qualcuno chiede slide, una presentazione, un deck o un'assemblea PoliNetwork, anche in inglese (slides, presentation, general meeting). Produce un unico file .html che funziona offline e si esporta in PDF. Offre una versione breve o lunga, in italiano o in inglese.
+description: Crea presentazioni HTML animate con il tema ufficiale PoliNetwork (glass, forme del sito, font DM Sans/Poppins/Red Hat Text), per assemblee dei soci, general meeting e riunioni dell'associazione. Usala quando qualcuno chiede slide, una presentazione, un deck o un'assemblea PoliNetwork, anche in inglese (slides, presentation, general meeting). Produce un unico file .html che funziona offline e si esporta in PDF. Offre tre versioni: breve, lunga e autoesplicativa (densa, da leggere senza chi presenta o da mandare a chi non c'era, anche ricavata da una presentazione già fatta), in italiano o in inglese.
 metadata:
   short-description: Presentazioni HTML animate con il tema PoliNetwork
 ---
@@ -23,6 +23,7 @@ standard di `references/brand.md` (codice fiscale, sito, link al recruiting, tes
 |---|---|
 | `templates/breve.slides.html` | Scaletta breve, ~8 slide (10-15 minuti), solo segnaposto |
 | `templates/lunga.slides.html` | Scaletta lunga, ~25 slide (assemblea completa), solo segnaposto |
+| `templates/autoesplicativa.slides.html` | Scaletta da leggere da soli, ~19 slide dense, solo segnaposto |
 | `references/components.md` | Catalogo dei componenti con markup e limiti. **Leggilo prima di scrivere.** |
 | `references/brand.md` | Tono, dati fissi (codice 5x1000, link), testi standard IT/EN |
 | `scripts/build.py` | Compila il sorgente in un unico HTML autonomo |
@@ -35,12 +36,16 @@ che l'utente ha già detto.
 
 1. **Versione:**
    - **breve**, ~8 slide: aggiornamento veloce o riunione;
-   - **lunga**, ~25 slide: assemblea dei soci completa, con team, bilancio, votazione e 5x1000.
+   - **lunga**, ~25 slide: assemblea dei soci completa, con team, bilancio, votazione e 5x1000;
+   - **autoesplicativa**, ~15-20 slide dense: da mandare a chi non c'era o da leggere in differita,
+     senza nessuno che presenta. Ogni slide si capisce da sola (vedi
+     [Versione autoesplicativa](#versione-autoesplicativa)).
 2. **Lingua:** italiano o inglese. Tutta la presentazione è in una lingua sola.
 3. **Occasione:** che cosa è (Assemblea dei Soci, General Meeting…), data e luogo.
 4. **Contenuti:** argomenti, numeri, persone, eventi, scadenze, oppure materiale da cui partire
    (appunti, verbale, documento, vecchia presentazione).
 5. **Immagini:** foto, sticker e screenshot che vuole usare. Vanno messi nella cartella `img/`.
+   Nella versione autoesplicativa niente sticker.
 
 Se i contenuti sono troppo pochi per la versione scelta, dillo e chiedi di più, oppure proponi la
 versione breve. Non riempire i buchi da solo.
@@ -65,7 +70,8 @@ Lavora nella cartella indicata dall'utente. Se non ne indica una, lavora in quel
    ```
 2. Aggiorna il commento in testa al file con `title:` (titolo della scheda del browser) e
    `lang: it` oppure `lang: en`. Cancella il secondo commento, quello che inizia con
-   "TEMPLATE BREVE" o "TEMPLATE LUNGO".
+   "TEMPLATE BREVE", "TEMPLATE LUNGO" o "TEMPLATE AUTOESPLICATIVO". Nella versione autoesplicativa
+   lascia `mode: lettura`.
 
 ## 4. Scrivi le slide
 
@@ -103,8 +109,12 @@ l'utente fornirà dopo.
 
    Non rimpicciolire i font. Ricompila e ricontrolla finché `check.py` non riporta più problemi di
    layout.
-3. **Screenshot:** guarda `shots/contact-sheet.png` (se c'è) o le singole `shots/slide-NN.png`.
-   Controlla che le slide siano equilibrate, leggibili e senza sovrapposizioni.
+3. **Screenshot:** guarda `shots/contact-sheet.png` (se c'è) e almeno qualche `shots/slide-NN.png`
+   a grandezza piena. `check.py` trova solo problemi di impaginazione; negli screenshot cerca il
+   resto:
+   - slide troppo vuote (unisci con un'altra o cambia componente) o troppo piene;
+   - ripetizioni (la stessa informazione nel riquadro "In breve", nel corpo e nel `.next`);
+   - numeri e nomi diversi da come li ha dati l'utente, frasi che aggiungono cose non dette.
 4. **Senza Chrome/Chromium:** se `check.py` non trova il browser, dillo all'utente e indica che il
    layout non è stato verificato.
 5. **Pulizia:** cancella la cartella `shots/` prima di consegnare, a meno che l'utente non chieda
@@ -124,6 +134,54 @@ Comunica all'utente:
   - P (o Ctrl+P) per la finestra presentatore con note e timer;
   - S per stampare o esportare in PDF: Salva come PDF, margini "Nessuno", "Grafica di sfondo"
     attiva (su Firefox "Stampa sfondi").
+
+## Versione autoesplicativa
+
+È la presentazione da **leggere**, non da proiettare: la si manda dopo l'assemblea o a chi non
+c'era, e deve capirsi tutto senza nessuno che parla. Usa le stesse regole sui contenuti: solo
+quello che dà l'utente, mai fatti inventati.
+
+**Come si attiva:** `mode: lettura` nel commento in testa al file. Testo più piccolo e più denso,
+niente sticker, numero di pagina "05 / 19", nome della sezione in alto a destra, voci dell'indice
+cliccabili che portano alle sezioni, contatori delle votazioni fermi.
+
+**Come si scrive:**
+- **Titoli che dicono la conclusione** ("Il sito è online da settembre"), non solo l'argomento
+  ("Sito web"). Qui possono arrivare a ~10 parole.
+- **Frasi complete** al posto delle parole chiave: chi, cosa, quando, perché, con i numeri.
+- **Un "In breve" (`.summary`)** in cima alle slide di contenuto: la frase da leggere per prima.
+- **Spiegare** con `.cols` (perché / cosa abbiamo fatto / risultato), `dl.facts` (quando, dove,
+  chi) e `.next` (prossimo passo o cosa chiediamo a chi legge).
+- **Struttura fissa:** copertina con `.intro` (cos'è il documento e per chi), "In sintesi"
+  (`ol.points`), indice, poi le sezioni; in fondo "Cosa puoi fare tu", glossario delle sigle
+  (`dl.terms`) e a chi scrivere per domande.
+- **Votazioni:** riporta l'esito finale (numeri e timbro "Approvato" o "Respinto"), non i
+  contatori da cliccare.
+- **Niente "Domande?"** come slide a sé: al suo posto la chiusura "Per domande e contatti".
+- **Un divisore (`.section`) per ogni voce dell'indice**, nello stesso ordine: servono per l'indice
+  cliccabile e per il nome della sezione in alto a destra. Le slide finali fuori dalle sezioni
+  ("Cosa puoi fare tu", glossario) hanno `data-crumb="off"`.
+- **Etichette in inglese:** vedi la tabella "Versione autoesplicativa" in `brand.md`.
+- I limiti di testo per la lettura sono nel catalogo, sezione "Versione autoesplicativa".
+
+**Trasformare una presentazione già fatta** (breve o lunga):
+1. **Parti dal template autoesplicativo**, non dal vecchio file: copia
+   `templates/autoesplicativa.slides.html` in un nuovo nome, per esempio
+   `assemblea-2026-04-28-lettura.slides.html`, e versaci dentro i contenuti della presentazione
+   originale. Il sorgente originale non si tocca.
+2. **Fonti:** testo delle slide, note di chi parla (`<aside class="notes">`, se ci sono), verbale e
+   materiali dati dall'utente. Non c'è altro: niente sticker, niente "Domande?", niente
+   contatori di voto da cliccare.
+3. **Ricostruisci le sezioni:** una voce dell'indice per ogni gruppo di argomenti, con il suo
+   divisore. Togli dall'indice voci come "Domande" o "Q&A".
+4. **Chiedi quello che manca, in un solo messaggio, prima di scrivere:** il perché delle scelte,
+   i risultati, le date, gli esiti e i numeri delle votazioni, le definizioni delle sigle. Se la
+   presentazione non ha note, quasi tutte le spiegazioni arriveranno da queste risposte. Quello
+   che l'utente non sa resta `.todo`.
+5. **Espandi** ogni slide in frasi complete usando solo le fonti e le risposte. Riporta i numeri
+   esattamente come sono (se l'originale dice "1000+ persone", non diventano "1000+ matricole") e
+   non aggiungere motivazioni o intenzioni che nessuno ha dato.
+6. Proponi la scaletta come al punto 2, poi compila e controlla come sempre.
 
 ## Modificare una presentazione esistente
 

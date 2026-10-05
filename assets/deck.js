@@ -11,6 +11,7 @@
   const CHECK = params.has("check");
   const EMBED = params.has("embed");
   const PRESENTER = params.has("presenter");
+  const READ = root.classList.contains("read");
   if (STATIC) root.classList.add("static");
   if (EMBED) root.classList.add("embed");
 
@@ -36,11 +37,17 @@
     ".agenda > li", ".irows > li", ".cards > *", ".stats > *", ".teams > *", ".timeline > li", ".compare > *",
     ".team > *", ".split > *", ".budget > .glass", ".fivex > *", ".vote > *", ".gallery > figure", ".people > .person",
     ".links > li", ".cover .meta", ".cover .orbit", ".cover .brand", ".lockup", ".media > *", ".legend > li", "table.status tr",
-    ".bars > .bar", ".cloud > span", ".thanks .qr",
+    ".bars > .bar", ".cloud > span", ".thanks .qr", ".body > .summary", ".body > .next", ".body > dl", ".cols > *",
+    "ol.points > li", "dl.terms > div", ".cover .intro",
   ].join(",");
 
+  let sectionTitle = "";
   slides.forEach((s, idx) => {
     const centered = CENTERED.some((c) => s.classList.contains(c));
+    if (s.classList.contains("section")) sectionTitle = (s.querySelector(":scope > h1")?.textContent || "").trim();
+    // lettura: in alto a destra la sezione in cui si è
+    const crumb = s.dataset.crumb === "off" ? "" : s.dataset.crumb || sectionTitle;
+    if (READ && !centered && crumb) s.insertAdjacentHTML("afterbegin", `<div class="crumb">${crumb.replace(/</g, "&lt;")}</div>`);
     // contenuto sotto il titolo in un .body centrato in verticale
     if (!centered && !s.querySelector(":scope > .body")) {
       const body = document.createElement("div");
@@ -82,7 +89,8 @@
     // footer e numero
     if (s.dataset.footer !== "off" && !s.classList.contains("cover")) {
       s.insertAdjacentHTML("beforeend", '<div class="slide-foot"><span class="logo"></span>PoliNetwork</div>');
-      if (!centered) s.insertAdjacentHTML("beforeend", `<div class="slide-num">${String(idx + 1).padStart(2, "0")}</div>`);
+      const num = String(idx + 1).padStart(2, "0") + (READ ? ` / ${String(total).padStart(2, "0")}` : "");
+      if (!centered) s.insertAdjacentHTML("beforeend", `<div class="slide-num">${num}</div>`);
     }
     // animazioni d'ingresso a cascata
     let k = 0;
@@ -103,10 +111,16 @@
   });
   // colonne esplicite
   document.querySelectorAll("[data-cols]").forEach((el) => el.style.setProperty("--cols", el.dataset.cols));
-  // agenda: righe per colonna
+  // agenda: righe per colonna; in lettura ogni voce porta alla sezione corrispondente
+  const sections = slides.filter((s) => s.classList.contains("section"));
   document.querySelectorAll(".agenda").forEach((el) => {
     const n = el.children.length;
     el.style.setProperty("--rows", n > 6 ? Math.ceil(n / 2) : n);
+    if (READ && sections.length >= n) [...el.children].forEach((li, i) => li.setAttribute("data-goto", slides.indexOf(sections[i])));
+  });
+  document.addEventListener("click", (e) => {
+    const li = e.target.closest("[data-goto]");
+    if (li && !root.classList.contains("overview")) go(+li.dataset.goto);
   });
   // barre: data-value
   document.querySelectorAll(".bars > .bar").forEach((b) => {
@@ -380,7 +394,7 @@
       const px = (v) => Math.round(v / scale);
       const foot = s.querySelector(".slide-foot");
       const footTop = foot ? foot.getBoundingClientRect().top : sr.bottom;
-      const els = [...s.querySelectorAll("*")].filter((el) => !el.closest(".notes, .slide-foot, .slide-num, .orbit, .bg, svg") && !el.matches(".sticker, .w, br"));
+      const els = [...s.querySelectorAll("*")].filter((el) => !el.closest(".notes, .slide-foot, .slide-num, .crumb, .orbit, .bg, svg") && !el.matches(".sticker, .w, br"));
       for (const el of els) {
         const r = el.getBoundingClientRect();
         if (!r.width && !r.height) continue;
@@ -409,6 +423,9 @@
         const own = [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim());
         if (own && parseFloat(cs.fontSize) < MIN_FONT && !el.closest(".ph, .qr figcaption")) issues.push(`testo troppo piccolo (${cs.fontSize}): ${name}`);
       }
+      if (READ && s.querySelector(".sticker")) issues.push("sticker nella versione da leggere: toglilo");
+      const ag = s.querySelector(".agenda");
+      if (READ && ag && ag.children.length > sections.length) issues.push(`indice con ${ag.children.length} voci ma ${sections.length} divisori: serve un divisore (.section) per voce, altrimenti l'indice non è cliccabile`);
       if (s.querySelector(".ph")) issues.push(`immagini mancanti: ${[...s.querySelectorAll(".ph span:last-child")].map((x) => x.textContent).join(", ")}`);
       const todos = [...s.querySelectorAll(".todo")].map((x) => x.textContent.trim());
       if (todos.length) issues.push(`dati da completare (.todo): ${todos.join(" · ")}`);

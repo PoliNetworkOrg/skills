@@ -146,7 +146,10 @@ Con Git: `cd ~/polinetwork-slides && git pull`. Con `$skill-installer`: cancella
 
 1. **Versione:**
    - **breve**, circa 8 slide: aggiornamenti e riunioni da 10-15 minuti;
-   - **lunga**, circa 25 slide: assemblea completa, con team, bilancio, votazione e 5x1000.
+   - **lunga**, circa 25 slide: assemblea completa, con team, bilancio, votazione e 5x1000;
+   - **autoesplicativa**, circa 15-20 slide più dense: da mandare a chi non c'era o da leggere in
+     differita. Ogni slide si capisce da sola, con frasi complete, un riquadro "In breve",
+     una sintesi iniziale, l'indice cliccabile e il glossario delle sigle. Niente sticker.
 2. **Lingua:** italiano o inglese.
 3. **Occasione:** che incontro è, data e luogo.
 4. **Contenuti:** argomenti, numeri, persone, eventi, scadenze.
@@ -159,6 +162,17 @@ con il loro contenuto: controllala e correggila.
 
 Se un dato non ce l'hai ancora (per esempio una cifra del bilancio), di' "lascialo da completare":
 nella slide comparirà evidenziato in azzurro, tipo `[€]`.
+
+### Versione da leggere a partire da una già fatta
+
+Dopo l'assemblea puoi chiedere, nella stessa cartella:
+
+> Fai la versione autoesplicativa di assemblea-2026-11-15.
+
+L'assistente parte dalla presentazione proiettata, trasforma le note di chi ha parlato in testo
+nelle slide e ti chiede, in un solo messaggio, le informazioni che mancano per spiegare tutto (per
+esempio l'esito delle votazioni). Il risultato è un file separato, per esempio
+`assemblea-2026-11-15-lettura.html`.
 
 ### I file che ottieni
 

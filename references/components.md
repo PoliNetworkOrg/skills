@@ -294,6 +294,84 @@ Testo standard in `brand.md`. Struttura:
 </div>
 ```
 
+## Versione autoesplicativa (`mode: lettura`)
+
+Con `mode: lettura` nel commento in testa al file tutti i componenti sopra restano validi, con
+testo più piccolo e limiti più larghi. In più ci sono i componenti qui sotto. Niente sticker.
+
+| Componente | Limite in lettura |
+|---|---|
+| Titolo `h1` | ~10 parole, una riga e mezza |
+| `ul.irows` | 4 righe; `<b>` ~8 parole + `<small>` ~20 parole |
+| `div.cards` | 4-6 card, ~35 parole per card |
+| `table.status` | 6 righe, con `<small>` di spiegazione |
+| `ol.timeline` | 3-4 tappe, ~20 parole per `<p>` |
+| Paragrafi in `.cols` | ~50 parole per colonna |
+
+### In breve: `div.summary`
+```html
+<div class="summary"><span class="label">In breve</span><p>Il sito è online da settembre e ha già 3 000 visite al mese.</p></div>
+```
+Una o due frasi, in cima alla slide, subito sotto il titolo. Max ~35 parole.
+
+### Colonne di spiegazione: `div.cols`
+```html
+<div class="cols">
+  <div><h3><i data-icon="lightbulb"></i>Perché</h3><p>Due o tre frasi.</p></div>
+  <div><h3><i data-icon="wrench"></i>Cosa abbiamo fatto</h3><p>…</p></div>
+  <div><h3><i data-icon="trending-up"></i>Risultato</h3><p>…</p></div>
+</div>
+```
+2 o 3 colonne; dentro anche più `<p>` o un `<ul>`. Icona nel titolo facoltativa.
+
+### Prossimo passo: `p.next`
+```html
+<p class="next"><i data-icon="arrow-right"></i><b>Prossimo passo</b>Lancio con l'evento matricole, a settembre.</p>
+```
+Una riga in fondo alla slide. Altre etichette: "Cosa ti chiediamo", "Scadenza", "Contatto".
+
+### Scheda dei fatti: `dl.facts`
+```html
+<dl class="facts glass">
+  <dt>Quando</dt><dd>6 marzo, 17:00–20:00</dd>
+  <dt>Dove</dt><dd>Piazza Leonardo da Vinci</dd>
+  <dt>Chi</dt><dd>400+ persone</dd>
+</dl>
+```
+Max 6 righe. Per eventi, iniziative, decisioni. Va bene anche dentro `div.split` accanto alle foto.
+
+### Punti chiave: `ol.points`
+```html
+<ol class="points">
+  <li><b>Il sito è online</b>Da settembre, con pagine per team e matricole.</li>
+  …
+</ol>
+```
+Per la slide "In sintesi": 4-6 punti, numerati da soli, ~20 parole ciascuno.
+
+### Glossario: `dl.terms`
+```html
+<dl class="terms">
+  <div><dt>APS</dt><dd>Associazione di Promozione Sociale: la forma giuridica di PoliNetwork.</dd></div>
+  …
+</dl>
+```
+Max 8 termini, meglio in numero pari (sono su due colonne). Solo sigle e nomi che compaiono
+davvero nel documento: definizioni standard da `brand.md`, quelle dei termini interni dall'utente.
+Se l'utente chiede un termine che non compare, prima inseriscilo dove serve nel testo.
+
+### Altro in lettura
+- **Copertina:** `<p class="intro">…</p>` dopo `.meta`, una o due frasi su cos'è il documento.
+- **Divisori:** `<p class="sub">` con una frase su cosa contiene la sezione.
+- **Indice:** le voci di `ol.agenda` portano alle sezioni nell'ordine dei divisori, quindi tieni
+  lo stesso numero di voci e di divisori (`check.py` lo segnala). Con meno di 4 sezioni,
+  valuta di togliere l'indice: "In sintesi" basta.
+- **Nome della sezione in alto a destra:** automatico, preso dall'ultimo divisore.
+  `data-crumb="off"` sulla section lo toglie, `data-crumb="Altro testo"` lo sostituisce.
+- **Timeline:** vale la regola di sempre, solo tappe con una data o un periodo.
+- **Esito di una votazione:** `div.vote` con i numeri finali e `<span class="stamp ok">Approvato</span>`
+  (o `<span class="stamp">Respinto</span>`) dentro il `div.vote`.
+
 ## Animazioni
 
 Sono automatiche: ogni elemento dei componenti entra a cascata, i titoli di

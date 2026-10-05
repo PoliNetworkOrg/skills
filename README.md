@@ -8,7 +8,8 @@ I contenuti li decide sempre chi usa la skill: i template sono scalette con soli
 l'agente non aggiunge fatti, numeri o nomi che l'utente non ha dato.
 
 All'avvio l'agente chiede tre cose:
-- **la versione:** breve (~8 slide) o lunga (~25 slide);
+- **la versione:** breve (~8 slide), lunga (~25 slide) o autoesplicativa (~15-20 slide dense,
+  da leggere senza nessuno che presenta; si può anche ricavare da una già fatta);
 - **la lingua:** italiano o inglese;
 - **i contenuti:** argomenti, numeri, persone, date.
 
@@ -43,7 +44,7 @@ Il markup di ogni componente è in [references/components.md](references/compone
 
 ```
 SKILL.md                  istruzioni per l'agente (procedura, regole)
-templates/                breve.slides.html, lunga.slides.html (scalette con soli segnaposto)
+templates/                breve, lunga, autoesplicativa (.slides.html, scalette con soli segnaposto)
 references/components.md  catalogo dei layout con markup e limiti
 references/brand.md       tono, dati fissi, testi standard IT/EN
 assets/theme.css          tema: token del sito, glass, layout, animazioni, stampa

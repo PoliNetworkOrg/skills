@@ -11,6 +11,7 @@ con i metadati:
     <!--
     title: Assemblea dei Soci – 28 aprile 2026
     lang: it
+    mode: lettura        (facoltativo: versione autoesplicativa)
     -->
 
 Il risultato include tema, motore, font, logo, forme di sfondo, le sole icone
@@ -180,6 +181,8 @@ def main() -> int:
     if args.extract:
         return extract(args.source.resolve(), args.out)
 
+    warnings: list[str] = []
+    errors: list[str] = []
     src: Path = args.source.resolve()
     text = src.read_text(encoding="utf-8")
     original = text
@@ -193,9 +196,10 @@ def main() -> int:
         text = text[m.end():]
     title = meta.get("title", "PoliNetwork")
     lang = meta.get("lang", "it")
-
-    warnings: list[str] = []
-    errors: list[str] = []
+    mode = meta.get("mode", "").lower()
+    if mode not in ("", "presentazione", "lettura"):
+        errors.append(f'mode "{mode}" non valido: usa "presentazione" (default) o "lettura"')
+    html_class = ' class="read"' if mode == "lettura" else ""
 
     # icone: <i data-icon="nome"></i> → <svg><use/></svg>
     known = set(available_icons())
@@ -252,7 +256,7 @@ def main() -> int:
     css = (ASSETS / "theme.css").read_text(encoding="utf-8")
     js = (ASSETS / "deck.js").read_text(encoding="utf-8")
     doc = f"""<!doctype html>
-<html lang="{html.escape(lang)}">
+<html lang="{html.escape(lang)}"{html_class}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
