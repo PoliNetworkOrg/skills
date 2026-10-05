@@ -304,10 +304,15 @@ Max 5 voci per colonna. **Usa solo cifre date dall'utente**: mai inventarle o st
 Contatori live durante l'assemblea: clic +1, Maiusc+clic −1.
 
 ### 5x1000: `div.fivex`
-Testo standard in `brand.md`. Struttura:
+Testo standard in `brand.md`: copialo così com'è. A sinistra i tre passi, a destra il codice in grande.
 ```html
+<p class="sub">Una quota IRPEF già trattenuta: non è una spesa in più, scegli tu dove va.</p>
 <div class="fivex">
-  <div class="glass"><h3>Cos'è?</h3><p>…</p><h3>Come farlo?</h3><p>…</p></div>
+  <ul class="irows">
+    <li><i data-icon="file-text"></i><p><b>Compila la dichiarazione</b><small>…</small></p></li>
+    <li><i data-icon="pen-tool"></i><p><b>Firma nel riquadro</b><small>…</small></p></li>
+    <li><i data-icon="hand-coins"></i><p><b>Scrivi il codice fiscale</b><small>…</small></p></li>
+  </ul>
   <div class="glass tint code"><span class="label">Il nostro codice fiscale</span><b>97927490157</b><p>…</p></div>
 </div>
 ```

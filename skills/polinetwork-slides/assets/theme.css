@@ -1471,40 +1471,31 @@ table.status td small {
 }
 
 /* ================= 5x1000 ================= */
+/* a sinistra i tre passi (ul.irows), a destra il codice fiscale in grande */
 .fivex {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-  gap: 30px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 40px;
   align-items: stretch;
-}
-.fivex h3 {
-  font-size: 26px;
-  margin: 0 0 8px;
-  color: var(--blue-2);
-}
-.fivex p + h3 {
-  margin-top: 26px;
-}
-.fivex p {
-  font-size: 23px;
 }
 .fivex .code {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 22px;
+  padding: 48px 40px;
   text-align: center;
-  gap: 18px;
 }
 .fivex .code b {
-  font: 500 66px/1 var(--font-display);
-  letter-spacing: 0.04em;
+  font: 500 80px/1 var(--font-display);
+  letter-spacing: 0.02em;
   color: var(--pn-blue);
   font-variant-numeric: tabular-nums;
 }
 .fivex .code p {
-  font-size: 21px;
   max-width: 440px;
+  font-size: 21px;
 }
 
 /* ================= Votazione ================= */

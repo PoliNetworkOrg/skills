@@ -42,15 +42,21 @@ lo fornisce l'utente ogni volta, perché cambia. Non riprenderlo da presentazion
 
 ### 5x1000 (IT)
 - Titolo: **5x1000: non ti costa nulla**
-- Cos'è? Una quota IRPEF che puoi destinare liberamente a un ente del Terzo Settore. Non è una spesa aggiuntiva: è già trattenuta. Scegli tu dove va.
-- Come farlo? Nella dichiarazione dei redditi, firma in "Sostegno degli enti del Terzo Settore" e scrivi il codice fiscale di PoliNetwork.
-- Il nostro codice fiscale: 97927490157. Passalo anche ai tuoi familiari: anche loro possono farlo, a costo zero.
+- Sottotitolo: Una quota IRPEF già trattenuta: non è una spesa in più, scegli tu dove va.
+- Passi:
+  1. **Compila la dichiarazione** · dei redditi, come ogni anno
+  2. **Firma nel riquadro** · "Sostegno degli enti del Terzo Settore"
+  3. **Scrivi il codice fiscale** · quello di PoliNetwork, qui accanto
+- Codice: Il nostro codice fiscale · **97927490157** · Passalo anche ai tuoi familiari: anche loro possono farlo, a costo zero.
 
 ### 5x1000 (EN)
 - Title: **5x1000: it won't cost you a thing**
-- What is it? A portion of your IRPEF tax that you can freely allocate to a third-sector organisation. It's not an extra cost: it's already deducted. You decide where it goes.
-- How do you do that? On your tax return, sign the box "Support for third-sector organisations" and enter PoliNetwork's tax code.
-- Our tax code: 97927490157. Share it with your family too: they can do it at no cost.
+- Subtitle: A share of your IRPEF tax that's already deducted: no extra cost, you choose where it goes.
+- Steps:
+  1. **Fill in your tax return** · as you do every year
+  2. **Sign the box** · "Support for third-sector organisations"
+  3. **Enter the tax code** · PoliNetwork's, shown here
+- Code: Our tax code · **97927490157** · Share it with your family too: they can do it at no cost.
 
 ### Etichette ricorrenti
 
