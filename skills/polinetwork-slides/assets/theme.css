@@ -872,6 +872,11 @@ dl.terms > div {
 .cards > * > p {
   font-size: 22px;
 }
+/* stato del progetto dentro la card, sotto il titolo */
+.cards > * > .pill {
+  justify-self: start;
+  align-self: start;
+}
 
 /* ================= Numeri in evidenza ================= */
 .stats {

@@ -525,6 +525,10 @@
           if (r.right > g.right + 2 || r.bottom > g.bottom + 2) {
             issues.push(`testo fuori dalla card: ${name}`);
             el.setAttribute("data-overflow", "");
+          } else if (cs.display !== "inline" && el.clientWidth > 0 && el.scrollWidth > el.clientWidth + 2) {
+            // una parola che non va a capo (un dominio, un nome lungo) esce dal suo riquadro anche se il riquadro sta nella card
+            issues.push(`testo più largo della card: ${name}`);
+            el.setAttribute("data-overflow", "");
           }
         }
         const own = [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim());

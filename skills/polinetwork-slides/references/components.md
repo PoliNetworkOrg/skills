@@ -223,6 +223,12 @@ slide di fila. Per passi numerati c'è `ol.points`, per chi/quando/dove `dl.fact
 </div>
 ```
 2 o 4 card → 2 colonne; 3, 5, 6 → 3 colonne; 7-8 → 4. Forzare: `data-cols="3"`.
+**Stato dei progetti:** una card per progetto con lo stato sotto il nome, ordinate dal più avanti
+al più indietro (pill come in `table.status`), più bella e leggibile della tabella quando i
+progetti sono 4-6:
+`<div><i data-icon="globe"></i><h3>Sito web</h3><span class="pill wip">In corso</span><p>Redesign</p></div>`.
+Un nome lungo senza spazi (un dominio) non va a capo: se `check.py` dice "testo più largo della
+card", togli lo sticker dalla slide o usa meno colonne.
 Max ~20 parole per card. L'icona è facoltativa: sta sulla riga del titolo, accanto a `h3`.
 Per persone o voci brevi (per esempio chi guida ogni team) usa un'etichetta sopra al titolo:
 `<div><span class="label">IT</span><h3>Nome Cognome<br>Nome Cognome</h3></div>`. I nomi devono
