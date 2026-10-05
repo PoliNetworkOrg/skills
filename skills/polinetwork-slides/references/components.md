@@ -80,6 +80,11 @@ Un nome sbagliato fa fallire `build.py`, che suggerisce i nomi più vicini.
   l'header dell'app:
   `magick shot.jpg -crop 584x1176+0+104 +repage -background "<colore header>" -gravity north -splice 0x56 img/app.jpg`
   (il colore si legge con `magick shot.jpg -format "%[pixel:p{3,120}]" info:`).
+- **Progetti e app: più schermate.** Un progetto non si racconta con una schermata sola. Mostrane
+  2-4, ognuna con una funzione diversa (elenco, filtri, dettaglio, mappa…): una slide `split`
+  con la descrizione e la schermata principale, poi una slide `div.screens` con le altre, oppure
+  una slide per funzione, ognuna con la sua schermata. Le schermate di uno stesso progetto
+  devono avere lo stesso tema e la stessa larghezza.
 - **Inclinazione:** telefono e immagini scontornate stanno meglio un po' storti che dritti:
   `class="phone tilt"`, `class="cutout tilt"` (8°, `tilt-left` per −8°). A destra `tilt`, a
   sinistra (`split media-left`) `tilt-left`, così l'immagine pende sempre verso l'esterno.
@@ -359,6 +364,29 @@ Larghezza di default 170 px; se il testo accanto va a capo, stringilo con `style
 </div>
 ```
 2-4 foto, didascalia facoltativa.
+
+### Schermate di un'app: `div.screens`
+```html
+<div class="screens">
+  <figure><div class="phone"><img src="img/app-elenco.jpg" alt=""></div><figcaption>Cerca e filtra<small>per orario, prese, capienza</small></figcaption></figure>
+  <figure><div class="phone"><img src="img/app-mappa.jpg" alt=""></div><figcaption>Mappa del campus</figcaption></figure>
+  …
+</div>
+```
+3-4 telefoni in fila, inclinati da soli a destra e a sinistra, con sotto cosa mostra ogni
+schermata (max ~4 parole, `<small>` facoltativo con ~6 parole). Senza altro componente nella
+slide, al massimo un `.sub` o un `p.small`. Ogni schermata deve mostrare una cosa diversa.
+Con **2 schermate** da sole la slide resta vuota ai lati: mettile in un `div.split` al posto di
+`.media`, accanto a un `ul.irows` con quello che si vede nelle schermate, senza didascalie:
+```html
+<div class="split media-left">
+  <ul class="irows">…</ul>
+  <div class="screens">
+    <figure><div class="phone"><img src="img/app-dettaglio.jpg" alt=""></div></figure>
+    <figure><div class="phone"><img src="img/app-mappa.jpg" alt=""></div></figure>
+  </div>
+</div>
+```
 
 ### Bilancio: `div.budget`
 ```html

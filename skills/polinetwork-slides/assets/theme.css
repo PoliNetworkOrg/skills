@@ -1388,45 +1388,95 @@ table.status td small {
   translate: 0 18px;
 }
 
+/* ================= Schermate di un'app: telefoni in fila ================= */
+.screens {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 64px;
+}
+.screens > figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+}
+.screens .phone {
+  width: 215px;
+}
+.screens > figure:nth-child(odd) > .phone {
+  rotate: -3deg;
+}
+.screens > figure:nth-child(even) > .phone {
+  rotate: 3deg;
+  translate: 0 14px;
+}
+.screens > figure > figcaption {
+  max-width: 300px;
+  text-align: center;
+  font: 500 22px/1.3 var(--font-headline);
+  color: var(--title);
+}
+.screens > figure > figcaption small {
+  display: block;
+  margin-top: 4px;
+  font: 400 18px/1.35 var(--font-body);
+  color: var(--text-3);
+}
+
 /* ================= Timeline ================= */
+/* un punto centrato sopra ogni tappa, un segmento da ogni punto al successivo */
 .timeline {
+  --tl-gap: 22px;
   list-style: none;
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: minmax(0, 1fr);
-  gap: 22px;
-  position: relative;
-  padding-top: 56px;
-}
-.timeline::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 18px;
-  height: 4px;
-  border-radius: 4px;
-  background: linear-gradient(90deg, var(--blue-3), var(--blue), var(--blue-2));
-  transform-origin: left;
-}
-.slide.active .timeline::before {
-  animation: barIn 1.4s var(--ease) 0.3s both;
+  gap: var(--tl-gap);
+  padding-top: 64px;
 }
 .timeline > li {
   padding: 26px 28px 30px;
+  text-align: center;
 }
 .timeline > li::before {
   content: "";
   position: absolute;
-  top: -48px;
-  left: 28px;
-  width: 24px;
-  height: 24px;
+  z-index: 1;
+  top: -50px;
+  left: 50%;
+  box-sizing: border-box;
+  width: 28px;
+  height: 28px;
+  margin-left: -14px;
   border-radius: 50%;
   background: #fff;
-  border: 6px solid var(--blue);
-  box-shadow: 0 0 0 6px rgb(255 255 255 / 0.6);
+  border: 7px solid var(--blue);
+  box-shadow:
+    0 0 0 6px rgb(255 255 255 / 0.7),
+    0 8px 16px -6px rgb(17 86 174 / 0.55);
 }
+.timeline > li:last-child::before {
+  border-color: var(--blue-2);
+}
+.timeline > li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: -38px; /* centro del punto: -50 + 28/2 - 4/2 */
+  left: 50%;
+  width: calc(100% + var(--tl-gap));
+  height: 4px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--blue), var(--blue-2));
+  transform-origin: left;
+}
+.slide.active .timeline > li:not(:last-child)::after {
+  animation: barIn 0.8s var(--ease) both;
+  animation-delay: calc(0.35s + var(--tl-i, 0) * 0.25s);
+}
+.timeline > li:nth-child(2) { --tl-i: 1; }
+.timeline > li:nth-child(3) { --tl-i: 2; }
+.timeline > li:nth-child(4) { --tl-i: 3; }
 .timeline > li > .when {
   display: block;
   font: 500 19px/1.2 var(--font-body);

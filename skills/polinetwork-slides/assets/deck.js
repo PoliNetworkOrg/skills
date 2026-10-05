@@ -57,7 +57,7 @@
     ".slide > h1", ".slide > .kicker", ".slide > .sub", ".body > .lead", ".body > .statement", ".body > p", ".body > ul:not([class])",
     ".body > .glass", ".body > .small", ".body > h2", ".body > table", ".body > .bars", ".body > .cloud > h2",
     ".agenda > li", ".irows > li > *", ".cards > *", ".stats > *", ".teams > *", ".timeline > li", ".compare > *",
-    ".team > *", ".split > *", ".budget > .glass", ".fivex > *", ".vote > *", ".gallery > figure", ".people > .person",
+    ".team > *", ".split > *", ".budget > .glass", ".fivex > *", ".vote > *", ".gallery > figure", ".screens > figure", ".people > .person",
     ".links > li", ".cover .meta > span", ".cover .orbit", ".cover .brand", ".lockup", ".media > *", ".legend > li", "table.status tr",
     ".bars > .bar", ".cloud > span", ".thanks .qr", ".body > .summary", ".body > .next", ".body > dl", ".cols > *",
     "ol.points > li", "dl.terms > div", ".cover .intro",

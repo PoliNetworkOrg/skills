@@ -52,8 +52,9 @@ che l'utente ha già detto.
 5. **Contenuti:** argomenti, numeri, persone, eventi, scadenze, oppure materiale da cui partire
    (appunti, verbale, documento, vecchia presentazione).
 6. **Immagini:** foto e screenshot che vuole usare. Vanno messi nella cartella `img/`. Gli
-   screenshot di app meglio in tema chiaro. Per i link da aprire in sala (sito, iscrizione,
-   recruiting) proponi un QR.
+   screenshot di app meglio in tema chiaro. Per ogni progetto o app chiedi 2-4 schermate diverse
+   (elenco, filtri, dettaglio, mappa…), non una sola. Per i link da aprire in sala (sito,
+   iscrizione, recruiting) proponi un QR.
 7. **Con sticker meme o senza?** Si chiede sempre, sia per la parlata sia per l'autoesplicativa.
    Se dice sì, proponi dove metterli (vedi il punto 4): usa quelli che fornisce l'utente oppure i
    meme pronti di `assets/memes/`. Se dice no, niente sticker: togli tutti gli
@@ -123,7 +124,7 @@ Lavora nella cartella indicata dall'utente. Se non ne indica una, lavora in quel
   Scegli in base alla forma del contenuto: elenco di punti con icona → `ul.irows`, numeri →
   `stats`, passi → `ol.points`, tappe con data → `timeline`, oggi/domani → `compare`,
   perché/cosa/risultato → `cols`, chi/quando/dove → `dl.facts`, voci affiancate → `cards`, un
-  evento con foto → `split`, un messaggio → frase a effetto. Già nella scaletta (punto 2) indica il
+  evento con foto → `split`, più schermate di un'app → `screens`, un messaggio → frase a effetto. Già nella scaletta (punto 2) indica il
   componente di ogni slide, il lato dell'immagine o dello sticker se c'è, e controlla che nessuno
   si ripeta troppo.
 - **Componi con cura.** Ogni slide deve essere bilanciata, non solo corretta:
@@ -140,6 +141,8 @@ Lavora nella cartella indicata dall'utente. Se non ne indica una, lavora in quel
   immagini scontornate inclinati (`tilt`); gli scontornati dentro la slide (`img.cutout`), non
   attaccati al bordo. Ogni persona con la foto una volta sola. QR per i link da aprire in sala,
   con il link verificato, senza didascalia, nello stesso riquadro del testo (`.has-qr`).
+  Un progetto o un'app si mostra con più schermate, anche su più slide (`split` con la schermata
+  principale, poi `div.screens` con le altre, oppure una slide per funzione).
 - **Titoli corti:** al massimo ~6 parole, senza punto finale.
 - **Inglese:** traduci anche le etichette fisse (vedi la tabella in `brand.md`). I nomi propri
   (team, eventi) restano come li scrive l'utente.
