@@ -1,84 +1,46 @@
-# PoliNetwork Slides
+# PoliNetwork Skills
 
-Skill per agenti AI (Claude Code e Codex) che crea le presentazioni delle assemblee
-PoliNetwork: un unico file HTML animato, con il tema del sito, che funziona offline e si
-esporta in PDF.
+Skill per agenti AI (Claude, Claude Code, Codex e gli altri agenti supportati da
+[`npx skills`](https://github.com/vercel-labs/skills)) usate da PoliNetwork APS.
 
-I contenuti li decide sempre chi usa la skill: i template sono scalette con soli segnaposto e
-l'agente non aggiunge fatti, numeri o nomi che l'utente non ha dato.
+## Skill disponibili
 
-All'avvio l'agente chiede:
-- **a voce o da leggere:** se qualcuno la presenta o se si manda da leggere senza nessuno che
-  presenta (la versione da leggere si può anche ricavare da una già fatta);
-- **quanto densa:** essenziale o completa. A voce diventa breve (~8 slide) o lunga (~25 slide),
-  da leggere diventa autoesplicativa compatta (~8-12 slide) o completa (~15-20 slide);
-- **la lingua:** italiano o inglese;
-- **i contenuti:** argomenti, numeri, persone, date.
-
-Poi propone la scaletta, aspetta la conferma, compone le slide con i componenti del tema,
-compila il file e lo controlla con gli screenshot.
-
-## Installazione e uso
-
-Le istruzioni passo passo per Claude (sito e app), Claude Code e Codex sono in
-**[GUIDA.md](GUIDA.md)**. In breve:
-
-| Strumento | Installazione | Richiamarla |
+| Skill | A cosa serve | Documentazione |
 |---|---|---|
-| claude.ai / app Claude | carica `polinetwork-slides.zip` in Customize → Skills | chiedi la presentazione |
-| Claude Code | `ln -s <repo> ~/.claude/skills/polinetwork-slides` | `/polinetwork-slides` o chiedi |
-| Codex | `$skill-installer` con il link della repo, oppure `ln -s <repo> ~/.agents/skills/polinetwork-slides` | `$polinetwork-slides` o chiedi |
+| [`polinetwork-slides`](skills/polinetwork-slides/) | Presentazioni HTML animate con il tema PoliNetwork, per assemblee e riunioni | [README](skills/polinetwork-slides/README.md) · [Guida](skills/polinetwork-slides/GUIDA.md) |
 
-Requisiti: **Python 3.10+**. **Chrome o Chromium** serve per il controllo automatico del layout,
-che è facoltativo.
+## Installazione
 
-### Senza agente
+Con Node.js, da qualsiasi agente supportato:
 
 ```bash
-cp templates/breve.slides.html ~/assemblea.slides.html   # sostituisci i segnaposto
-python3 scripts/build.py ~/assemblea.slides.html          # → ~/assemblea.html
-python3 scripts/check.py ~/assemblea.html --shots ~/shots # controllo + screenshot
+npx skills add PoliNetworkOrg/skills                               # sceglie quali installare
+npx skills add PoliNetworkOrg/skills --skill polinetwork-slides    # una sola skill
+npx skills update                                                  # aggiorna quelle installate
 ```
 
-Il markup di ogni componente è in [references/components.md](references/components.md).
+`-a claude-code` o `-a codex` sceglie l'agente, `-g` installa per l'utente invece che nel
+progetto. Le istruzioni passo passo (claude.ai, Claude Code, Codex, anche senza Node.js) sono
+nella guida di ogni skill.
 
 ## Struttura
 
 ```
-SKILL.md                  istruzioni per l'agente (procedura, regole)
-templates/                breve, lunga, autoesplicativa (.slides.html, scalette con soli segnaposto)
-references/components.md  catalogo dei layout con markup e limiti
-references/brand.md       tono, dati fissi, testi standard IT/EN
-assets/theme.css          tema: token del sito, glass, layout, animazioni, stampa
-assets/deck.js            motore: navigazione, animazioni, panoramica, presentatore, ?check
-assets/fonts/             DM Sans, Poppins, Red Hat Text (woff2, latin + latin-ext)
-assets/icons/             icone Lucide (+ alcune Simple Icons) incluse nel file finale
-assets/shapes/, logo.*    forme di sfondo e logo, presi dai repo web e polinet.cc
-scripts/build.py          compila il sorgente in un HTML autonomo (solo libreria standard)
-scripts/check.py          controllo del layout e screenshot con Chrome headless
-scripts/package.py        crea lo ZIP da caricare su claude.ai
-GUIDA.md                  guida all'installazione e all'uso per i membri
+skills/
+  <nome-skill>/
+    SKILL.md      istruzioni per l'agente, con frontmatter name e description
+    README.md     cosa fa, installazione, manutenzione
+    …             template, riferimenti, script e asset della skill
 ```
 
-## Manutenzione
+## Aggiungere una skill
 
-- **Colori e font** vengono da `web/src/styles/figma.css` e `typography.css`. Se il sito
-  cambia, aggiorna le variabili in cima ad `assets/theme.css`.
-- **Nuova icona:** copia l'SVG da [lucide.dev](https://lucide.dev) in `assets/icons/`
-  e aggiungila alla tabella in `components.md`.
-- **Nuovo componente:**
-  1. aggiungi il CSS in `theme.css`;
-  2. se serve, aggiungi il suo selettore all'elenco `ANIM` in `deck.js`, per farlo animare;
-  3. documentalo in `components.md`, con markup e limiti;
-  4. provalo nel template lungo con `check.py`.
-- **Dati fissi** (codice fiscale, link): tienili aggiornati in `references/brand.md`.
-- **Dopo ogni modifica** rigenera lo ZIP con `python3 scripts/package.py` e ricaricalo su
-  claude.ai. Chi usa Git aggiorna con `git pull`.
+1. Crea `skills/<nome-skill>/` con il suo `SKILL.md`. Il campo `name` del frontmatter deve
+   coincidere con il nome della cartella.
+2. Tieni dentro la cartella tutto quello che serve alla skill: ogni skill si installa da sola,
+   senza file condivisi fuori dalla sua cartella.
+3. Aggiungi una riga alla tabella "Skill disponibili" qui sopra.
+4. Controlla che venga trovata: `npx skills add . --list`.
 
-## Licenze di terze parti
-
-- Font: SIL Open Font License, vedi `assets/fonts/OFL-*.txt`.
-- Icone Lucide: ISC.
-- Simple Icons: CC0.
-
-I testi delle licenze sono in `assets/icons/`.
+Non mettere un `SKILL.md` nella radice della repo: `npx skills` si fermerebbe lì e non vedrebbe
+le skill in `skills/`.

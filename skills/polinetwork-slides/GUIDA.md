@@ -58,19 +58,25 @@ Per il controllo automatico delle slide serve anche **Google Chrome** o **Chromi
 Apri il terminale ed esegui:
 
 ```bash
-git clone <URL-DELLA-REPO> ~/polinetwork-slides
+git clone https://github.com/PoliNetworkOrg/skills ~/polinetwork-skills
 mkdir -p ~/.claude/skills
-ln -s ~/polinetwork-slides ~/.claude/skills/polinetwork-slides
+ln -s ~/polinetwork-skills/skills/polinetwork-slides ~/.claude/skills/polinetwork-slides
 ```
 
 Su **Windows** (PowerShell), al posto delle ultime due righe:
 
 ```powershell
 New-Item -ItemType Directory -Force "$HOME\.claude\skills"
-Copy-Item -Recurse "$HOME\polinetwork-slides" "$HOME\.claude\skills\polinetwork-slides"
+Copy-Item -Recurse "$HOME\polinetwork-skills\skills\polinetwork-slides" "$HOME\.claude\skills\polinetwork-slides"
 ```
 
 Su Windows la cartella è una copia: dopo ogni aggiornamento va ricopiata.
+
+In alternativa, se hai Node.js, installala con un solo comando (senza clonare la repo):
+
+```bash
+npx skills add PoliNetworkOrg/skills --skill polinetwork-slides -a claude-code -g
+```
 
 Se usi già la skill su claude.ai con lo stesso account, l'app desktop di Claude Code può
 caricarla anche da lì.
@@ -94,8 +100,10 @@ Oppure richiama la skill per nome con `/polinetwork-slides`, seguito dalla richi
 ### Aggiornare
 
 ```bash
-cd ~/polinetwork-slides && git pull
+cd ~/polinetwork-skills && git pull
 ```
+
+Se l'hai installata con `npx skills`: `npx skills update polinetwork-slides`.
 
 ---
 
@@ -108,18 +116,19 @@ Per il controllo automatico delle slide serve anche **Google Chrome** o **Chromi
 
 Apri Codex e scrivi:
 
-> $skill-installer installa la skill da https://github.com/<ORGANIZZAZIONE>/<REPO>
+> $skill-installer installa la skill da https://github.com/PoliNetworkOrg/skills/tree/main/skills/polinetwork-slides
 
-Al posto del link metti quello della repo; se la skill è in una sottocartella, usa il link alla
-sottocartella. Poi chiudi e riapri Codex.
+Poi chiudi e riapri Codex.
 
 ### Installazione (con Git, per aggiornarla con un comando)
 
 ```bash
-git clone <URL-DELLA-REPO> ~/polinetwork-slides
+git clone https://github.com/PoliNetworkOrg/skills ~/polinetwork-skills
 mkdir -p ~/.agents/skills
-ln -s ~/polinetwork-slides ~/.agents/skills/polinetwork-slides
+ln -s ~/polinetwork-skills/skills/polinetwork-slides ~/.agents/skills/polinetwork-slides
 ```
+
+Con Node.js, in alternativa: `npx skills add PoliNetworkOrg/skills --skill polinetwork-slides -a codex -g`.
 
 Su Windows copia la cartella in `%USERPROFILE%\.agents\skills\polinetwork-slides`, come per
 Claude Code. Poi chiudi e riapri Codex.
@@ -135,7 +144,7 @@ Oppure richiama la skill per nome con `$polinetwork-slides`, seguito dalla richi
 
 ### Aggiornare
 
-Con Git: `cd ~/polinetwork-slides && git pull`. Con `$skill-installer`: cancella la cartella
+Con Git: `cd ~/polinetwork-skills && git pull`. Con `npx skills`: `npx skills update polinetwork-slides`. Con `$skill-installer`: cancella la cartella
 `~/.codex/skills/polinetwork-slides` e reinstalla.
 
 ---

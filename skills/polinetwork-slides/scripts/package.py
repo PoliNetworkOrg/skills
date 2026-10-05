@@ -5,7 +5,7 @@ Uso:
     python3 scripts/package.py [-o polinetwork-slides.zip]
 
 Lo ZIP contiene la cartella polinetwork-slides/ con SKILL.md e tutti i file necessari,
-senza cache, screenshot o file nascosti. Di default viene creato accanto alla cartella.
+senza cache, screenshot o file nascosti. Di default viene creato in dist/ nella radice della repo.
 """
 
 from __future__ import annotations
@@ -23,7 +23,7 @@ SKIP_DIRS = {"__pycache__", "shots", ".git", "dist"}
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("-o", "--out", type=Path, default=SKILL.parent / f"{NAME}.zip")
+    ap.add_argument("-o", "--out", type=Path, default=SKILL.parent.parent / "dist" / f"{NAME}.zip")
     args = ap.parse_args()
 
     skill_md = (SKILL / "SKILL.md").read_text(encoding="utf-8")
@@ -52,6 +52,7 @@ def main() -> int:
     if SKILL in out.parents:
         print("ERRORE: crea lo ZIP fuori dalla cartella della skill", file=sys.stderr)
         return 1
+    out.parent.mkdir(parents=True, exist_ok=True)
     files = sorted(
         p for p in SKILL.rglob("*")
         if p.is_file()
