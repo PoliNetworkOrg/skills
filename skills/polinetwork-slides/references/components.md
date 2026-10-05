@@ -433,7 +433,9 @@ Max 5 voci per colonna. **Usa solo cifre date dall'utente**: mai inventarle o st
 Contatori live durante l'assemblea: clic +1, Maiusc+clic −1.
 
 ### 5x1000: `div.fivex`
-Testo standard in `brand.md`: copialo così com'è. A sinistra i tre passi, a destra il codice in grande.
+Testo standard in `brand.md`: copialo così com'è. A sinistra i tre passi, a destra il codice
+fiscale: scrivi solo le cifre, senza spazi, e il motore le mette da solo in caselle, una per
+cifra, come sul modulo della dichiarazione.
 ```html
 <p class="sub">Una quota IRPEF già trattenuta: non è una spesa in più, scegli tu dove va.</p>
 <div class="fivex">

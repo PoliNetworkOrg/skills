@@ -1686,11 +1686,22 @@ table.status td small {
   padding: 48px 40px;
   text-align: center;
 }
+/* il codice cifra per cifra, nelle caselle come sul modulo della dichiarazione */
 .fivex .code b {
-  font: 500 80px/1 var(--font-display);
-  letter-spacing: 0.02em;
-  color: var(--pn-blue);
-  font-variant-numeric: tabular-nums;
+  display: flex;
+  gap: 6px;
+  font: 500 40px/1 var(--font-headline);
+  color: var(--title);
+}
+.fivex .code b > span {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 66px;
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.92);
+  border: 1.5px solid rgb(17 86 174 / 0.22);
+  box-shadow: 0 6px 14px -10px rgb(17 86 174 / 0.6);
 }
 .fivex .code p {
   max-width: 440px;

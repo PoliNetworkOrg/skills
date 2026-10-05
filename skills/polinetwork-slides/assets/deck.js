@@ -202,6 +202,13 @@
       b.innerHTML = `<span>${label}</span><i></i><em>${b.dataset.label || v + "%"}</em>`;
     }
   });
+  // 5x1000: il codice fiscale in caselle, una per cifra (il testo copiato resta il codice intero)
+  document.querySelectorAll(".fivex .code > b").forEach((b) => {
+    const code = b.textContent.replace(/\s+/g, "");
+    if (!/^\d{6,16}$/.test(code) || b.querySelector("span")) return;
+    b.setAttribute("aria-label", code);
+    b.innerHTML = [...code].map((d) => `<span>${d}</span>`).join("");
+  });
   // colonne: altezze relative al valore più alto del grafico; data-from = parte "prima"
   document.querySelectorAll(".columns").forEach((c) => {
     const cols = [...c.querySelectorAll(":scope > .col")];
