@@ -1456,9 +1456,6 @@ table.status td small {
     0 0 0 6px rgb(255 255 255 / 0.7),
     0 8px 16px -6px rgb(17 86 174 / 0.55);
 }
-.timeline > li:last-child::before {
-  border-color: var(--blue-2);
-}
 .timeline > li:not(:last-child)::after {
   content: "";
   position: absolute;
