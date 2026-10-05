@@ -34,9 +34,9 @@
   const ANIM = [
     ".slide > h1", ".slide > .kicker", ".slide > .sub", ".body > .lead", ".body > .statement", ".body > p", ".body > ul:not([class])",
     ".body > .glass", ".body > .small", ".body > h2", ".body > table", ".body > .bars", ".body > .cloud > h2",
-    ".agenda > li", ".irows > li", ".cards > *", ".stats > *", ".teams > *", ".timeline > li", ".compare > *",
+    ".agenda > li", ".irows > li > *", ".cards > *", ".stats > *", ".teams > *", ".timeline > li", ".compare > *",
     ".team > *", ".split > *", ".budget > .glass", ".fivex > *", ".vote > *", ".gallery > figure", ".people > .person",
-    ".links > li", ".cover .meta", ".cover .orbit", ".cover .brand", ".lockup", ".media > *", ".legend > li", "table.status tr",
+    ".links > li", ".cover .meta > span", ".cover .orbit", ".cover .brand", ".lockup", ".media > *", ".legend > li", "table.status tr",
     ".bars > .bar", ".cloud > span", ".thanks .qr", ".body > .summary", ".body > .next", ".body > dl", ".cols > *",
     "ol.points > li", "dl.terms > div", ".cover .intro",
   ].join(",");
@@ -92,12 +92,15 @@
       const num = String(idx + 1).padStart(2, "0") + (READ ? ` / ${String(total).padStart(2, "0")}` : "");
       if (!centered) s.insertAdjacentHTML("beforeend", `<div class="slide-num">${num}</div>`);
     }
-    // animazioni d'ingresso a cascata
+    // animazioni d'ingresso a cascata; nelle righe con icona tessera e testo entrano insieme
     let k = 0;
+    const rows = new Map();
     s.querySelectorAll(ANIM).forEach((el) => {
       if (el.closest(".notes") || el.classList.contains("w") || el.classList.contains("reveal")) return;
       if (!el.hasAttribute("data-anim")) el.setAttribute("data-anim", "");
-      el.style.setProperty("--i", Math.min(k++, 16));
+      const row = el.matches(".irows > li > *") ? el.parentElement : null;
+      if (row && !rows.has(row)) rows.set(row, k++);
+      el.style.setProperty("--i", Math.min(row ? rows.get(row) : k++, 16));
     });
   });
 
@@ -106,6 +109,8 @@
   document.querySelectorAll(".irows > li > svg.ico").forEach((svg) => {
     const tile = document.createElement("span");
     tile.className = "tile";
+    // l'animazione passa alla tessera di vetro, che deve entrare insieme al testo
+    for (const a of ["style", "data-anim"]) if (svg.hasAttribute(a)) (tile.setAttribute(a, svg.getAttribute(a)), svg.removeAttribute(a));
     svg.replaceWith(tile);
     tile.appendChild(svg);
   });

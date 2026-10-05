@@ -1647,10 +1647,18 @@ table.status td small {
   display: inline-block;
 }
 .slide.active .w {
-  animation: rise 0.9s var(--ease) both;
+  animation: riseBlur 0.9s var(--ease) both;
   animation-delay: calc(var(--w, 0) * 70ms + 120ms);
 }
+/* niente filter qui: su un antenato spegne il vetro (backdrop-filter) dei figli
+   fino alla fine dell'animazione, che poi "scatta"; ed è pesante da animare */
 @keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+}
+@keyframes riseBlur {
   from {
     opacity: 0;
     transform: translateY(32px);
@@ -1753,12 +1761,12 @@ html.read .slide.section > .sub {
   font-size: 26px;
 }
 html.read .slide.active [data-anim] {
-  animation-duration: 0.55s;
-  animation-delay: calc(var(--i, 0) * 40ms + 80ms);
+  animation-duration: 0.75s;
+  animation-delay: calc(var(--i, 0) * 60ms + 120ms);
 }
 html.read .slide.active .w {
-  animation-duration: 0.6s;
-  animation-delay: calc(var(--w, 0) * 40ms + 60ms);
+  animation-duration: 0.75s;
+  animation-delay: calc(var(--w, 0) * 50ms + 80ms);
 }
 html.read .vote > button {
   pointer-events: none;
