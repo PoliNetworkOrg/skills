@@ -7,7 +7,11 @@ Skill per agenti AI (Claude, Claude Code, Codex e gli altri agenti supportati da
 
 | Skill | A cosa serve | Documentazione |
 |---|---|---|
+| [`polinetwork-content-slides`](skills/polinetwork-content-slides/) | Prepara i contenuti di una presentazione (da ODG, appunti o bozza) in un file `.md` pronto per `polinetwork-slides` | [README](skills/polinetwork-content-slides/README.md) · [Guida](skills/polinetwork-content-slides/GUIDA.md) |
 | [`polinetwork-slides`](skills/polinetwork-slides/) | Presentazioni HTML animate con il tema PoliNetwork, per assemblee e riunioni | [README](skills/polinetwork-slides/README.md) · [Guida](skills/polinetwork-slides/GUIDA.md) |
+
+Le due skill lavorano in coppia: `polinetwork-content-slides` decide **cosa** dire e consegna un
+file `.md`, `polinetwork-slides` lo trasforma nelle slide. Si possono usare anche separatamente.
 
 ## Installazione
 
@@ -16,6 +20,7 @@ Con Node.js, da qualsiasi agente supportato:
 ```bash
 npx skills add PoliNetworkOrg/skills                               # sceglie quali installare
 npx skills add PoliNetworkOrg/skills --skill polinetwork-slides    # una sola skill
+npx skills add PoliNetworkOrg/skills --skill polinetwork-slides polinetwork-content-slides   # entrambe
 npx skills update                                                  # aggiorna quelle installate
 ```
 
