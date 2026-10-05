@@ -121,8 +121,9 @@ Comunica all'utente:
   - → e ← per avanzare e tornare indietro;
   - F per lo schermo intero;
   - O per la panoramica;
-  - P per la finestra presentatore con note e timer;
-  - per il PDF: Chrome → Stampa → Salva come PDF, margini "Nessuno", "Grafica di sfondo" attiva.
+  - P (o Ctrl+P) per la finestra presentatore con note e timer;
+  - S per stampare o esportare in PDF: Salva come PDF, margini "Nessuno", "Grafica di sfondo"
+    attiva (su Firefox "Stampa sfondi").
 
 ## Modificare una presentazione esistente
 

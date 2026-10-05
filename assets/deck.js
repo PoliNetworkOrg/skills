@@ -1,6 +1,7 @@
 /*
   PoliNetwork Slides — motore
-  ←/→ Spazio PagSu/PagGiù · Home/Fine · F schermo intero · O panoramica · P presentatore
+  ←/→ Spazio PagSu/PagGiù · Home/Fine · F schermo intero · O panoramica · P (anche Ctrl+P) presentatore
+  S stampa / PDF
   URL: ?static (niente animazioni) · ?check (controllo layout) · #N (vai alla slide N)
 */
 (() => {
@@ -15,8 +16,8 @@
 
   const LANG = (root.lang || "it").slice(0, 2);
   const T = {
-    it: { image: "Immagine", prev: "Indietro", next: "Avanti", full: "Schermo intero", grid: "Panoramica", now: "Ora", next2: "Dopo", notes: "Note", end: "Fine", nonotes: "Nessuna nota." },
-    en: { image: "Image", prev: "Previous", next: "Next", full: "Full screen", grid: "Overview", now: "Now", next2: "Next", notes: "Notes", end: "End", nonotes: "No notes." },
+    it: { image: "Immagine", prev: "Indietro", next: "Avanti", full: "Schermo intero", grid: "Panoramica", print: "Stampa / PDF", now: "Ora", next2: "Dopo", notes: "Note", end: "Fine", nonotes: "Nessuna nota." },
+    en: { image: "Image", prev: "Previous", next: "Next", full: "Full screen", grid: "Overview", print: "Print / PDF", now: "Now", next2: "Next", notes: "Notes", end: "End", nonotes: "No notes." },
   }[LANG] || {};
 
   const stage = document.getElementById("stage");
@@ -194,6 +195,7 @@
        <span class="counter" id="pn-counter"></span>
        <button id="pn-next" title="${T.next}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m9 18 6-6-6-6"/></svg></button>
        <button id="pn-grid" title="${T.grid} (O)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
+       <button id="pn-print" title="${T.print} (S)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M6 14h12v7H6z"/></svg></button>
        <button id="pn-fs" title="${T.full} (F)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
      </nav>`,
   );
@@ -325,12 +327,22 @@
     else if (k === "f" || k === "F") toggleFs();
     else if (k === "o" || k === "O") toggleOverview();
     else if (k === "Escape" && root.classList.contains("overview")) toggleOverview(false);
-    else if (k === "p" || k === "P") openPresenter();
+    else if (k === "p" || k === "P") {
+      // anche Ctrl+P / ⌘P: apre il presentatore al posto della stampa del browser
+      e.preventDefault();
+      openPresenter();
+    } else if ((k === "s" || k === "S") && !e.ctrlKey && !e.metaKey && !e.altKey) printDeck();
   });
+  // stampa / PDF: tasto S o pulsante nella barra (Ctrl+P apre il presentatore)
+  function printDeck() {
+    if (root.classList.contains("overview")) toggleOverview(false);
+    print();
+  }
   document.getElementById("pn-prev").onclick = prev;
   document.getElementById("pn-next").onclick = next;
   document.getElementById("pn-fs").onclick = toggleFs;
   document.getElementById("pn-grid").onclick = () => toggleOverview();
+  document.getElementById("pn-print").onclick = printDeck;
   let tx = null;
   addEventListener("touchstart", (e) => (tx = e.touches[0].clientX), { passive: true });
   addEventListener("touchend", (e) => {

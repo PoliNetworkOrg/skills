@@ -306,6 +306,6 @@ copertina/sezione parola per parola, i numeri contano, le barre si riempiono.
 ## Comandi durante la presentazione
 
 → / Spazio / PagGiù avanti · ← indietro · Home/Fine · **F** schermo intero ·
-**O** panoramica di tutte le slide · **P** finestra presentatore (note, timer, slide
-successiva) · `#7` nell'URL apre la slide 7 · `?static` senza animazioni.
-PDF: Chrome → Stampa → Salva come PDF, margini "Nessuno", "Grafica di sfondo" attiva.
+**O** panoramica di tutte le slide · **P** o **Ctrl+P** finestra presentatore (note, timer, slide
+successiva) · **S** stampa / PDF · `#7` nell'URL apre la slide 7 · `?static` senza animazioni.
+PDF: tasto S → Salva come PDF, margini "Nessuno", "Grafica di sfondo" (Firefox: "Stampa sfondi") attiva.

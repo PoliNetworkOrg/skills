@@ -184,7 +184,8 @@ Apri `nome.html` con **Google Chrome** (Edge e Brave vanno bene uguale).
 | ← | slide precedente |
 | **F** | schermo intero |
 | **O** | panoramica di tutte le slide: clic su una per andarci |
-| **P** | finestra del presentatore (note, timer, slide successiva): tienila sul tuo schermo e proietta l'altra |
+| **P** oppure **Ctrl+P** (⌘P su Mac) | finestra del presentatore (note, timer, slide successiva): tienila sul tuo schermo e proietta l'altra |
+| **S** | stampa / esporta in PDF |
 | Home / Fine | prima / ultima slide |
 
 Nelle slide di **votazione**, clic su Favorevoli, Contrari o Astenuti per aggiungere un voto;
@@ -192,8 +193,17 @@ Nelle slide di **votazione**, clic su Favorevoli, Contrari o Astenuti per aggiun
 
 ### Esportare in PDF
 
-In Chrome: **Stampa** (Ctrl+P, su Mac ⌘P) → Destinazione **Salva come PDF**, Margini
-**Nessuno**, spunta **Grafica di sfondo** → Salva. Ogni slide diventa una pagina.
+Premi **S** oppure il pulsante con la stampante nella barra in basso a destra (compare muovendo
+il mouse). Ctrl+P non stampa: nelle presentazioni apre il presentatore.
+
+Nella finestra di stampa:
+- **Chrome / Edge / Brave:** Destinazione **Salva come PDF**, Margini **Nessuno**, spunta
+  **Grafica di sfondo** → Salva.
+- **Firefox:** Destinazione **Salva come PDF**, in **Altre impostazioni** Margini **Nessuno** e
+  spunta **Stampa sfondi** → Salva.
+
+Ogni slide diventa una pagina. Senza "Grafica di sfondo" / "Stampa sfondi" spariscono sfondo e
+card in vetro.
 
 ---
 
