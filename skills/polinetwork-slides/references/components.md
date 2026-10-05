@@ -81,20 +81,39 @@ Un nome sbagliato fa fallire `build.py`, che suggerisce i nomi più vicini.
   `magick shot.jpg -crop 584x1176+0+104 +repage -background "<colore header>" -gravity north -splice 0x56 img/app.jpg`
   (il colore si legge con `magick shot.jpg -format "%[pixel:p{3,120}]" info:`).
 - **Inclinazione:** telefono e immagini scontornate stanno meglio un po' storti che dritti:
-  `class="phone tilt"`, `class="cutout tilt"` (8°, `tilt-left` per −8°).
+  `class="phone tilt"`, `class="cutout tilt"` (8°, `tilt-left` per −8°). A destra `tilt`, a
+  sinistra (`split media-left`) `tilt-left`, così l'immagine pende sempre verso l'esterno.
+- **Lato delle immagini:** alterna `split` e `split media-left` lungo la presentazione, invece di
+  mettere tutte le foto a destra. Il telefono a sinistra sale fino al sottotitolo: se la slide ha un
+  `.sub` lungo, tienilo a destra e gira un'altra slide.
 - **Immagini scontornate** (un prodotto, un oggetto, PNG trasparente) dentro la slide, in
   `.media` con `<img class="cutout tilt" src="img/x.png" alt="">`, non come sticker attaccato al
-  bordo. Ritaglia prima i bordi trasparenti: `magick x.png -trim +repage -resize x760 img/x.png`.
+  bordo. Ritaglia prima i bordi trasparenti: `magick x.png -channel A -fx "u<0.2?0:u" +channel -trim +repage -resize x760 img/x.png`.
 - **Sticker** (meme o personaggi scontornati, PNG trasparente): `<img class="sticker" src="img/x.png" alt="">`.
   Solo se l'utente ha detto sì ai meme. In basso a destra, alto 380 px; il contenuto si restringe
   per fargli spazio. Varianti: `sticker left`, `sticker small` (240 px, non sposta il contenuto),
+  `sticker edge` (attaccato al bordo laterale, per i lati tagliati, vedi sotto),
   `sticker top`. Al massimo uno per slide, e non in tutte; mai su bilancio, votazioni e 5x1000.
+  **Alterna i lati:** più o meno metà `sticker`, metà `sticker left`, mescolati lungo la
+  presentazione. `sticker left` sposta il contenuto a destra; `sticker small` non sposta niente,
+  quindi a sinistra copre il testo in basso (per esempio un `p.small`): lascialo a destra, a meno
+  che l'angolo in basso a sinistra sia vuoto.
+  **Lati tagliati:** molti meme sono tagliati dritto in basso e a volte su un fianco. Il taglio
+  deve toccare il bordo della slide, mai restare a mezz'aria. Controlla ogni sticker dopo averlo
+  copiato in `img/` (valore sopra 0.3 = lato tagliato):
+  `for g in east west; do magick img/x.png -gravity $g -crop 1x0+0+0 +repage -format "$g %[fx:mean.a] " info:; done`.
+  Taglio sul fianco destro → `sticker edge` (attaccato al bordo destro); sul sinistro → mettilo a
+  sinistra con `sticker left edge`, oppure specchialo (`magick img/x.png -flop img/x.png`) e usa
+  `sticker edge`. Il taglio in basso è già a posto: lo sticker sta sempre appoggiato al fondo.
 - **Meme pronti** in `assets/memes/` (la cartella cresce: guarda cosa c'è con `ls`). Scegli il
   gatto che ha l'espressione giusta per la slide, per esempio: quello che supplica per le richieste
   al pubblico (associati, candidati), quello sorpreso per numeri e risultati, quello imbronciato per
   ritardi, problemi o "Domande?", quello in giacca e cravatta per organizzazione e team. Copialo in
   `img/` ridimensionato, così non appesantisce il file finale:
-  `magick "$SKILL_DIR/assets/memes/PleaseCat.png" -trim +repage -resize x760 img/sticker-richieste.png`.
+  `magick "$SKILL_DIR/assets/memes/PleaseCat.png" -channel A -fx "u<0.2?0:u" +channel -trim +repage -resize x760 -colors 256 PNG8:img/sticker-richieste.png`
+  (`-fx "u<0.2?0:u"` toglie l'alone quasi invisibile che alcuni scontornati hanno attorno: senza,
+  `-trim` non taglia niente e lo sticker resta sospeso con un margine vuoto; con `-colors 256`
+  resta sotto i 250 KB invece di 500-700).
   Quelli non scontornati (con lo sfondo) vanno come `sticker small`.
 
 ## Tipi di slide

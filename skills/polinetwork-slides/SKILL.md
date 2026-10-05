@@ -114,6 +114,9 @@ Lavora nella cartella indicata dall'utente. Se non ne indica una, lavora in quel
     (`ul.irows`, `div.cards`, `div.split`, `dl.facts`, `div.stats`…), non per uno solo.
   - Lo stesso per le impaginazioni: per esempio non sempre riquadro a sinistra e immagine a destra,
     anche se dentro cambia componente.
+  - Lo stesso per il lato di foto e sticker: non tutti a destra. Alterna le slide con immagine
+    (`split` e `split media-left`) e gli sticker (`sticker` e `sticker left`) lungo la
+    presentazione, come per i componenti: mai tutti dallo stesso lato, mai lunghe file uguali.
   - Quando correggi una ripetizione, non spostare tutto su un altro componente: distribuisci. Variare
     non vuol dire eliminare un componente, ma usarne tanti, ognuno poche volte.
 
@@ -121,7 +124,8 @@ Lavora nella cartella indicata dall'utente. Se non ne indica una, lavora in quel
   `stats`, passi → `ol.points`, tappe con data → `timeline`, oggi/domani → `compare`,
   perché/cosa/risultato → `cols`, chi/quando/dove → `dl.facts`, voci affiancate → `cards`, un
   evento con foto → `split`, un messaggio → frase a effetto. Già nella scaletta (punto 2) indica il
-  componente di ogni slide e controlla che nessuno si ripeta troppo.
+  componente di ogni slide, il lato dell'immagine o dello sticker se c'è, e controlla che nessuno
+  si ripeta troppo.
 - **Componi con cura.** Ogni slide deve essere bilanciata, non solo corretta:
   - riempi la larghezza: 3 voci stanno su una riga, non 2+1; niente riquadri piccoli in mezzo al
     vuoto;
@@ -143,6 +147,7 @@ Lavora nella cartella indicata dall'utente. Se non ne indica una, lavora in quel
   massimo uno per slide, non in tutte, mai su bilancio, votazioni e 5x1000. Nell'autoesplicativa
   ancora meno e solo su slide leggere. Usa quelli forniti dall'utente o i meme pronti di
   `assets/memes/` (copiali in `img/`, vedi "Sticker" nel catalogo); non scaricare immagini di terzi.
+  Metti gli sticker un po' a destra e un po' a sinistra (vedi "Varia i layout").
 - **Note per chi parla:** quando servono, mettile in `<aside class="notes">`. Si vedono con il tasto P.
 
 ## 5. Compila e controlla (obbligatorio)
@@ -170,7 +175,8 @@ l'utente fornirà dopo.
    resto:
    - slide troppo vuote (unisci con un'altra o cambia componente) o troppo piene;
    - troppe slide uguali: nel foglio riassuntivo non devono vedersi file di slide con lo stesso
-     layout. Conta quante volte compare ogni componente e ogni impaginazione, nessuno escluso;
+     layout. Conta quante volte compare ogni componente e ogni impaginazione, nessuno escluso, e
+     da che lato stanno foto e sticker: se sono quasi tutti dallo stesso lato, alternali;
    - slide sbilanciate: un lato pieno e l'altro vuoto, blocchi staccati, testi corti spezzati su
      due righe, foto strette o tagliate male, telefono o immagini dritti e rigidi;
    - ripetizioni (la stessa informazione nel riquadro "In breve", nel corpo e nel `.next`);

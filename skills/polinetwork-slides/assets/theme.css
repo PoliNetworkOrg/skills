@@ -1657,6 +1657,7 @@ table.status td small {
   width: auto;
   max-width: 420px;
   object-fit: contain;
+  object-position: right bottom; /* gli sticker larghi restano appoggiati in basso, non sospesi */
   z-index: 2;
   filter: drop-shadow(0 24px 30px rgb(15 23 42 / 0.22));
   pointer-events: none;
@@ -1664,6 +1665,14 @@ table.status td small {
 .sticker.left {
   right: auto;
   left: 60px;
+  object-position: left bottom;
+}
+/* sticker tagliato dritto sul lato: attaccato al bordo della slide */
+.sticker.edge {
+  right: 0;
+}
+.sticker.left.edge {
+  left: 0;
 }
 .sticker.small {
   height: 240px;
