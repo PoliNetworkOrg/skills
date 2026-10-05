@@ -658,26 +658,65 @@ dl.terms > div {
 }
 
 /* ================= Indice (agenda) ================= */
+/* fino a 6 voci: tessere con il numero grande come nei divisori di sezione */
 .agenda {
   list-style: none;
   counter-reset: ag;
   display: grid;
-  grid-auto-flow: column;
-  grid-template-rows: repeat(var(--rows, 6), auto);
-  gap: 14px 22px;
+  grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
+  gap: 22px;
   align-content: center;
 }
 .agenda > li {
   counter-increment: ag;
   display: flex;
-  align-items: center;
-  gap: 26px;
-  padding: 16px 30px 16px 22px;
-  font: 400 28px/1.25 var(--font-headline);
+  flex-direction: column;
+  gap: 12px;
+  min-height: 230px;
+  padding: 30px 32px 34px;
+  font: 400 30px/1.2 var(--font-headline);
   color: var(--title);
+  text-wrap: balance;
 }
 .agenda > li::before {
   content: counter(ag, decimal-leading-zero);
+  padding-bottom: 34px;
+  font: 600 84px/0.85 var(--font-display);
+  letter-spacing: -0.05em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--blue);
+  background: linear-gradient(160deg, rgb(116 212 255 / 0.35), rgb(81 162 255 / 0.05) 70%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.agenda > li > small {
+  font: 400 19px/1.45 var(--font-body);
+  color: var(--text-2);
+  text-wrap: pretty;
+}
+
+/* oltre 6 voci: righe compatte su due colonne */
+.agenda.long {
+  grid-template-columns: none;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(var(--rows, 5), auto);
+  gap: 14px 22px;
+}
+.agenda.long > li {
+  flex-direction: row;
+  align-items: center;
+  gap: 26px;
+  min-height: 0;
+  padding: 16px 30px 16px 22px;
+  font-size: 28px;
+  line-height: 1.25;
+}
+.agenda.long > li::before {
+  padding-bottom: 0;
+  -webkit-text-stroke: 0;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  letter-spacing: 0;
   flex: none;
   width: 58px;
   height: 58px;
@@ -1701,12 +1740,50 @@ html.read .vote > button {
 }
 html.read .agenda > li[data-goto] {
   cursor: pointer;
+  transition:
+    transform 0.35s var(--ease),
+    box-shadow 0.35s var(--ease);
+}
+html.read .agenda > li[data-goto]:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--glass-shadow), 0 26px 50px -30px rgb(17 86 174 / 0.5);
 }
 html.read .agenda > li[data-goto]::after {
   content: "→";
+  position: absolute;
+  top: 26px;
+  right: 26px;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--blue-soft);
+  font: 500 22px/1 var(--font-display);
+  color: var(--blue-ink);
+  transition:
+    background 0.35s var(--ease),
+    color 0.35s var(--ease);
+}
+html.read .agenda > li[data-goto]:hover::after {
+  background: var(--blue-ink);
+  color: #fff;
+}
+html.read .agenda.long > li[data-goto]::after {
+  position: static;
   margin-left: auto;
-  font-family: var(--font-display);
+  width: auto;
+  height: auto;
+  background: none;
   color: var(--blue-2);
+}
+html.read .agenda > li {
+  font-size: 30px;
+  line-height: 1.2;
+}
+html.read .agenda.long > li {
+  font-size: 26px;
+  line-height: 1.25;
 }
 /* sezione corrente in alto a destra */
 .crumb {

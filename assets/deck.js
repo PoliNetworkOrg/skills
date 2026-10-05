@@ -111,12 +111,21 @@
   });
   // colonne esplicite
   document.querySelectorAll("[data-cols]").forEach((el) => el.style.setProperty("--cols", el.dataset.cols));
-  // agenda: righe per colonna; in lettura ogni voce porta alla sezione corrispondente
+  // agenda: tessere fino a 6 voci, poi righe su due colonne;
+  // in lettura ogni voce porta alla sezione corrispondente e ne riprende il sottotitolo
   const sections = slides.filter((s) => s.classList.contains("section"));
   document.querySelectorAll(".agenda").forEach((el) => {
     const n = el.children.length;
-    el.style.setProperty("--rows", n > 6 ? Math.ceil(n / 2) : n);
-    if (READ && sections.length >= n) [...el.children].forEach((li, i) => li.setAttribute("data-goto", slides.indexOf(sections[i])));
+    if (n > 6) {
+      el.classList.add("long");
+      el.style.setProperty("--rows", Math.ceil(n / 2));
+    } else if (!el.dataset.cols) el.style.setProperty("--cols", n > 4 ? 3 : n);
+    if (READ && sections.length >= n)
+      [...el.children].forEach((li, i) => {
+        li.setAttribute("data-goto", slides.indexOf(sections[i]));
+        const sub = sections[i].querySelector(":scope > .sub");
+        if (n <= 6 && sub && !li.querySelector("small")) li.insertAdjacentHTML("beforeend", `<small>${sub.innerHTML}</small>`);
+      });
   });
   document.addEventListener("click", (e) => {
     const li = e.target.closest("[data-goto]");
