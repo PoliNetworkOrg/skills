@@ -315,6 +315,8 @@ testo più piccolo e limiti più larghi. In più ci sono i componenti qui sotto.
 <div class="summary"><span class="label">In breve</span><p>Il sito è online da settembre e ha già 3 000 visite al mese.</p></div>
 ```
 Una o due frasi, in cima alla slide, subito sotto il titolo. Max ~35 parole.
+Solo se aggiunge qualcosa: la chiave per leggere un corpo denso (colonne, tabella, bilancio) o
+un'informazione che non sta altrove. Se ripete il titolo o le card sotto, toglilo.
 
 ### Colonne di spiegazione: `div.cols`
 ```html

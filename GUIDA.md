@@ -148,8 +148,8 @@ Con Git: `cd ~/polinetwork-slides && git pull`. Con `$skill-installer`: cancella
    - **breve**, circa 8 slide: aggiornamenti e riunioni da 10-15 minuti;
    - **lunga**, circa 25 slide: assemblea completa, con team, bilancio, votazione e 5x1000;
    - **autoesplicativa**, circa 15-20 slide più dense: da mandare a chi non c'era o da leggere in
-     differita. Ogni slide si capisce da sola, con frasi complete, un riquadro "In breve",
-     una sintesi iniziale, l'indice cliccabile e il glossario delle sigle. Niente sticker.
+     differita. Ogni slide si capisce da sola, con frasi complete, un riquadro "In breve"
+     dove serve, una sintesi iniziale, l'indice cliccabile e il glossario delle sigle. Niente sticker.
 2. **Lingua:** italiano o inglese.
 3. **Occasione:** che incontro è, data e luogo.
 4. **Contenuti:** argomenti, numeri, persone, eventi, scadenze.

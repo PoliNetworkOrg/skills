@@ -149,7 +149,10 @@ cliccabili che portano alle sezioni, contatori delle votazioni fermi.
 - **Titoli che dicono la conclusione** ("Il sito è online da settembre"), non solo l'argomento
   ("Sito web"). Qui possono arrivare a ~10 parole.
 - **Frasi complete** al posto delle parole chiave: chi, cosa, quando, perché, con i numeri.
-- **Un "In breve" (`.summary`)** in cima alle slide di contenuto: la frase da leggere per prima.
+- **"In breve" (`.summary`) solo dove serve:** sulle slide dense o da interpretare (colonne di
+  spiegazione, tabelle di stato, bilancio), quando dice qualcosa che non è già nel titolo o nel
+  corpo. Non sulle slide già sintetiche (numeri, card brevi, foto, team, timeline): lì basta un
+  titolo che dice la conclusione. In tutto il documento poche, non una per slide.
 - **Spiegare** con `.cols` (perché / cosa abbiamo fatto / risultato), `dl.facts` (quando, dove,
   chi) e `.next` (prossimo passo o cosa chiediamo a chi legge).
 - **Struttura fissa:** copertina con `.intro` (cos'è il documento e per chi), "In sintesi"
