@@ -1878,6 +1878,11 @@ dl.terms {
 dl.terms > div {
   padding: 22px 28px;
 }
+
+/* su due colonne, se gli elementi sono dispari l'ultimo occupa tutta la riga */
+:is(ol.points > li, dl.terms > div):last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
 dl.terms dt {
   font: 500 24px/1.3 var(--font-display);
   color: var(--pn-blue);

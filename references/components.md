@@ -356,7 +356,7 @@ Per la slide "In sintesi": 4-6 punti, numerati da soli, ~20 parole ciascuno.
   …
 </dl>
 ```
-Max 8 termini, meglio in numero pari (sono su due colonne). Solo sigle e nomi che compaiono
+Max 8 termini, su due colonne (se sono dispari l'ultimo occupa tutta la riga). Solo sigle e nomi che compaiono
 davvero nel documento: definizioni standard da `brand.md`, quelle dei termini interni dall'utente.
 Se l'utente chiede un termine che non compare, prima inseriscilo dove serve nel testo.
 
