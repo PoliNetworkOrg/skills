@@ -1324,6 +1324,10 @@ table.status td small {
 .slide.active .growth > .track > span:last-child {
   animation-delay: 1.45s;
 }
+/* accanto alla crescita il telefono sta un po' più in alto: il blocco di testo pesa in basso */
+.split:has(> .growth) > .media {
+  translate: 0 -40px;
+}
 @keyframes growIn {
   from {
     transform: scaleX(0);
@@ -1947,6 +1951,10 @@ table.status td small {
 }
 .sticker.small {
   height: 240px;
+}
+/* specchiato, per farlo guardare verso il contenuto (scale non tocca l'animazione con transform) */
+.sticker.flip {
+  scale: -1 1;
 }
 .sticker.top {
   bottom: auto;

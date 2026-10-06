@@ -102,7 +102,8 @@ Un nome sbagliato fa fallire `build.py`, che suggerisce i nomi più vicini.
   bordo. Ritaglia prima i bordi trasparenti: `magick x.png -channel A -fx "u<0.2?0:u" +channel -trim +repage -resize x760 img/x.png`.
 - **Sticker** (meme o personaggi scontornati, PNG trasparente): `<img class="sticker" src="img/x.png" alt="">`.
   Solo se l'utente ha detto sì ai meme. In basso a destra, alto 380 px; il contenuto si restringe
-  per fargli spazio. Varianti: `sticker left`, `sticker small` (240 px, non sposta il contenuto),
+  per fargli spazio. Varianti: `sticker left`, `sticker small` (240 px, non sposta il contenuto), `sticker flip` (specchiato, per
+  farlo guardare verso il contenuto),
   `sticker edge` (attaccato al bordo laterale, per i lati tagliati, vedi sotto),
   `sticker top`. Al massimo uno per slide, e non in tutte; mai su bilancio, votazioni e 5x1000.
   **Alterna i lati:** più o meno metà `sticker`, metà `sticker left`, mescolati lungo la
@@ -323,12 +324,12 @@ testo va piccolo sotto (max ~4 parole):
 
 ### Crescita: `div.growth`
 ```html
-<div class="split media-left">
+<div class="split">
   <div class="growth" data-from="5000" data-value="7500">
     <p><b>+2.500</b>follower dalla scorsa assemblea</p>
     <div class="track"><span>5.000<small>scorsa assemblea</small></span><span>7.500<small>oggi</small></span></div>
   </div>
-  <div class="media"><div class="phone tilt-left" style="width: 270px"><img src="img/profilo.jpg" alt=""></div></div>
+  <div class="media"><div class="phone tilt" style="width: 270px"><img src="img/profilo.jpg" alt=""></div></div>
 </div>
 ```
 Per **una crescita sola** raccontata come messaggio principale (follower, iscritti, soci): la
