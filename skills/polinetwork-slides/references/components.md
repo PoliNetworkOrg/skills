@@ -354,7 +354,8 @@ guarda, oltre agli ingressi. Uno o più nomi separati da spazi:
 | `wiggle` | Lo sticker dondola | Solo versione con meme |
 
 Al massimo un effetto "grande" (`fireworks`, `confetti`, `network`, `code`, `likes`, `pizza`) per
-slide, e non in tutte: 4-6 slide animate in una presentazione bastano, sulle slide che contano. Gli
+slide, e non in tutte: più o meno una slide su cinque, quelle che contano (copertina, risultati,
+novità, chiusura). Mai su votazioni, bilancio e 5x1000. Gli
 effetti dietro (`network`, `code`) restano tenui per non disturbare la lettura. Tutti si spengono
 da soli nel PDF, nell'anteprima del presentatore, in `?check`/`?static` e per chi ha chiesto meno
 animazioni nel sistema; gli screenshot di `check.py` quindi non li mostrano.
