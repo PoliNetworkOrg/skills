@@ -294,28 +294,50 @@
     else img.addEventListener("error", fail, { once: true });
   });
   // numeri che contano fino al valore
+  // numeri che contano fino al valore: ogni numero del testo ("7", "0–4", "20 000+"); i decimali restano fermi
   const counters = [...document.querySelectorAll(".stats b, .num[data-count], .cloud b, .growth > p > b")].map((el) => {
-    const m = el.textContent.match(/^(\D*)(\d[\d.,\s  ]*\d|\d)(.*)$/s);
-    // decimali ("3,8/5", "4.5") restano fermi: niente conteggio
-    if (!m || /^\d{1,3}[.,]\d{1,2}$/.test(m[2].trim())) return null;
-    const sep = (m[2].match(/[.,\s  ]/) || [""])[0];
-    const value = parseInt(m[2].replace(/\D/g, ""), 10);
-    const fmt = (v) => String(v).replace(/\B(?=(\d{3})+(?!\d))/g, sep === "," && /,\d{1,2}$/.test(m[2]) ? "." : sep);
-    return { el, pre: m[1], post: m[3], value, fmt, final: el.textContent };
+    const final = el.textContent, parts = final.split(/(\d[\d.,\s  ]*\d|\d)/);
+    if (parts.some((p, i) => i % 2 && /^\d{1,3}[.,]\d{1,2}$/.test(p.trim()))) return null; // "3,8/5", "4.5"
+    const nums = parts.map((p, i) => {
+      if (!(i % 2)) return null;
+      const sep = (p.match(/[.,\s  ]/) || [""])[0];
+      return { value: parseInt(p.replace(/\D/g, ""), 10), fmt: (v) => String(v).replace(/\B(?=(\d{3})+(?!\d))/g, sep) };
+    });
+    const max = Math.max(...nums.filter(Boolean).map((n) => n.value));
+    return Number.isFinite(max) ? { el, parts, nums, final, max } : null;
   }).filter(Boolean);
   function runCounters(slide) {
     counters.forEach((c) => {
       if (!slide.contains(c.el)) return;
-      if (STATIC || c.value < 4) return (c.el.textContent = c.final);
-      const t0 = performance.now() + 250, dur = 1400;
+      if (STATIC) return (c.el.textContent = c.final);
+      // i numeri piccoli si contano uno per uno, più in fretta; quelli grandi in 1,4 s
+      const t0 = performance.now() + 250, dur = c.max < 10 ? 300 + c.max * 160 : 1400;
       const tick = (t) => {
         const p = Math.min(1, Math.max(0, (t - t0) / dur));
-        const e = 1 - Math.pow(1 - p, 3);
-        c.el.textContent = p >= 1 ? c.final : c.pre + c.fmt(Math.round(c.value * e)) + c.post;
+        const e = c.max < 10 ? p : 1 - Math.pow(1 - p, 3);
+        c.el.textContent = p >= 1 ? c.final : c.parts.map((s, i) => (c.nums[i] ? c.nums[i].fmt(Math.floor(c.nums[i].value * e)) : s)).join("");
         if (p < 1 && slide.classList.contains("active")) requestAnimationFrame(tick);
         else c.el.textContent = c.final;
       };
       requestAnimationFrame(tick);
+    });
+  }
+  // codice del 5x1000: ogni cifra gira come un contatore e si ferma, una dopo l'altra
+  function rollDigits(slide) {
+    slide.querySelectorAll(".fivex .code > b").forEach((b) => {
+      const spans = [...b.querySelectorAll(":scope > span")];
+      spans.forEach((sp, i) => {
+        const final = (sp.dataset.d ??= sp.textContent);
+        if (STATIC) return (sp.textContent = final);
+        const t0 = performance.now(), dur = 1700 + i * 130; // il riquadro entra dopo ~1 s: il rullo deve vedersi
+        let last = 0;
+        const tick = (t) => {
+          if (!slide.classList.contains("active") || t - t0 >= dur) return (sp.textContent = final);
+          if (t - last > 55) (last = t), (sp.textContent = String(Math.floor(Math.random() * 10)));
+          requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      });
     });
   }
 
@@ -352,19 +374,20 @@
   }
 
   /* ---------- animazioni sulla slide: data-fx="…" (uno o più nomi separati da spazi) ----------
-     Su tela (disegnate qui): fireworks, confetti (una volta, all'arrivo); network, code (dietro al
-     contenuto, continue); likes, pizza (davanti, continue). Solo CSS (theme.css): float, pulse,
+     Su tela (disegnate qui): fireworks, confetti (una volta, all'arrivo); network, code, wings (dietro al
+     contenuto); pizza, emoji (in mezzo: sopra le foto, sotto le scritte); likes, questions, snake (davanti). train: le persone si
+     scambiano di posto in giro. Solo CSS (theme.css): float, pulse,
      flow, shine, wiggle. Spente in ?check/?static/anteprima, nel PDF e con "riduci movimento". */
   const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const FX_COLORS = ["#1156ae", "#0369a1", "#0284c7", "#38bdf8", "#ffffff"]; // blu del tema e bianco
   const rnd = (a, b) => a + Math.random() * (b - a);
   const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
-  // centro in alto di un elemento della slide, in coordinate 1600×900
-  function anchorOf(slide, sel, fallback) {
+  // rettangolo di un elemento della slide in coordinate 1600×900 (null se non c'è)
+  function rectOf(slide, sel) {
     const el = slide.querySelector(sel);
-    if (!el) return fallback;
+    if (!el) return null;
     const s = slide.getBoundingClientRect(), r = el.getBoundingClientRect(), k = 1600 / s.width;
-    return [(r.left + r.width / 2 - s.left) * k, (r.top - s.top) * k];
+    return { x: (r.left - s.left) * k, y: (r.top - s.top) * k, w: r.width * k, h: r.height * k };
   }
   const FX = {
     // cinque fuochi bianchi e blu, in alto e lontano dal titolo
@@ -507,14 +530,16 @@
       return (ctx, ms, k) => {
         if (ms > next) {
           next = ms + rnd(220, 480);
-          const [x, y] = anchorOf(slide, ".phone, .media img, .media", [1300, 600]);
-          hearts.push({ x: x + rnd(-150, 150), y: y + rnd(-40, 40), vy: rnd(1.4, 2.4), ph: rnd(0, 6.28), s: rnd(30, 52), life: 1, c: pick(["#1156ae", "#0284c7", "#38bdf8", "#ffffff"]) });
+          const r = rectOf(slide, ".phone, .media img, .media") || { x: 1200, y: 300, w: 260, h: 520 };
+          hearts.push({
+            x: r.x + r.w / 2 + rnd(-70, 70), y: r.y + rnd(-10, 50), vx: 0, vy: rnd(1.3, 2.2),
+            ph: rnd(0, 6.28), s: rnd(22, 38), life: 1, grow: 1, c: pick(["#1156ae", "#0284c7", "#38bdf8", "#ffffff"]),
+          });
         }
         for (const h of hearts) {
           h.ph += 0.05 * k;
           h.y -= h.vy * k;
-          h.x += Math.sin(h.ph) * 0.9 * k;
-          h.life -= 0.006 * k;
+          h.x += (h.vx + Math.sin(h.ph) * 0.9) * k;
           if (h.life <= 0) continue;
           ctx.save();
           ctx.translate(h.x, h.y);
@@ -525,14 +550,95 @@
           heart(ctx, h.s);
           ctx.restore();
         }
-        for (let i = hearts.length - 1; i >= 0; i--) if (hearts[i].life <= 0) hearts.splice(i, 1);
+        for (let i = hearts.length - 1; i >= 0; i--) if (hearts[i].y < -80) hearts.splice(i, 1); // fino a uscire dallo schermo
+        return true;
+      };
+    },
+    // faccine a contorno (felice, triste, occhiali, sorpresa, preoccupata, occhiolino) che escono dall'alto della foto
+    emoji(slide) {
+      const kinds = ["smile", "sad", "glasses", "wow", "worried", "wink", "laugh", "meh"];
+      const faces = [];
+      let next = 0;
+      const face = (ctx, kind, r) => {
+        ctx.fillStyle = "rgb(255 255 255 / 0.85)";
+        ctx.beginPath();
+        ctx.arc(0, 0, r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        const ex = r * 0.36, ey = -r * 0.22, er = r * 0.09;
+        const dot = (x) => (ctx.beginPath(), ctx.arc(x, ey, er, 0, Math.PI * 2), ctx.fillStyle = ctx.strokeStyle, ctx.fill());
+        const arc = (y, rad, a0, a1) => (ctx.beginPath(), ctx.arc(0, y, rad, a0, a1), ctx.stroke());
+        if (kind === "glasses") {
+          ctx.fillStyle = ctx.strokeStyle;
+          for (const x of [-ex, ex]) ctx.fillRect(x - r * 0.27, ey - r * 0.14, r * 0.54, r * 0.3);
+          ctx.beginPath();
+          ctx.moveTo(-ex + r * 0.27, ey);
+          ctx.lineTo(ex - r * 0.27, ey);
+          ctx.stroke();
+        } else if (kind === "wink") {
+          dot(-ex);
+          ctx.beginPath();
+          ctx.moveTo(ex - r * 0.14, ey);
+          ctx.lineTo(ex + r * 0.14, ey);
+          ctx.stroke();
+        } else if (kind === "worried") {
+          dot(-ex);
+          dot(ex);
+          ctx.beginPath(); // sopracciglia in salita verso il centro
+          ctx.moveTo(-ex - r * 0.16, ey - r * 0.2);
+          ctx.lineTo(-ex + r * 0.14, ey - r * 0.3);
+          ctx.moveTo(ex + r * 0.16, ey - r * 0.2);
+          ctx.lineTo(ex - r * 0.14, ey - r * 0.3);
+          ctx.stroke();
+        } else {
+          dot(-ex);
+          dot(ex);
+        }
+        if (kind === "sad" || kind === "worried") arc(r * 0.58, r * 0.38, Math.PI * 1.15, Math.PI * 1.85);
+        else if (kind === "wow") (ctx.beginPath(), ctx.arc(0, r * 0.35, r * 0.15, 0, Math.PI * 2), ctx.stroke());
+        else if (kind === "meh") (ctx.beginPath(), ctx.moveTo(-r * 0.3, r * 0.36), ctx.lineTo(r * 0.3, r * 0.36), ctx.stroke());
+        else if (kind === "laugh") {
+          ctx.beginPath();
+          ctx.moveTo(-r * 0.42, r * 0.12);
+          ctx.arc(0, r * 0.12, r * 0.42, 0, Math.PI);
+          ctx.closePath();
+          ctx.fillStyle = ctx.strokeStyle;
+          ctx.fill();
+        } else arc(r * 0.05, r * 0.45, Math.PI * 0.2, Math.PI * 0.8);
+      };
+      return (ctx, ms, k) => {
+        if (ms > next) {
+          next = ms + rnd(700, 1200);
+          // escono dall'alto della foto (la scatola del Welcome kit), come i cuori dal telefono
+          const r = rectOf(slide, ".media img, .media > *, .media") || { x: 300, y: 300, w: 400, h: 400 };
+          faces.push({
+            x: r.x + r.w * rnd(0.12, 0.88), y: r.y + rnd(-10, 40), vy: rnd(1.3, 2.1), ph: rnd(0, 6.28),
+            rot: rnd(-0.15, 0.15), r: rnd(26, 42), kind: pick(kinds), c: pick(["#1156ae", "#0284c7", "#0369a1"]),
+          });
+        }
+        for (const f of faces) {
+          f.y -= f.vy * k;
+          f.ph += 0.05 * k;
+          f.x += Math.sin(f.ph) * 0.9 * k;
+          ctx.save();
+          ctx.translate(f.x, f.y);
+          ctx.rotate(f.rot + Math.sin(f.ph) * 0.12);
+          ctx.strokeStyle = f.c;
+          ctx.lineWidth = Math.max(2.5, f.r * 0.1);
+          ctx.lineCap = "round";
+          ctx.shadowColor = "rgb(17 86 174 / 0.3)";
+          ctx.shadowBlur = 8;
+          face(ctx, f.kind, f.r);
+          ctx.restore();
+        }
+        for (let i = faces.length - 1; i >= 0; i--) if (faces[i].y < -80) faces.splice(i, 1); // fino a uscire dallo schermo
         return true;
       };
     },
     // spicchi di pizza che cadono (per la slide finale, se si va a mangiare)
     pizza() {
       const slices = [];
-      let next = 300;
+      let next = 0;
       const slice = (ctx, s) => {
         ctx.fillStyle = "#fbbf24"; // formaggio
         ctx.beginPath();
@@ -552,35 +658,257 @@
           ctx.fill();
         }
       };
+      // compare in dissolvenza già dentro la slide, gira piano e scompare: non entra né esce dai bordi
+      const spawn = (ms) => ({
+        x: rnd(140, 1460), y: rnd(130, 780), vx: rnd(-0.35, 0.35), vy: rnd(-0.25, 0.25), rot: rnd(0, 6.28),
+        vr: rnd(-0.008, 0.008), s: rnd(46, 66), born: ms, life: rnd(6000, 9000),
+      });
       return (ctx, ms, k) => {
-        if (ms > next) {
-          next = ms + rnd(260, 560);
-          slices.push({ x: rnd(40, 1560), y: -60, vy: rnd(2, 3.6), rot: rnd(0, 6.28), vr: rnd(-0.04, 0.04), s: rnd(38, 60) });
+        if (ms > next && slices.length < 6) {
+          next = ms + rnd(700, 1400);
+          slices.push(spawn(ms));
         }
         for (const p of slices) {
+          p.x += p.vx * k;
           p.y += p.vy * k;
           p.rot += p.vr * k;
+          const age = ms - p.born;
           ctx.save();
           ctx.translate(p.x, p.y);
           ctx.rotate(p.rot);
-          ctx.globalAlpha = 0.95;
+          ctx.globalAlpha = 0.9 * Math.min(1, age / 1200, (p.life - age) / 1200);
           ctx.shadowColor = "rgb(15 23 42 / 0.25)";
           ctx.shadowBlur = 10;
           slice(ctx, p.s);
           ctx.restore();
         }
-        for (let i = slices.length - 1; i >= 0; i--) if (slices[i].y > 980) slices.splice(i, 1);
+        for (let i = slices.length - 1; i >= 0; i--) if (ms - slices[i].born > slices[i].life) slices.splice(i, 1);
+        return true;
+      };
+    },
+    // un verme di luce che fa il giro di un riquadro (foto, card) e poi passa al successivo, su tutti
+    snake(slide) {
+      const SEL = ".media img, .media > .phone, .cards > *, .stats > *, .split > .glass, .body > .glass";
+      let path = null, total = 0;
+      // punti lungo il bordo arrotondato, in senso orario, partendo dall'angolo in alto a sinistra
+      const perimeter = (x, y, w, h, r) => {
+        const pts = [], seg = (x0, y0, x1, y1) => {
+          const n = Math.max(1, Math.round(Math.hypot(x1 - x0, y1 - y0) / 4));
+          for (let i = 0; i < n; i++) pts.push([x0 + ((x1 - x0) * i) / n, y0 + ((y1 - y0) * i) / n]);
+        }, arc = (cx, cy, a0) => {
+          for (let i = 0; i < 8; i++) pts.push([cx + Math.cos(a0 + (i / 8) * Math.PI / 2) * r, cy + Math.sin(a0 + (i / 8) * Math.PI / 2) * r]);
+        };
+        seg(x + r, y, x + w - r, y); arc(x + w - r, y + r, -Math.PI / 2);
+        seg(x + w, y + r, x + w, y + h - r); arc(x + w - r, y + h - r, 0);
+        seg(x + w - r, y + h, x + r, y + h); arc(x + r, y + h - r, Math.PI / 2);
+        seg(x, y + h - r, x, y + r); arc(x + r, y + r, Math.PI);
+        return pts;
+      };
+      const build = () => {
+        const k = 1600 / slide.getBoundingClientRect().width;
+        let items = [...slide.querySelectorAll(SEL)].map((el) => {
+          const r = el.getBoundingClientRect(), s = slide.getBoundingClientRect();
+          const box = { x: (r.left - s.left) * k, y: (r.top - s.top) * k, w: r.width * k, h: r.height * k };
+          return { ...box, rad: Math.min(parseFloat(getComputedStyle(el).borderTopLeftRadius) || 16, box.w / 2, box.h / 2) };
+        }).filter((b) => b.w > 20);
+        if (!items.length) return;
+        // giro: dal riquadro più a sinistra, poi sempre al più vicino
+        const c = (b) => [b.x + b.w / 2, b.y + b.h / 2];
+        const tour = [items.sort((a, b) => a.x - b.x || a.y - b.y).shift()];
+        while (items.length) {
+          const [lx, ly] = c(tour[tour.length - 1]);
+          items.sort((a, b) => Math.hypot(c(a)[0] - lx, c(a)[1] - ly) - Math.hypot(c(b)[0] - lx, c(b)[1] - ly));
+          tour.push(items.shift());
+        }
+        path = [];
+        tour.forEach((b, i) => {
+          const loop = perimeter(b.x, b.y, b.w, b.h, b.rad);
+          path.push(...loop, loop[0]);
+          // tratto che porta al riquadro dopo
+          const nb = tour[(i + 1) % tour.length], [x0, y0] = loop[0], x1 = nb.x + nb.rad, y1 = nb.y;
+          const n = Math.max(1, Math.round(Math.hypot(x1 - x0, y1 - y0) / 4));
+          for (let j = 1; j < n; j++) path.push([x0 + ((x1 - x0) * j) / n, y0 + ((y1 - y0) * j) / n]);
+        });
+        total = path.length;
+      };
+      const LEN = 70; // lunghezza del verme, in punti da 4 px
+      return (ctx, ms) => {
+        if (ms < 1400) return true; // dopo l'ingresso di foto e card
+        if (!path) build();
+        if (!path) return false;
+        const head = Math.floor((ms - 1400) * 0.17) % total; // ~680 px al secondo
+        ctx.lineCap = "round";
+        ctx.shadowColor = "#38bdf8";
+        ctx.shadowBlur = 14;
+        for (let i = LEN; i > 0; i--) {
+          const a = path[(head - i + total) % total], b = path[(head - i + 1 + total) % total], f = 1 - i / LEN;
+          if (Math.hypot(a[0] - b[0], a[1] - b[1]) > 12) continue;
+          ctx.globalAlpha = Math.min(1, (ms - 1400) / 500) * f;
+          ctx.strokeStyle = f > 0.85 ? "#ffffff" : f > 0.4 ? "#38bdf8" : "#0284c7";
+          ctx.lineWidth = 2 + 3 * f;
+          ctx.beginPath();
+          ctx.moveTo(a[0], a[1]);
+          ctx.lineTo(b[0], b[1]);
+          ctx.stroke();
+        }
+        return true;
+      };
+    },
+    // punti di domanda bianchi e blu che spuntano qua e là e salgono, lontano dal titolo al centro
+    questions() {
+      const marks = [];
+      let next = 400;
+      return (ctx, ms, k) => {
+        if (ms > next) {
+          next = ms + rnd(350, 700);
+          let x, y;
+          do (x = rnd(80, 1520)), (y = rnd(180, 820));
+          while (x > 420 && x < 1180 && y > 280 && y < 620);
+          marks.push({ x, y, s: rnd(46, 90), rot: rnd(-0.35, 0.35), ph: rnd(0, 6.28), life: 1, grow: 0, white: Math.random() < 0.45 });
+        }
+        for (const m of marks) {
+          m.y -= 0.6 * k;
+          m.ph += 0.04 * k;
+          m.grow = Math.min(1, m.grow + 0.06 * k);
+          m.life -= 0.006 * k;
+          if (m.life <= 0) continue;
+          ctx.save();
+          ctx.translate(m.x, m.y);
+          ctx.rotate(m.rot + Math.sin(m.ph) * 0.1);
+          ctx.scale(m.grow, m.grow);
+          ctx.globalAlpha = Math.min(1, m.life * 2);
+          ctx.font = `700 ${m.s}px "DM Sans", system-ui, sans-serif`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.lineJoin = "round";
+          ctx.lineWidth = m.s * 0.07;
+          ctx.strokeStyle = "#1156ae";
+          ctx.fillStyle = m.white ? "#ffffff" : pick(["#1156ae", "#0284c7"]);
+          if (m.white) (ctx.shadowColor = "rgb(17 86 174 / 0.3)"), (ctx.shadowBlur = 8);
+          ctx.fillText("?", 0, 0);
+          if (m.white) ctx.strokeText("?", 0, 0);
+          ctx.restore();
+        }
+        for (let i = marks.length - 1; i >= 0; i--) if (marks[i].life <= 0) marks.splice(i, 1);
+        return true;
+      };
+    },
+    // ali bianche che battono ai lati dell'immagine (la lattina "che mette le ali"): dietro all'immagine
+    wings(slide) {
+      const wing = (ctx, side, flap) => {
+        ctx.save();
+        ctx.scale(side, 1);
+        ctx.rotate(-0.25 + flap);
+        ctx.fillStyle = "#ffffff";
+        ctx.strokeStyle = "#1156ae";
+        ctx.lineWidth = 5;
+        ctx.lineJoin = "round";
+        // tre piume, dalla più lunga alla più corta
+        for (const [len, ang, wd] of [[230, -0.55, 50], [190, -0.2, 44], [145, 0.15, 38]]) {
+          ctx.save();
+          ctx.rotate(ang);
+          ctx.beginPath();
+          ctx.ellipse(len / 2, 0, len / 2, wd / 2, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+          ctx.restore();
+        }
+        ctx.restore();
+      };
+      return (ctx, ms) => {
+        const el = slide.querySelector(".media img, .media > *"), r = rectOf(slide, ".media img, .media > *");
+        if (!r) return false;
+        // le ali seguono l'inclinazione dell'immagine (tilt): ruotate attorno al suo centro, attaccate ai suoi bordi
+        const rot = (parseFloat(getComputedStyle(el).rotate) || 0) * (Math.PI / 180);
+        const w = el.offsetWidth, h = el.offsetHeight, flap = Math.sin(ms * 0.0055) * 0.3;
+        // compaiono insieme all'immagine (stessa opacità durante l'ingresso) e la seguono mentre fluttua
+        ctx.globalAlpha = parseFloat(getComputedStyle(el).opacity) || 0;
+        ctx.shadowColor = "rgb(17 86 174 / 0.3)";
+        ctx.shadowBlur = 12;
+        ctx.translate(r.x + r.w / 2, r.y + r.h / 2);
+        ctx.rotate(rot);
+        for (const side of [-1, 1]) {
+          ctx.save();
+          ctx.translate(side * w * 0.36, -h * 0.14);
+          wing(ctx, side, flap);
+          ctx.restore();
+        }
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
         return true;
       };
     },
   };
-  const FX_BACK = ["network", "code"]; // dietro al contenuto
+  // train: le persone delle righe .people (es. 4 sopra e 3 sotto) scivolano su una pista e ci girano
+  // sopra piano, a distanze uguali lungo il percorso: sempre tutte visibili, mai sovrapposte.
+  const TRAIN_SLOT_MS = 4500; // tempo per passare dal posto di una persona a quello della successiva
+  function rotatePeople(slide) {
+    const rows = [...slide.querySelectorAll(".people")];
+    // in senso orario: prima riga da sinistra, seconda da destra…
+    const order = rows.flatMap((r, i) => {
+      const p = [...r.querySelectorAll(":scope > .person")];
+      return i % 2 ? p.reverse() : p;
+    });
+    if (order.length < 2) return;
+    cancelAnimationFrame(slide._train);
+    let home = null, ring = null, len = 0, t0 = 0;
+    const frame = (t) => {
+      if (!slide.classList.contains("active")) return order.forEach((p) => (p.style.translate = ""));
+      if (!home) {
+        if (t - slide._fxStart < 2200) return (slide._train = requestAnimationFrame(frame)); // dopo l'ingresso
+        const k = 1600 / slide.getBoundingClientRect().width, s = slide.getBoundingClientRect();
+        home = order.map((p) => {
+          const r = p.getBoundingClientRect();
+          return [(r.left - s.left + r.width / 2) * k, (r.top - s.top + r.height / 2) * k];
+        });
+        const xs = home.map((h) => h[0]), ys = home.map((h) => h[1]);
+        const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2;
+        // pista: due tratti dritti e due semicerchi ampi (un ovale curva troppo stretto alle estremità
+        // e lì le persone si toccherebbero); larga quanto la slide permette
+        const rx = Math.max((Math.max(...xs) - Math.min(...xs)) / 2 + 60, Math.min(600, cx - 170, 1430 - cx)), ry = 150, a = rx - ry;
+        const pts = [];
+        const line = (x0, y0, x1, y1) => { for (let i = 0; i < 60; i++) pts.push([x0 + ((x1 - x0) * i) / 60, y0 + ((y1 - y0) * i) / 60]); };
+        const half = (x, a0) => { for (let i = 0; i < 90; i++) pts.push([x + Math.cos(a0 + (i / 90) * Math.PI) * ry, cy + Math.sin(a0 + (i / 90) * Math.PI) * ry]); };
+        line(cx - a, cy - ry, cx + a, cy - ry); // sopra, verso destra (parte in alto a sinistra)
+        half(cx + a, -Math.PI / 2);
+        line(cx + a, cy + ry, cx - a, cy + ry); // sotto, verso sinistra
+        half(cx - a, Math.PI / 2);
+        pts.push(pts[0]);
+        ring = [];
+        pts.forEach((pt, i) => ring.push([...pt, i ? ring[i - 1][2] + Math.hypot(pt[0] - pts[i - 1][0], pt[1] - pts[i - 1][1]) : 0]));
+        len = ring[ring.length - 1][2];
+        t0 = t;
+      }
+      // partenza morbida: in 3 s scivolano dalle righe alla pista e la velocità sale da zero
+      // (lo spostamento è l'integrale di una velocità che cresce con una curva smoothstep)
+      const RAMP = 3000, n = order.length, el = t - t0, speed = len / (TRAIN_SLOT_MS * n), u = Math.min(1, el / RAMP);
+      const shift = speed * (el < RAMP ? RAMP * (u ** 3 - u ** 4 / 2) : el - RAMP / 2);
+      const ease = u * u * (3 - 2 * u);
+      const at = (d) => {
+        d = ((d % len) + len) % len;
+        let lo = 0, hi = ring.length - 1;
+        while (hi - lo > 1) ring[(lo + hi) >> 1][2] < d ? (lo = (lo + hi) >> 1) : (hi = (lo + hi) >> 1);
+        const a = ring[lo], b = ring[hi], f = (d - a[2]) / (b[2] - a[2] || 1);
+        return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f];
+      };
+      order.forEach((p, j) => {
+        const [x, y] = at((j / n) * len + shift), [hx, hy] = home[j];
+        p.style.translate = `${(x - hx) * ease}px ${(y - hy) * ease}px`;
+      });
+      slide._train = requestAnimationFrame(frame);
+    };
+    slide._fxStart = performance.now();
+    slide._train = requestAnimationFrame(frame);
+  }
+
+  const FX_BACK = ["network", "code", "wings"]; // dietro al contenuto
+  const FX_MID = ["pizza", "emoji"]; // sotto le scritte, sopra foto, sticker e piè di pagina
   function runFx(slide) {
     slide.querySelectorAll(":scope > canvas.fx").forEach((c) => c.remove());
     if (STATIC || REDUCED || !slide.dataset.fx) return;
+    if (slide.dataset.fx.split(/\s+/).includes("train")) rotatePeople(slide);
     slide.dataset.fx.split(/\s+/).filter((n) => FX[n]).forEach((name) => {
       const cv = document.createElement("canvas");
-      cv.className = FX_BACK.includes(name) ? "fx back" : "fx";
+      cv.className = FX_BACK.includes(name) ? "fx back" : FX_MID.includes(name) ? "fx mid" : "fx";
       cv.width = 1600;
       cv.height = 900;
       if (FX_BACK.includes(name)) slide.prepend(cv);
@@ -612,6 +940,7 @@
       revealsOf(slides[i]).forEach((r) => r.classList.toggle("shown", fromEnd || STATIC));
       moveBg(i);
       runCounters(slides[i]);
+      rollDigits(slides[i]);
       runFx(slides[i]);
     }
     document.getElementById("pn-counter").textContent = `${i + 1} / ${total}`;

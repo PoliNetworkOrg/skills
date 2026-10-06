@@ -213,6 +213,7 @@ svg.ico {
 .slide {
   position: absolute;
   inset: 0;
+  isolation: isolate; /* le animazioni "dietro" (canvas.fx.back) restano sempre dietro al contenuto */
   display: flex;
   flex-direction: column;
   padding: 84px var(--pad-x) 116px;
@@ -1330,8 +1331,8 @@ table.status td small {
 }
 
 /* ================= Animazioni sulla slide: data-fx="…" =================
-   Su tela, disegnate da deck.js: fireworks, confetti, likes, pizza (davanti), network, code (dietro).
-   Solo CSS, qui sotto: float, pulse, flow, shine, wiggle. Si spengono da sole in ?static, nel PDF
+   Su tela, disegnate da deck.js: fireworks, confetti, likes, emoji, pizza, questions, snake (davanti),
+   network, code, wings (dietro). Solo CSS, qui sotto: float, pulse, flow, shine, wiggle; train (deck.js). Si spengono da sole in ?static, nel PDF
    e con "riduci movimento" (vedi html.static e prefers-reduced-motion). */
 .slide > canvas.fx {
   position: absolute;
@@ -1344,6 +1345,16 @@ table.status td small {
 /* dietro al contenuto: la slide ha un suo contesto di sovrapposizione (transform) */
 .slide > canvas.fx.back {
   z-index: -1;
+}
+/* in mezzo: sopra foto, sticker (z 2) e piè di pagina, sotto titolo, scritte e riquadri */
+.slide > canvas.fx.mid {
+  z-index: 3;
+}
+.slide:has(> canvas.fx.mid) > :is(h1, .kicker, .sub, .links, .meta),
+.slide:has(> canvas.fx.mid) > .body > :not(.media, .split, .gallery, .crumb),
+.slide:has(> canvas.fx.mid) .split > :not(.media) {
+  position: relative;
+  z-index: 4;
 }
 @media print {
   .slide > canvas.fx {

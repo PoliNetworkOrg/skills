@@ -59,7 +59,11 @@ che l'utente ha già detto.
    Se dice sì, proponi dove metterli (vedi il punto 4): usa quelli che fornisce l'utente oppure i
    meme pronti di `assets/memes/`. Se dice no, niente sticker: togli tutti gli
    `<img class="sticker">` del template.
-8. **Struttura**, con il default della versione scelta già proposto:
+8. **Animazioni sulla slide?** Oltre agli ingressi, cose che si muovono mentre la si guarda
+   (fuochi, coriandoli, cuori che escono dal telefono, una luce che corre sui bordi…, vedi
+   "Animazioni sulla slide" nel catalogo). Di default sì nella parlata, no nell'autoesplicativa.
+   Se dice sì, nella scaletta indica quale effetto va su quale slide.
+9. **Struttura**, con il default della versione scelta già proposto:
    - **indice** (`ol.agenda`, cliccabile, con il sottotitolo di ogni sezione): sì nella parlata,
      no nell'autoesplicativa;
    - **divisori di sezione** (slide "Parte 1"): sì nella parlata, no nell'autoesplicativa;
@@ -122,8 +126,10 @@ Lavora nella cartella indicata dall'utente. Se non ne indica una, lavora in quel
     non vuol dire eliminare un componente, ma usarne tanti, ognuno poche volte.
 
   Scegli in base alla forma del contenuto: elenco di punti con icona → `ul.irows`, numeri →
-  `stats`, una crescita o un confronto prima/dopo → `columns` (un grafico si capisce subito, tre
-  numeri vanno letti), passi → `ol.points`, tappe con data → `timeline`, oggi/domani → `compare`,
+  `stats`, un confronto anno per anno → `columns` (un grafico si capisce subito, tre numeri vanno
+  letti), una crescita sola accanto a un'immagine → `growth`, passi → `ol.points`, tappe con data
+  → `timeline`, oggi/domani → `compare` (con `bigicon` da tutti e due i lati se manca un'immagine),
+  rinomine vecchio → nuovo → `cards` con "Era: …",
   perché/cosa/risultato → `cols`, chi/quando/dove → `dl.facts`, voci affiancate → `cards`, un
   evento con foto → `split`, più schermate di un'app → `screens`, un messaggio → frase a effetto. Già nella scaletta (punto 2) indica il
   componente di ogni slide, il lato dell'immagine o dello sticker se c'è, e controlla che nessuno
@@ -136,7 +142,18 @@ Lavora nella cartella indicata dall'utente. Se non ne indica una, lavora in quel
   - nomi ed etichette stanno su una riga (se vanno a capo, meno colonne); niente URL lunghi;
   - la parola chiave si deve vedere: in `div.stats` mettila in `<h3>` tra numero e descrizione;
   - niente decorazioni senza significato: pallini colorati che non indicano niente, riquadri
-    azzurri (`glass tint`) su contenuti normali.
+    azzurri (`glass tint`) su contenuti normali;
+  - **mai un elenco puntato da solo dentro un riquadro:** ogni punto diventa una card
+    (`div.cards`, una colonna accanto a un'immagine, 2×2 se sono quattro). Un solo riquadro va bene
+    per un testo, una spiegazione, un numero grande con due righe, una scheda `dl.facts`;
+  - **simmetria nei confronti:** i due lati di un prima/dopo si costruiscono uguali (mai un riquadro
+    glass da una parte e niente dall'altra) e il gruppo sta al centro;
+  - **etichette coerenti:** nella stessa slide tutte dello stesso tipo (tutte date, tutte luoghi…);
+    l'anno comune a tutte va nel sottotitolo, non ripetuto nei titoli;
+  - **numeri come protagonisti:** il dato chiave di un riquadro accanto a una foto va in grande
+    (`b.num`) con la parola accanto, così il riquadro pesa quanto la foto;
+  - **foto ritagliate al centro:** screenshot e foto con margini uguali a destra e a sinistra, senza
+    barre del browser, finestre in sovrimpressione o dati personali (nomi di chi segue un account).
 - **Immagini e QR** (dettagli nella sezione "Immagini" del catalogo): una foto per riquadro,
   ritagliata sul soggetto e nel formato del riquadro; le altre in una galleria. Telefono e
   immagini scontornate inclinati (`tilt`); gli scontornati dentro la slide (`img.cutout`), non
@@ -153,7 +170,14 @@ Lavora nella cartella indicata dall'utente. Se non ne indica una, lavora in quel
   massimo uno per slide, non in tutte, mai su bilancio, votazioni e 5x1000. Nell'autoesplicativa
   ancora meno e solo su slide leggere. Usa quelli forniti dall'utente o i meme pronti di
   `assets/memes/` (copiali in `img/`, vedi "Sticker" nel catalogo); non scaricare immagini di terzi.
-  Metti gli sticker un po' a destra e un po' a sinistra (vedi "Varia i layout").
+  Metti gli sticker un po' a destra e un po' a sinistra (vedi "Varia i layout"). Scegli il gatto
+  per l'espressione e giralo verso il contenuto (`flip`); i gatti interi, non tagliati in basso,
+  vanno staccati dal fondo (`lift`). I gatti restano fermi: niente `float` o `wiggle` sugli sticker.
+- **Animazioni sulla slide (`data-fx`):** solo se l'utente le vuole (domanda 8 del punto 1). Più o
+  meno una slide su cinque, quelle che contano (copertina, risultati, novità, chiusura); l'effetto
+  deve dire qualcosa sulla slide (i like su Instagram, i fuochi su un record, le ali sulla Red Bull),
+  non decorare. Al massimo un effetto grande per slide, mai su votazioni, bilancio e 5x1000.
+  Catalogo e regole in "Animazioni sulla slide" in `references/components.md`.
 - **Note per chi parla:** quando servono, mettile in `<aside class="notes">`. Si vedono con il tasto P.
 
 ## 5. Compila e controlla (obbligatorio)
@@ -187,9 +211,12 @@ l'utente fornirà dopo.
      due righe, foto strette o tagliate male, telefono o immagini dritti e rigidi;
    - ripetizioni (la stessa informazione nel riquadro "In breve", nel corpo e nel `.next`);
    - numeri e nomi diversi da come li ha dati l'utente, frasi che aggiungono cose non dette.
-4. **Senza Chrome/Chromium:** se `check.py` non trova il browser, dillo all'utente e indica che il
+4. **Animazioni (`data-fx`):** `check.py` e i suoi screenshot le spengono, quindi non le mostrano.
+   Per vederle apri l'HTML nel browser; alla consegna di' all'utente su quali slide ci sono e chiedi
+   di guardarle in movimento.
+5. **Senza Chrome/Chromium:** se `check.py` non trova il browser, dillo all'utente e indica che il
    layout non è stato verificato.
-5. **Pulizia:** cancella la cartella `shots/` prima di consegnare, a meno che l'utente non chieda
+6. **Pulizia:** cancella la cartella `shots/` prima di consegnare, a meno che l'utente non chieda
    di tenere gli screenshot.
 
 ## 6. Consegna

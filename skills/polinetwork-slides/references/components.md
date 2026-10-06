@@ -345,20 +345,29 @@ guarda, oltre agli ingressi. Uno o più nomi separati da spazi:
 | `confetti` | Coriandoli bianchi e blu che cadono, una volta (~4 s) | Chiusura, un traguardo |
 | `network` | Nodi e linee che si muovono piano dietro al contenuto | Copertina, "chi siamo", divisori |
 | `code` | Caratteri di codice che scendono tenui dietro al contenuto | Divisore o slide dell'IT |
-| `likes` | Cuori bianchi e blu che salgono dal telefono o dall'immagine | Social, follower |
-| `pizza` | Spicchi di pizza che cadono | Solo la slide finale con la pizza |
+| `emoji` | Faccine a contorno (felice, triste, occhiali, sorpresa…) che escono dall'alto della foto e salgono fino a uscire dallo schermo, come `likes` | Emozioni, paure, feedback delle persone |
+| `likes` | Cuori bianchi e blu che salgono dall'alto del telefono fino a uscire dallo schermo, come i like di una diretta | Social, follower |
+| `pizza` | Pochi spicchi di pizza disegnati a contorno blu, lontani da scritte e sticker: compaiono, galleggiano e svaniscono | Quando dopo si va a mangiare (es. "Domande?" con `questions`) |
+| `questions` | Punti di domanda bianchi e blu che spuntano attorno al titolo e salgono | "Domande?" |
+| `wings` | Ali bianche che battono ai lati dell'immagine: compaiono con lei, ne seguono inclinazione e movimento (con `float` vola) | Red Bull, "ti mette le ali" |
+| `snake` | Un verme di luce fa il giro di un riquadro (foto, card) e passa al successivo, su tutti | Hackathon, progetti, una slide "tech" |
+| `train` | Le persone delle righe `div.people` (es. 4 sopra, 3 sotto) scivolano su una pista ovale e ci girano sopra piano, a distanze uguali: sempre tutte visibili, mai sovrapposte | Ringraziamenti al Direttivo, a un team |
 | `float` | Immagini, telefoni e sticker galleggiano piano | Slide con screenshot o foto scontornate |
 | `pulse` | Onde che partono dall'icona grande (`bigicon`) e dal QR | Un "in futuro", un "provalo" |
 | `flow` | Una luce percorre la timeline dalla prima all'ultima tappa | `ol.timeline` |
 | `shine` | Un riflesso passa sulla barra di `div.growth` | Crescita |
-| `wiggle` | Lo sticker dondola | Solo versione con meme |
+| `wiggle` | Lo sticker dondola | Solo versione con meme, e con parsimonia: un gatto fermo spesso è meglio |
 
-Al massimo un effetto "grande" (`fireworks`, `confetti`, `network`, `code`, `likes`, `pizza`) per
+Al massimo un effetto "grande" (`fireworks`, `confetti`, `network`, `code`, `emoji`, `likes`, `pizza`, `questions`, `train`) per
 slide, e non in tutte: più o meno una slide su cinque, quelle che contano (copertina, risultati,
 novità, chiusura). Mai su votazioni, bilancio e 5x1000. Gli
 effetti dietro (`network`, `code`) restano tenui per non disturbare la lettura. Tutti si spengono
 da soli nel PDF, nell'anteprima del presentatore, in `?check`/`?static` e per chi ha chiesto meno
 animazioni nel sistema; gli screenshot di `check.py` quindi non li mostrano.
+
+I numeri in `div.stats`, `b.num`, `div.cloud` e `div.growth` contano sempre fino al valore quando la
+slide compare, anche quelli piccoli e gli intervalli ("0–4"); le cifre del codice del 5x1000 girano come
+un contatore e si fermano una dopo l'altra.
 
 ### Numero grande in un riquadro: `b.num`
 In un `glass` accanto a una foto, il numero chiave in grande (conta fino al valore come in

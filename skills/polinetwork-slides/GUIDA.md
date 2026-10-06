@@ -167,7 +167,11 @@ Con Git: `cd ~/polinetwork-skills && git pull`. Con `npx skills`: `npx skills up
    l'assistente propone un QR.
 7. **Con sticker meme o senza?** In tutte e due le versioni. Se li vuoi, l'assistente propone dove
    metterli e usa i tuoi oppure i gatti meme già pronti nella skill; se no, la presentazione non ne ha.
-8. **Struttura:** se vuoi l'indice, i divisori di sezione ("Parte 1") e il nome della sezione in
+8. **Animazioni sulla slide?** Oltre agli ingressi, effetti che si muovono mentre la slide è aperta:
+   fuochi d'artificio, coriandoli, cuori che escono dal telefono, numeri che contano, una luce che
+   corre sui bordi delle card, persone che girano in cerchio… L'assistente propone quale effetto su
+   quale slide. Nel PDF e nella finestra del presentatore restano ferme.
+9. **Struttura:** se vuoi l'indice, i divisori di sezione ("Parte 1") e il nome della sezione in
    alto a destra. Di default tutti e tre nella parlata, solo il nome della sezione
    nell'autoesplicativa.
 
