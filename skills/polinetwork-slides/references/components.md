@@ -111,23 +111,40 @@ Un nome sbagliato fa fallire `build.py`, che suggerisce i nomi più vicini.
   presentazione. `sticker left` sposta il contenuto a destra; `sticker small` non sposta niente,
   quindi a sinistra copre il testo in basso (per esempio un `p.small`): lascialo a destra, a meno
   che l'angolo in basso a sinistra sia vuoto.
+  **Non deve coprire niente.** `check.py` non segnala uno sticker sopra il testo: guarda lo
+  screenshot di ogni slide con uno sticker. `sticker small` copre facilmente la fine delle righe
+  larghe (`irows`, `.next`, didascalie di `compare`). Se succede:
+  - sticker largo e basso (un muso, un gatto che sbuca) in un angolo: rimpiccioliscilo solo su
+    quella slide con `style="height: 180px"`;
+  - oppure togli `small`: lo sticker grande fa restringere il contenuto;
+  - se la slide è già piena (card con QR e `.next`, per esempio) e restringendo il testo va a capo,
+    niente sticker su quella slide.
+  **Grandezza:** sulle slide con molto spazio vuoto (chiusura, divisori, "Domande?") usa lo sticker
+  grande, non `small`: piccolo in mezzo al vuoto sembra perso.
   **Lati tagliati:** molti meme sono tagliati dritto in basso e a volte su un fianco. Il taglio
   deve toccare il bordo della slide, mai restare a mezz'aria. Controlla ogni sticker dopo averlo
   copiato in `img/` (valore sopra 0.3 = lato tagliato):
-  `for g in east west; do magick img/x.png -gravity $g -crop 1x0+0+0 +repage -format "$g %[fx:mean.a] " info:; done`.
+  `for g in east west; do magick img/x.png -gravity $g -crop 1x0+0+0 +repage -format "$g %[fx:mean.a] " info:; done; magick img/x.png -gravity south -crop 0x1+0+0 +repage -format "south %[fx:mean.a]\n" info:`.
   Taglio sul fianco destro → `sticker edge` (attaccato al bordo destro); sul sinistro → mettilo a
   sinistra con `sticker left edge`, oppure specchialo (`magick img/x.png -flop img/x.png`) e usa
   `sticker edge`. Il taglio in basso è già a posto: lo sticker sta sempre appoggiato al fondo.
-- **Meme pronti** in `assets/memes/` (la cartella cresce: guarda cosa c'è con `ls`). Scegli il
-  gatto che ha l'espressione giusta per la slide, per esempio: quello che supplica per le richieste
-  al pubblico (associati, candidati), quello sorpreso per numeri e risultati, quello imbronciato per
-  ritardi, problemi o "Domande?", quello in giacca e cravatta per organizzazione e team. Copialo in
-  `img/` ridimensionato, così non appesantisce il file finale:
-  `magick "$SKILL_DIR/assets/memes/PleaseCat.png" -channel A -fx "u<0.2?0:u" +channel -trim +repage -resize x760 -colors 256 PNG8:img/sticker-richieste.png`
-  (`-fx "u<0.2?0:u"` toglie l'alone quasi invisibile che alcuni scontornati hanno attorno: senza,
-  `-trim` non taglia niente e lo sticker resta sospeso con un margine vuoto; con `-colors 256`
-  resta sotto i 250 KB invece di 500-700).
+  Taglio in basso e anche sul fianco: le due classi insieme (es. `sticker left edge`), senza `lift`.
+  Su un'immagine non scontornata (senza trasparenza) i valori escono tutti 0: non contano.
+- **Meme pronti** in `assets/memes/`: scegli dal catalogo `references/memes.md`, che per ogni
+  gatto dice cosa esprime e su quali lati è tagliato (la cartella cresce: un file che non è nel
+  catalogo, guardalo prima di usarlo). Il gatto deve dire la stessa cosa della slide a colpo
+  d'occhio, non per un gioco di parole. Copialo in `img/` ridimensionato, così non appesantisce il
+  file finale:
+  `magick "$SKILL_DIR/assets/memes/PleaseCat.png" -channel A -fx "u<0.5?0:u" +channel -trim +repage -resize 'x760>' -colors 256 PNG8:img/sticker-richieste.png`
+  (`-fx "u<0.5?0:u"` toglie l'alone semitrasparente attorno al gatto. Senza, `-trim` non taglia
+  niente e lo sticker resta sospeso con un margine vuoto. La soglia è 0.5 perché `PNG8` rende del
+  tutto trasparenti i pixel sotto metà opacità: con una soglia più bassa l'ultima riga del taglio
+  in basso diventa trasparente e il gatto resta staccato dal fondo di un pixel. `x760>`
+  rimpicciolisce senza ingrandire i meme piccoli, quasi tutti 400 px. Con `-colors 256` resta sotto
+  i 250 KB invece di 500-700).
   Quelli non scontornati (con lo sfondo) vanno come `sticker small`.
+  Chiama il file in `img/` come l'argomento della slide (`sticker-censimento.png`). Se cambi lo
+  sticker di una slide, cancella da `img/` il file che non usi più.
 
 ## Tipi di slide
 

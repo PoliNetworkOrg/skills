@@ -24,6 +24,7 @@ standard di `references/brand.md` (codice fiscale, sito, link al recruiting, tes
 | `templates/parlata.slides.html` | Base per la versione parlata (da proiettare), solo segnaposto |
 | `templates/autoesplicativa.slides.html` | Base per la versione da leggere da soli, solo segnaposto |
 | `assets/memes/` | Sticker meme pronti (gatti scontornati), da usare se l'utente vuole i meme |
+| `references/memes.md` | Catalogo dei meme: cosa esprime ogni gatto e su quali lati è tagliato. Leggilo se l'utente vuole i meme |
 | `references/components.md` | Catalogo dei componenti con markup e limiti. **Leggilo prima di scrivere.** |
 | `references/brand.md` | Tono, dati fissi (codice 5x1000, link), testi standard IT/EN |
 | `scripts/build.py` | Compila il sorgente in un unico HTML autonomo |
@@ -169,10 +170,13 @@ Lavora nella cartella indicata dall'utente. Se non ne indica una, lavora in quel
 - **Sticker:** solo se l'utente li ha voluti (domanda 7 del punto 1); altrimenti nessuno. Al
   massimo uno per slide, non in tutte, mai su bilancio, votazioni e 5x1000. Nell'autoesplicativa
   ancora meno e solo su slide leggere. Usa quelli forniti dall'utente o i meme pronti di
-  `assets/memes/` (copiali in `img/`, vedi "Sticker" nel catalogo); non scaricare immagini di terzi.
+  `assets/memes/`, scelti da `references/memes.md` (copiali in `img/`, vedi "Sticker" nel
+  catalogo); non scaricare immagini di terzi.
   Metti gli sticker un po' a destra e un po' a sinistra (vedi "Varia i layout"). Scegli il gatto
-  per l'espressione e giralo verso il contenuto (`flip`); i gatti interi, non tagliati in basso,
-  vanno staccati dal fondo (`lift`). I gatti restano fermi: niente `float` o `wiggle` sugli sticker.
+  per l'espressione: deve dire la stessa cosa della slide a colpo d'occhio, non per un gioco di
+  parole; sulle slide tecniche, meglio nessuno. Giralo verso il contenuto (`flip`); i gatti interi,
+  non tagliati in basso, vanno staccati dal fondo (`lift`). Lo sticker non deve coprire testo o
+  riquadri. I gatti restano fermi: niente `float` o `wiggle` sugli sticker.
 - **Animazioni sulla slide (`data-fx`):** solo se l'utente le vuole (domanda 8 del punto 1). Più o
   meno una slide su cinque, quelle che contano (copertina, risultati, novità, chiusura); l'effetto
   deve dire qualcosa sulla slide (i like su Instagram, i fuochi su un record, le ali sulla Red Bull),
@@ -209,6 +213,9 @@ l'utente fornirà dopo.
      da che lato stanno foto e sticker: se sono quasi tutti dallo stesso lato, alternali;
    - slide sbilanciate: un lato pieno e l'altro vuoto, blocchi staccati, testi corti spezzati su
      due righe, foto strette o tagliate male, telefono o immagini dritti e rigidi;
+   - sticker che coprono testo o riquadri, o che restano sospesi invece di toccare il bordo:
+     `check.py` non li segnala, guarda una per una le slide con uno sticker (rimedi in "Sticker"
+     in `components.md`);
    - ripetizioni (la stessa informazione nel riquadro "In breve", nel corpo e nel `.next`);
    - numeri e nomi diversi da come li ha dati l'utente, frasi che aggiungono cose non dette.
 4. **Animazioni (`data-fx`):** `check.py` e i suoi screenshot le spengono, quindi non le mostrano.

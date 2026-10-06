@@ -51,6 +51,7 @@ Il markup di ogni componente è in [references/components.md](references/compone
 SKILL.md                  istruzioni per l'agente (procedura, regole)
 templates/                parlata, autoesplicativa (.slides.html, basi con soli segnaposto)
 assets/memes/             sticker meme pronti (gatti scontornati)
+references/memes.md       catalogo dei meme: espressione e lati tagliati di ognuno
 references/components.md  catalogo dei layout con markup e limiti
 references/brand.md       tono, dati fissi, testi standard IT/EN
 assets/theme.css          tema: token del sito, glass, layout, animazioni, stampa
@@ -76,6 +77,10 @@ GUIDA.md                  guida all'installazione e all'uso per i membri
   3. documentalo in `components.md`, con markup e limiti;
   4. provalo nel template parlato con `check.py`.
 - **Dati fissi** (codice fiscale, link): tienili aggiornati in `references/brand.md`.
+- **Nuovo meme:** PNG scontornato in `assets/memes/`, nome in PascalCase che dice l'espressione
+  e finisce in `Cat` (`SadThumbsUpCat.png`). Controlla che non ci sia già, anche ruotato o
+  specchiato: se c'è, tieni il più recente col vecchio nome, così i deck che lo usano non si
+  rompono. Poi aggiungi una riga in `references/memes.md`, con il taglio misurato come spiegato lì.
 - **Dopo ogni modifica** rigenera lo ZIP con `python3 scripts/package.py` (finisce in `dist/`
   nella radice della repo) e ricaricalo su claude.ai. Chi usa Git aggiorna con `git pull`, chi usa
   `npx skills` con `npx skills update polinetwork-slides`.
