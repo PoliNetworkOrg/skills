@@ -347,7 +347,7 @@ guarda, oltre agli ingressi. Uno o più nomi separati da spazi:
 | `code` | Caratteri di codice che scendono tenui dietro al contenuto | Divisore o slide dell'IT |
 | `emoji` | Faccine a contorno (felice, triste, occhiali, sorpresa…) che escono dall'alto della foto e salgono fino a uscire dallo schermo, come `likes` | Emozioni, paure, feedback delle persone |
 | `likes` | Cuori bianchi e blu che salgono dall'alto del telefono fino a uscire dallo schermo, come i like di una diretta | Social, follower |
-| `pizza` | Pochi spicchi di pizza disegnati a contorno blu, lontani da scritte e sticker: compaiono, galleggiano e svaniscono | Quando dopo si va a mangiare (es. "Domande?" con `questions`) |
+| `pizza` | Spicchi di pizza disegnati a contorno blu che spuntano, salgono e svaniscono come i punti di domanda, lontani da scritte e sticker | Quando dopo si va a mangiare (es. "Domande?" con `questions`) |
 | `questions` | Punti di domanda bianchi e blu che spuntano attorno al titolo e salgono | "Domande?" |
 | `wings` | Ali bianche che battono ai lati dell'immagine: compaiono con lei, ne seguono inclinazione e movimento (con `float` vola) | Red Bull, "ti mette le ali" |
 | `snake` | Un verme di luce fa il giro di un riquadro (foto, card) e passa al successivo, su tutti | Hackathon, progetti, una slide "tech" |

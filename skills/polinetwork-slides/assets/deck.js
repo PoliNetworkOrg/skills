@@ -389,6 +389,27 @@
     const s = slide.getBoundingClientRect(), r = el.getBoundingClientRect(), k = 1600 / s.width;
     return { x: (r.left - s.left) * k, y: (r.top - s.top) * k, w: r.width * k, h: r.height * k };
   }
+  // posto per un nuovo elemento, condiviso tra gli effetti della stessa slide (es. questions e pizza):
+  // tra 24 posti a caso validi sceglie il più lontano da quelli usati negli ultimi 3 s, così si
+  // distribuiscono in modo uniforme e non spuntano uno sopra l'altro
+  function freeSpot(slide, ok) {
+    const now = performance.now();
+    slide._spots = (slide._spots || []).filter((s) => now - s.t < 3000);
+    let best = null, bd = -1;
+    for (let i = 0; i < 24; i++) {
+      const x = rnd(80, 1520), y = rnd(170, 830);
+      if (!ok(x, y)) continue;
+      const d = Math.min(Infinity, ...slide._spots.map((s) => Math.hypot(s.x - x, s.y - y)));
+      if (d > bd) (bd = d), (best = { x, y });
+    }
+    if (best) slide._spots.push({ ...best, t: now });
+    return best;
+  }
+  // fuori dal centro della slide (titolo) e lontano dallo sticker
+  const awayFromCenter = (slide) => {
+    const st = rectOf(slide, ".sticker");
+    return (x, y) => !(x > 420 && x < 1180 && y > 280 && y < 620) && !(st && x > st.x - 70 && x < st.x + st.w + 70 && y > st.y - 70 && y < st.y + st.h + 70);
+  };
   const FX = {
     // cinque fuochi bianchi e blu, in alto e lontano dal titolo
     fireworks() {
@@ -635,136 +656,68 @@
         return true;
       };
     },
-    // spicchi di pizza che cadono (per la slide finale, se si va a mangiare)
-    pizza() {
+    // spicchi di pizza disegnati a contorno blu (come le faccine) che spuntano e salgono come i punti di
+    // domanda (questions): lontani dal centro della slide e dallo sticker
+    pizza(slide) {
       const slices = [];
-      let next = 0;
+      let next = 700;
       const slice = (ctx, s) => {
-        ctx.fillStyle = "#fbbf24"; // formaggio
-        ctx.beginPath();
-        ctx.moveTo(0, s);
-        ctx.lineTo(-s * 0.55, 0);
-        ctx.lineTo(s * 0.55, 0);
+        ctx.fillStyle = "rgb(255 255 255 / 0.85)";
+        ctx.beginPath(); // spicchio: punta in basso, crosta curva in alto
+        ctx.moveTo(0, s * 0.62);
+        ctx.lineTo(-s * 0.46, -s * 0.38);
+        ctx.quadraticCurveTo(0, -s * 0.62, s * 0.46, -s * 0.38);
         ctx.closePath();
         ctx.fill();
-        ctx.fillStyle = "#b45309"; // crosta
-        ctx.beginPath();
-        ctx.ellipse(0, 0, s * 0.6, s * 0.13, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = "#dc2626"; // salame
-        for (const [px, py] of [[-0.15, 0.28], [0.17, 0.33], [0, 0.6]]) {
-          ctx.beginPath();
-          ctx.arc(px * s, py * s, s * 0.09, 0, Math.PI * 2);
-          ctx.fill();
+        ctx.stroke();
+        ctx.beginPath(); // bordo interno della crosta
+        ctx.moveTo(-s * 0.39, -s * 0.24);
+        ctx.quadraticCurveTo(0, -s * 0.44, s * 0.39, -s * 0.24);
+        ctx.stroke();
+        for (const [x, y, r] of [[-0.14, -0.08, 0.09], [0.15, -0.02, 0.08], [0, 0.24, 0.07]]) {
+          ctx.beginPath(); // salame
+          ctx.arc(x * s, y * s, r * s, 0, Math.PI * 2);
+          ctx.stroke();
         }
       };
-      // compare in dissolvenza già dentro la slide, gira piano e scompare: non entra né esce dai bordi
-      const spawn = (ms) => ({
-        x: rnd(140, 1460), y: rnd(130, 780), vx: rnd(-0.35, 0.35), vy: rnd(-0.25, 0.25), rot: rnd(0, 6.28),
-        vr: rnd(-0.008, 0.008), s: rnd(46, 66), born: ms, life: rnd(6000, 9000),
-      });
       return (ctx, ms, k) => {
-        if (ms > next && slices.length < 6) {
-          next = ms + rnd(700, 1400);
-          slices.push(spawn(ms));
+        if (ms > next) {
+          next = ms + rnd(900, 1500);
+          const at = freeSpot(slide, awayFromCenter(slide));
+          if (at) slices.push({ x: at.x, y: at.y, s: rnd(60, 84), rot: rnd(-0.5, 0.5), ph: rnd(0, 6.28), life: 1, grow: 0, c: pick(["#1156ae", "#0284c7"]) });
         }
         for (const p of slices) {
-          p.x += p.vx * k;
-          p.y += p.vy * k;
-          p.rot += p.vr * k;
-          const age = ms - p.born;
+          p.y -= 0.6 * k;
+          p.ph += 0.04 * k;
+          p.grow = Math.min(1, p.grow + 0.06 * k);
+          p.life -= 0.006 * k;
+          if (p.life <= 0) continue;
           ctx.save();
           ctx.translate(p.x, p.y);
-          ctx.rotate(p.rot);
-          ctx.globalAlpha = 0.9 * Math.min(1, age / 1200, (p.life - age) / 1200);
-          ctx.shadowColor = "rgb(15 23 42 / 0.25)";
-          ctx.shadowBlur = 10;
+          ctx.rotate(p.rot + Math.sin(p.ph) * 0.1);
+          ctx.scale(p.grow, p.grow);
+          ctx.globalAlpha = Math.min(1, p.life * 2);
+          ctx.strokeStyle = p.c;
+          ctx.lineWidth = 4;
+          ctx.lineCap = ctx.lineJoin = "round";
+          ctx.shadowColor = "rgb(17 86 174 / 0.25)";
+          ctx.shadowBlur = 8;
           slice(ctx, p.s);
           ctx.restore();
         }
-        for (let i = slices.length - 1; i >= 0; i--) if (ms - slices[i].born > slices[i].life) slices.splice(i, 1);
-        return true;
-      };
-    },
-    // un verme di luce che fa il giro di un riquadro (foto, card) e poi passa al successivo, su tutti
-    snake(slide) {
-      const SEL = ".media img, .media > .phone, .cards > *, .stats > *, .split > .glass, .body > .glass";
-      let path = null, total = 0;
-      // punti lungo il bordo arrotondato, in senso orario, partendo dall'angolo in alto a sinistra
-      const perimeter = (x, y, w, h, r) => {
-        const pts = [], seg = (x0, y0, x1, y1) => {
-          const n = Math.max(1, Math.round(Math.hypot(x1 - x0, y1 - y0) / 4));
-          for (let i = 0; i < n; i++) pts.push([x0 + ((x1 - x0) * i) / n, y0 + ((y1 - y0) * i) / n]);
-        }, arc = (cx, cy, a0) => {
-          for (let i = 0; i < 8; i++) pts.push([cx + Math.cos(a0 + (i / 8) * Math.PI / 2) * r, cy + Math.sin(a0 + (i / 8) * Math.PI / 2) * r]);
-        };
-        seg(x + r, y, x + w - r, y); arc(x + w - r, y + r, -Math.PI / 2);
-        seg(x + w, y + r, x + w, y + h - r); arc(x + w - r, y + h - r, 0);
-        seg(x + w - r, y + h, x + r, y + h); arc(x + r, y + h - r, Math.PI / 2);
-        seg(x, y + h - r, x, y + r); arc(x + r, y + r, Math.PI);
-        return pts;
-      };
-      const build = () => {
-        const k = 1600 / slide.getBoundingClientRect().width;
-        let items = [...slide.querySelectorAll(SEL)].map((el) => {
-          const r = el.getBoundingClientRect(), s = slide.getBoundingClientRect();
-          const box = { x: (r.left - s.left) * k, y: (r.top - s.top) * k, w: r.width * k, h: r.height * k };
-          return { ...box, rad: Math.min(parseFloat(getComputedStyle(el).borderTopLeftRadius) || 16, box.w / 2, box.h / 2) };
-        }).filter((b) => b.w > 20);
-        if (!items.length) return;
-        // giro: dal riquadro più a sinistra, poi sempre al più vicino
-        const c = (b) => [b.x + b.w / 2, b.y + b.h / 2];
-        const tour = [items.sort((a, b) => a.x - b.x || a.y - b.y).shift()];
-        while (items.length) {
-          const [lx, ly] = c(tour[tour.length - 1]);
-          items.sort((a, b) => Math.hypot(c(a)[0] - lx, c(a)[1] - ly) - Math.hypot(c(b)[0] - lx, c(b)[1] - ly));
-          tour.push(items.shift());
-        }
-        path = [];
-        tour.forEach((b, i) => {
-          const loop = perimeter(b.x, b.y, b.w, b.h, b.rad);
-          path.push(...loop, loop[0]);
-          // tratto che porta al riquadro dopo
-          const nb = tour[(i + 1) % tour.length], [x0, y0] = loop[0], x1 = nb.x + nb.rad, y1 = nb.y;
-          const n = Math.max(1, Math.round(Math.hypot(x1 - x0, y1 - y0) / 4));
-          for (let j = 1; j < n; j++) path.push([x0 + ((x1 - x0) * j) / n, y0 + ((y1 - y0) * j) / n]);
-        });
-        total = path.length;
-      };
-      const LEN = 70; // lunghezza del verme, in punti da 4 px
-      return (ctx, ms) => {
-        if (ms < 1400) return true; // dopo l'ingresso di foto e card
-        if (!path) build();
-        if (!path) return false;
-        const head = Math.floor((ms - 1400) * 0.17) % total; // ~680 px al secondo
-        ctx.lineCap = "round";
-        ctx.shadowColor = "#38bdf8";
-        ctx.shadowBlur = 14;
-        for (let i = LEN; i > 0; i--) {
-          const a = path[(head - i + total) % total], b = path[(head - i + 1 + total) % total], f = 1 - i / LEN;
-          if (Math.hypot(a[0] - b[0], a[1] - b[1]) > 12) continue;
-          ctx.globalAlpha = Math.min(1, (ms - 1400) / 500) * f;
-          ctx.strokeStyle = f > 0.85 ? "#ffffff" : f > 0.4 ? "#38bdf8" : "#0284c7";
-          ctx.lineWidth = 2 + 3 * f;
-          ctx.beginPath();
-          ctx.moveTo(a[0], a[1]);
-          ctx.lineTo(b[0], b[1]);
-          ctx.stroke();
-        }
+        for (let i = slices.length - 1; i >= 0; i--) if (slices[i].life <= 0) slices.splice(i, 1);
         return true;
       };
     },
     // punti di domanda bianchi e blu che spuntano qua e là e salgono, lontano dal titolo al centro
-    questions() {
+    questions(slide) {
       const marks = [];
       let next = 400;
       return (ctx, ms, k) => {
         if (ms > next) {
           next = ms + rnd(350, 700);
-          let x, y;
-          do (x = rnd(80, 1520)), (y = rnd(180, 820));
-          while (x > 420 && x < 1180 && y > 280 && y < 620);
-          marks.push({ x, y, s: rnd(46, 90), rot: rnd(-0.35, 0.35), ph: rnd(0, 6.28), life: 1, grow: 0, white: Math.random() < 0.45 });
+          const at = freeSpot(slide, awayFromCenter(slide));
+          if (at) marks.push({ x: at.x, y: at.y, s: rnd(46, 90), rot: rnd(-0.35, 0.35), ph: rnd(0, 6.28), life: 1, grow: 0, white: Math.random() < 0.45 });
         }
         for (const m of marks) {
           m.y -= 0.6 * k;
@@ -904,6 +857,7 @@
   const FX_MID = ["pizza", "emoji"]; // sotto le scritte, sopra foto, sticker e piè di pagina
   function runFx(slide) {
     slide.querySelectorAll(":scope > canvas.fx").forEach((c) => c.remove());
+    slide._spots = [];
     if (STATIC || REDUCED || !slide.dataset.fx) return;
     if (slide.dataset.fx.split(/\s+/).includes("train")) rotatePeople(slide);
     slide.dataset.fx.split(/\s+/).filter((n) => FX[n]).forEach((name) => {
