@@ -321,6 +321,25 @@ testo va piccolo sotto (max ~4 parole):
 </div>
 ```
 
+### Crescita: `div.growth`
+```html
+<div class="split media-left">
+  <div class="growth" data-from="5000" data-value="7500">
+    <p><b>+2.500</b>follower dalla scorsa assemblea</p>
+    <div class="track"><span>5.000<small>scorsa assemblea</small></span><span>7.500<small>oggi</small></span></div>
+  </div>
+  <div class="media"><div class="phone tilt-left" style="width: 270px"><img src="img/profilo.jpg" alt=""></div></div>
+</div>
+```
+Per **una crescita sola** raccontata come messaggio principale (follower, iscritti, soci): la
+crescita in grande, sotto una barra orizzontale chiara fino al valore di partenza e scura fino a
+oggi, con i due valori sotto. Si legge da sinistra a destra: 5.000 + 2.500 = 7.500. Meglio di
+`div.columns` quando accanto c'è un'immagine (lo screenshot del profilo, una foto), in uno
+`split`, senza `glass` intorno. Il titolo allora non ripete il numero (per esempio solo
+"Instagram"). `data-from` e `data-value` sono i numeri veri; il testo delle etichette resta
+quello scritto. Le due etichette si sovrappongono se la crescita è meno di un quarto del
+totale: in quel caso meglio `div.stats`.
+
 ### Timeline: `ol.timeline`
 ```html
 <ol class="timeline">
