@@ -335,12 +335,29 @@ Al posto dell'icona può esserci un numero grande, `<b class="num" data-count>15
 `div.compare` usa `bigicon` da tutti e due i lati (numero → icona), mai un riquadro glass da una
 parte e niente dall'altra.
 
-### Fuochi d'artificio: `data-fx="fireworks"`
-`<section class="slide" data-fx="fireworks">`: quando si arriva sulla slide partono cinque
-fuochi d'artificio bianchi e blu, per circa tre secondi, sopra il contenuto. Solo per un
-risultato da festeggiare (un record, un evento andato benissimo), al massimo una o due slide
-per presentazione. Non partono nel PDF, nell'anteprima del presentatore, in `?check` né per chi
-ha chiesto meno animazioni nel sistema.
+### Animazioni sulla slide: `data-fx`
+`<section class="slide" data-fx="likes shine">`: cose che si muovono sulla slide mentre la si
+guarda, oltre agli ingressi. Uno o più nomi separati da spazi:
+
+| Nome | Cosa fa | Dove usarlo |
+| --- | --- | --- |
+| `fireworks` | Cinque fuochi bianchi e blu, una volta all'arrivo (~3 s) | Un risultato da festeggiare |
+| `confetti` | Coriandoli bianchi e blu che cadono, una volta (~4 s) | Chiusura, un traguardo |
+| `network` | Nodi e linee che si muovono piano dietro al contenuto | Copertina, "chi siamo", divisori |
+| `code` | Caratteri di codice che scendono tenui dietro al contenuto | Divisore o slide dell'IT |
+| `likes` | Cuori bianchi e blu che salgono dal telefono o dall'immagine | Social, follower |
+| `pizza` | Spicchi di pizza che cadono | Solo la slide finale con la pizza |
+| `float` | Immagini, telefoni e sticker galleggiano piano | Slide con screenshot o foto scontornate |
+| `pulse` | Onde che partono dall'icona grande (`bigicon`) e dal QR | Un "in futuro", un "provalo" |
+| `flow` | Una luce percorre la timeline dalla prima all'ultima tappa | `ol.timeline` |
+| `shine` | Un riflesso passa sulla barra di `div.growth` | Crescita |
+| `wiggle` | Lo sticker dondola | Solo versione con meme |
+
+Al massimo un effetto "grande" (`fireworks`, `confetti`, `network`, `code`, `likes`, `pizza`) per
+slide, e non in tutte: 4-6 slide animate in una presentazione bastano, sulle slide che contano. Gli
+effetti dietro (`network`, `code`) restano tenui per non disturbare la lettura. Tutti si spengono
+da soli nel PDF, nell'anteprima del presentatore, in `?check`/`?static` e per chi ha chiesto meno
+animazioni nel sistema; gli screenshot di `check.py` quindi non li mostrano.
 
 ### Numero grande in un riquadro: `b.num`
 In un `glass` accanto a una foto, il numero chiave in grande (conta fino al valore come in

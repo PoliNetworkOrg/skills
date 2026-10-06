@@ -1329,7 +1329,10 @@ table.status td small {
   color: var(--text-2);
 }
 
-/* fuochi d'artificio (data-fx="fireworks"): tela sopra la slide, disegnata da deck.js */
+/* ================= Animazioni sulla slide: data-fx="…" =================
+   Su tela, disegnate da deck.js: fireworks, confetti, likes, pizza (davanti), network, code (dietro).
+   Solo CSS, qui sotto: float, pulse, flow, shine, wiggle. Si spengono da sole in ?static, nel PDF
+   e con "riduci movimento" (vedi html.static e prefers-reduced-motion). */
 .slide > canvas.fx {
   position: absolute;
   inset: 0;
@@ -1338,9 +1341,148 @@ table.status td small {
   z-index: 6;
   pointer-events: none;
 }
+/* dietro al contenuto: la slide ha un suo contesto di sovrapposizione (transform) */
+.slide > canvas.fx.back {
+  z-index: -1;
+}
 @media print {
   .slide > canvas.fx {
     display: none;
+  }
+}
+/* float: immagini, telefoni e sticker galleggiano piano (translate, non tocca l'ingresso) */
+.slide.active[data-fx~="float"] .media > * {
+  animation:
+    rise var(--anim-dur) var(--ease) both,
+    floaty 5s ease-in-out infinite alternate;
+  animation-delay: calc(var(--i, 0) * var(--anim-step) + var(--anim-base)), 1.4s;
+}
+.slide.active[data-fx~="float"] > .sticker {
+  animation:
+    stickerIn 0.9s var(--ease-back) 0.65s both,
+    floaty 4.2s ease-in-out 1.6s infinite alternate;
+}
+@keyframes floaty {
+  from {
+    translate: 0 -9px;
+  }
+  to {
+    translate: 0 9px;
+  }
+}
+/* wiggle: lo sticker dondola */
+.slide.active[data-fx~="wiggle"] > .sticker {
+  animation:
+    stickerIn 0.9s var(--ease-back) 0.65s both,
+    wiggle 2.6s ease-in-out 1.6s infinite;
+}
+@keyframes wiggle {
+  0%,
+  100% {
+    rotate: 0deg;
+  }
+  25% {
+    rotate: -4deg;
+  }
+  75% {
+    rotate: 3deg;
+  }
+}
+/* pulse: onde che partono dall'icona grande e dal QR, come un segnale */
+.slide.active[data-fx~="pulse"] .bigicon > svg.ico {
+  animation: pulseIcon 2.4s ease-out 1s infinite;
+}
+.slide.active[data-fx~="pulse"] .qr {
+  animation: pulseQr 2.4s ease-out 1s infinite;
+}
+@keyframes pulseIcon {
+  from {
+    box-shadow:
+      0 0 0 18px rgb(17 86 174 / 0.1),
+      0 0 0 38px rgb(17 86 174 / 0.05),
+      0 30px 60px -20px rgb(17 86 174 / 0.6),
+      0 0 0 0 rgb(56 189 248 / 0.55);
+  }
+  to {
+    box-shadow:
+      0 0 0 18px rgb(17 86 174 / 0.1),
+      0 0 0 38px rgb(17 86 174 / 0.05),
+      0 30px 60px -20px rgb(17 86 174 / 0.6),
+      0 0 0 90px rgb(56 189 248 / 0);
+  }
+}
+@keyframes pulseQr {
+  from {
+    box-shadow:
+      var(--glass-shadow),
+      0 0 0 0 rgb(56 189 248 / 0.6);
+  }
+  to {
+    box-shadow:
+      var(--glass-shadow),
+      0 0 0 36px rgb(56 189 248 / 0);
+  }
+}
+/* flow: una luce percorre la linea della timeline, dalla prima all'ultima tappa */
+.slide[data-fx~="flow"] .timeline {
+  position: relative;
+  /* centro della prima tappa, meno metà della luce */
+  --tl-a: calc((100% - (var(--n, 3) - 1) * var(--tl-gap)) / var(--n, 3) / 2 - 11px);
+}
+.slide[data-fx~="flow"] .timeline::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 17px; /* centro della linea: 64 - 38 + 2, meno metà della luce */
+  left: var(--tl-a);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0 30%, #38bdf8 60%, rgb(56 189 248 / 0) 72%);
+  box-shadow: 0 0 22px 8px rgb(56 189 248 / 0.55);
+  opacity: 0;
+}
+.slide.active[data-fx~="flow"] .timeline::after {
+  animation: flow 3.4s cubic-bezier(0.45, 0, 0.25, 1) 1.8s infinite;
+}
+@keyframes flow {
+  0% {
+    opacity: 0;
+    left: var(--tl-a);
+  }
+  12% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+    left: calc(100% - var(--tl-a) - 22px);
+  }
+  100% {
+    opacity: 0;
+    left: calc(100% - var(--tl-a) - 22px);
+  }
+}
+/* shine: un riflesso passa sulla barra di crescita */
+.slide[data-fx~="shine"] .growth > .track::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 0.75) 50%, transparent 65%) no-repeat;
+  background-size: 40% 100%;
+  background-position: -60% 0;
+  pointer-events: none;
+}
+.slide.active[data-fx~="shine"] .growth > .track::after {
+  animation: shine 2.8s ease-in-out 2s infinite;
+}
+@keyframes shine {
+  0% {
+    background-position: -60% 0;
+  }
+  60%,
+  100% {
+    background-position: 160% 0;
   }
 }
 

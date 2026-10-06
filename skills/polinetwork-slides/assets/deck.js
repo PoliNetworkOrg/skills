@@ -218,6 +218,7 @@
     b.innerHTML = [...code].map((d) => `<span>${d}</span>`).join("");
   });
   // colonne: altezze relative al valore più alto del grafico; data-from = parte "prima"
+  document.querySelectorAll(".timeline").forEach((tl) => tl.style.setProperty("--n", tl.children.length));
   document.querySelectorAll(".columns").forEach((c) => {
     const cols = [...c.querySelectorAll(":scope > .col")];
     const num = (x) => parseFloat(x || "0");
@@ -350,62 +351,253 @@
     if (wire) wire.style.transform = `translate(${Math.sin(i * 0.6) * 2}%, ${Math.cos(i * 0.5) * 1.5}%) rotate(${Math.sin(i * 0.4) * 3}deg)`;
   }
 
-  // fuochi d'artificio: <section class="slide" data-fx="fireworks">, quando si arriva sulla slide
+  /* ---------- animazioni sulla slide: data-fx="…" (uno o più nomi separati da spazi) ----------
+     Su tela (disegnate qui): fireworks, confetti (una volta, all'arrivo); network, code (dietro al
+     contenuto, continue); likes, pizza (davanti, continue). Solo CSS (theme.css): float, pulse,
+     flow, shine, wiggle. Spente in ?check/?static/anteprima, nel PDF e con "riduci movimento". */
   const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const FX_COLORS = ["#1156ae", "#0369a1", "#0284c7", "#38bdf8", "#ffffff"]; // blu del tema e bianco
-  // [x, y dell'esplosione, ms dall'arrivo sulla slide]: in alto, lontano dal titolo
-  const FX_BURSTS = [[1180, 230, 500], [760, 300, 1000], [1400, 360, 1450], [980, 170, 1900], [560, 260, 2400]];
-  function fireworks(slide) {
-    if (STATIC || REDUCED || slide.dataset.fx !== "fireworks") return;
-    slide.querySelector(":scope > canvas.fx")?.remove();
-    const cv = document.createElement("canvas");
-    cv.className = "fx";
-    cv.width = 1600;
-    cv.height = 900;
-    slide.appendChild(cv);
-    const ctx = cv.getContext("2d");
-    const sparks = [];
-    const t0 = performance.now();
-    let fired = 0;
-    const frame = (t) => {
-      if (!slide.classList.contains("active")) return cv.remove();
-      const el = t - t0;
-      ctx.clearRect(0, 0, 1600, 900);
-      // razzi che salgono dal basso nei 500 ms prima di esplodere
-      FX_BURSTS.forEach(([x, y, at], k) => {
-        const p = (el - at + 500) / 500;
-        if (k < fired || p < 0 || p >= 1) return;
-        const ry = 900 - (900 - y) * (1 - Math.pow(1 - p, 2));
-        ctx.globalAlpha = 0.9;
-        ctx.fillStyle = "#1156ae";
-        ctx.fillRect(x - 1.5, ry, 3, 18);
-      });
-      while (fired < FX_BURSTS.length && el >= FX_BURSTS[fired][2]) {
-        const [x, y] = FX_BURSTS[fired++];
-        const main = FX_COLORS[fired % FX_COLORS.length];
-        for (let k = 0; k < 90; k++) {
-          const a = (k / 90) * Math.PI * 2 + Math.random() * 0.2, v = 3 + Math.random() * 4.5;
-          sparks.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 1, c: Math.random() < 0.7 ? main : FX_COLORS[(k + fired) % FX_COLORS.length] });
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+  // centro in alto di un elemento della slide, in coordinate 1600×900
+  function anchorOf(slide, sel, fallback) {
+    const el = slide.querySelector(sel);
+    if (!el) return fallback;
+    const s = slide.getBoundingClientRect(), r = el.getBoundingClientRect(), k = 1600 / s.width;
+    return [(r.left + r.width / 2 - s.left) * k, (r.top - s.top) * k];
+  }
+  const FX = {
+    // cinque fuochi bianchi e blu, in alto e lontano dal titolo
+    fireworks() {
+      const bursts = [[1180, 230, 500], [760, 300, 1000], [1400, 360, 1450], [980, 170, 1900], [560, 260, 2400]];
+      const sparks = [];
+      let fired = 0;
+      return (ctx, ms, k) => {
+        bursts.forEach(([x, y, at], i) => {
+          const p = (ms - at + 500) / 500; // razzo che sale nei 500 ms prima dell'esplosione
+          if (i < fired || p < 0 || p >= 1) return;
+          ctx.globalAlpha = 0.9;
+          ctx.fillStyle = "#1156ae";
+          ctx.fillRect(x - 1.5, 900 - (900 - y) * (1 - (1 - p) ** 2), 3, 18);
+        });
+        while (fired < bursts.length && ms >= bursts[fired][2]) {
+          const [x, y] = bursts[fired++], main = FX_COLORS[fired % FX_COLORS.length];
+          for (let i = 0; i < 90; i++) {
+            const a = (i / 90) * Math.PI * 2 + rnd(0, 0.2), v = rnd(3, 7.5);
+            sparks.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 1, c: Math.random() < 0.7 ? main : pick(FX_COLORS) });
+          }
         }
-      }
-      for (const s of sparks) {
-        s.vx *= 0.965;
-        s.vy = s.vy * 0.965 + 0.06;
-        s.x += s.vx;
-        s.y += s.vy;
-        s.life -= 0.011;
-        if (s.life <= 0) continue;
-        ctx.globalAlpha = Math.min(1, s.life * 1.4);
-        ctx.fillStyle = s.c;
+        for (const s of sparks) {
+          s.vx *= 0.965 ** k;
+          s.vy = s.vy * 0.965 ** k + 0.06 * k;
+          s.x += s.vx * k;
+          s.y += s.vy * k;
+          s.life -= 0.011 * k;
+          if (s.life <= 0) continue;
+          ctx.globalAlpha = Math.min(1, s.life * 1.4);
+          ctx.fillStyle = s.c;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, 3.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        return fired < bursts.length || sparks.some((s) => s.life > 0);
+      };
+    },
+    // coriandoli bianchi e blu che cadono dall'alto e girano
+    confetti() {
+      const bits = Array.from({ length: 150 }, () => ({
+        x: rnd(0, 1600), y: rnd(-260, -20), vy: rnd(2.2, 4.2), sway: rnd(0, 6.28), sp: rnd(0.02, 0.05),
+        rot: rnd(0, 6.28), vr: rnd(-0.12, 0.12), w: rnd(9, 15), h: rnd(14, 22), c: pick(FX_COLORS), at: rnd(0, 1300),
+      }));
+      return (ctx, ms, k) => {
+        let alive = false;
+        for (const b of bits) {
+          if (ms < b.at || b.y > 940) continue;
+          alive = true;
+          b.sway += b.sp * k;
+          b.y += b.vy * k;
+          b.x += Math.sin(b.sway) * 1.4 * k;
+          b.rot += b.vr * k;
+          ctx.save();
+          ctx.translate(b.x, b.y);
+          ctx.rotate(b.rot);
+          ctx.scale(1, Math.cos(b.sway * 2)); // il foglietto si gira mentre cade
+          ctx.globalAlpha = 0.95;
+          ctx.fillStyle = b.c;
+          if (b.c === "#ffffff") (ctx.shadowColor = "rgb(17 86 174 / 0.35)"), (ctx.shadowBlur = 4);
+          ctx.fillRect(-b.w / 2, -b.h / 2, b.w, b.h);
+          ctx.restore();
+        }
+        return alive || ms < 1400;
+      };
+    },
+    // la rete: nodi che si spostano piano e si collegano quando sono vicini (dietro al contenuto)
+    network() {
+      const nodes = Array.from({ length: 38 }, () => ({
+        x: rnd(0, 1600), y: rnd(0, 900), vx: rnd(-0.35, 0.35), vy: rnd(-0.25, 0.25), r: rnd(2.5, 5),
+      }));
+      const D = 230;
+      return (ctx, ms, k) => {
+        const fade = Math.min(1, ms / 1200);
+        for (const n of nodes) {
+          n.x += n.vx * k;
+          n.y += n.vy * k;
+          if (n.x < -20 || n.x > 1620) n.vx *= -1;
+          if (n.y < -20 || n.y > 920) n.vy *= -1;
+        }
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = "#1156ae";
+        for (let i = 0; i < nodes.length; i++)
+          for (let j = i + 1; j < nodes.length; j++) {
+            const a = nodes[i], b = nodes[j], d = Math.hypot(a.x - b.x, a.y - b.y);
+            if (d > D) continue;
+            ctx.globalAlpha = (1 - d / D) * 0.28 * fade;
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.stroke();
+          }
+        ctx.fillStyle = "#1156ae";
+        for (const n of nodes) {
+          ctx.globalAlpha = 0.45 * fade;
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        return true;
+      };
+    },
+    // codice che scende piano, molto tenue (dietro al contenuto): per l'IT
+    code() {
+      const glyphs = "01{}<>/=;()[]".split("");
+      const cols = Array.from({ length: 40 }, (_, i) => ({ x: 20 + i * 40, y: rnd(-900, 0), v: rnd(1.2, 3), acc: 0 }));
+      return (ctx, ms, k) => {
+        // sfuma quello che c'è già, così resta una scia
+        ctx.globalCompositeOperation = "destination-out";
+        ctx.globalAlpha = 0.05 * k;
+        ctx.fillRect(0, 0, 1600, 900);
+        ctx.globalCompositeOperation = "source-over";
+        ctx.font = "600 26px ui-monospace, monospace";
+        ctx.fillStyle = "#1156ae";
+        for (const c of cols) {
+          c.acc += c.v * k;
+          if (c.acc < 26) continue;
+          c.acc = 0;
+          c.y += 26;
+          if (c.y > 940) c.y = rnd(-300, 0);
+          ctx.globalAlpha = 0.55 * Math.min(1, ms / 1200);
+          ctx.fillText(pick(glyphs), c.x, c.y);
+        }
+        return true;
+      };
+    },
+    // cuori che salgono dal telefono (o dall'immagine) della slide, come i like
+    likes(slide) {
+      const hearts = [];
+      let next = 900;
+      const heart = (ctx, s) => {
         ctx.beginPath();
-        ctx.arc(s.x, s.y, 3.2, 0, Math.PI * 2);
+        ctx.moveTo(0, s * 0.3);
+        ctx.bezierCurveTo(0, 0, -s * 0.5, 0, -s * 0.5, s * 0.3);
+        ctx.bezierCurveTo(-s * 0.5, s * 0.6, 0, s * 0.8, 0, s);
+        ctx.bezierCurveTo(0, s * 0.8, s * 0.5, s * 0.6, s * 0.5, s * 0.3);
+        ctx.bezierCurveTo(s * 0.5, 0, 0, 0, 0, s * 0.3);
         ctx.fill();
-      }
-      for (let k = sparks.length - 1; k >= 0; k--) if (sparks[k].life <= 0) sparks.splice(k, 1);
-      if (fired < FX_BURSTS.length || sparks.length) requestAnimationFrame(frame);
-      else cv.remove();
-    };
-    requestAnimationFrame(frame);
+      };
+      return (ctx, ms, k) => {
+        if (ms > next) {
+          next = ms + rnd(220, 480);
+          const [x, y] = anchorOf(slide, ".phone, .media img, .media", [1300, 600]);
+          hearts.push({ x: x + rnd(-150, 150), y: y + rnd(-40, 40), vy: rnd(1.4, 2.4), ph: rnd(0, 6.28), s: rnd(30, 52), life: 1, c: pick(["#1156ae", "#0284c7", "#38bdf8", "#ffffff"]) });
+        }
+        for (const h of hearts) {
+          h.ph += 0.05 * k;
+          h.y -= h.vy * k;
+          h.x += Math.sin(h.ph) * 0.9 * k;
+          h.life -= 0.006 * k;
+          if (h.life <= 0) continue;
+          ctx.save();
+          ctx.translate(h.x, h.y);
+          ctx.globalAlpha = Math.min(1, h.life * 1.6);
+          ctx.fillStyle = h.c;
+          ctx.shadowColor = "rgb(17 86 174 / 0.35)";
+          ctx.shadowBlur = 8;
+          heart(ctx, h.s);
+          ctx.restore();
+        }
+        for (let i = hearts.length - 1; i >= 0; i--) if (hearts[i].life <= 0) hearts.splice(i, 1);
+        return true;
+      };
+    },
+    // spicchi di pizza che cadono (per la slide finale, se si va a mangiare)
+    pizza() {
+      const slices = [];
+      let next = 300;
+      const slice = (ctx, s) => {
+        ctx.fillStyle = "#fbbf24"; // formaggio
+        ctx.beginPath();
+        ctx.moveTo(0, s);
+        ctx.lineTo(-s * 0.55, 0);
+        ctx.lineTo(s * 0.55, 0);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = "#b45309"; // crosta
+        ctx.beginPath();
+        ctx.ellipse(0, 0, s * 0.6, s * 0.13, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#dc2626"; // salame
+        for (const [px, py] of [[-0.15, 0.28], [0.17, 0.33], [0, 0.6]]) {
+          ctx.beginPath();
+          ctx.arc(px * s, py * s, s * 0.09, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      };
+      return (ctx, ms, k) => {
+        if (ms > next) {
+          next = ms + rnd(260, 560);
+          slices.push({ x: rnd(40, 1560), y: -60, vy: rnd(2, 3.6), rot: rnd(0, 6.28), vr: rnd(-0.04, 0.04), s: rnd(38, 60) });
+        }
+        for (const p of slices) {
+          p.y += p.vy * k;
+          p.rot += p.vr * k;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot);
+          ctx.globalAlpha = 0.95;
+          ctx.shadowColor = "rgb(15 23 42 / 0.25)";
+          ctx.shadowBlur = 10;
+          slice(ctx, p.s);
+          ctx.restore();
+        }
+        for (let i = slices.length - 1; i >= 0; i--) if (slices[i].y > 980) slices.splice(i, 1);
+        return true;
+      };
+    },
+  };
+  const FX_BACK = ["network", "code"]; // dietro al contenuto
+  function runFx(slide) {
+    slide.querySelectorAll(":scope > canvas.fx").forEach((c) => c.remove());
+    if (STATIC || REDUCED || !slide.dataset.fx) return;
+    slide.dataset.fx.split(/\s+/).filter((n) => FX[n]).forEach((name) => {
+      const cv = document.createElement("canvas");
+      cv.className = FX_BACK.includes(name) ? "fx back" : "fx";
+      cv.width = 1600;
+      cv.height = 900;
+      if (FX_BACK.includes(name)) slide.prepend(cv);
+      else slide.appendChild(cv);
+      const ctx = cv.getContext("2d"), step = FX[name](slide), t0 = performance.now();
+      let last = t0;
+      const frame = (t) => {
+        if (!slide.classList.contains("active") || !cv.isConnected) return cv.remove();
+        const k = Math.min(3, (t - last) / 16.67); // movimento uguale a 60 e a 120 Hz
+        last = t;
+        if (name !== "code") ctx.clearRect(0, 0, 1600, 900);
+        ctx.globalAlpha = 1;
+        if (step(ctx, t - t0, k)) requestAnimationFrame(frame);
+        else cv.remove();
+      };
+      requestAnimationFrame(frame);
+    });
   }
 
   function go(i, fromEnd = false) {
@@ -420,7 +612,7 @@
       revealsOf(slides[i]).forEach((r) => r.classList.toggle("shown", fromEnd || STATIC));
       moveBg(i);
       runCounters(slides[i]);
-      fireworks(slides[i]);
+      runFx(slides[i]);
     }
     document.getElementById("pn-counter").textContent = `${i + 1} / ${total}`;
     document.getElementById("pn-progress").style.width = `${((i + 1) / total) * 100}%`;
