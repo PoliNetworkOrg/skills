@@ -230,13 +230,24 @@
       if (col.dataset.from) col.style.setProperty("--b", Math.min(1, num(col.dataset.from) / (v || 1)));
       if (!col.querySelector("i")) {
         const name = col.innerHTML;
-        const delta = col.dataset.delta ? `<b>${col.dataset.delta}</b>` : "";
-        col.innerHTML = `<em>${col.dataset.label || v}</em><i></i><span>${name}</span>${delta}`;
+        // etichette accanto alla colonna: la cifra grande, il resto del testo piccolo sotto
+        const side = (text, cls) => {
+          if (!text) return "";
+          const [, n, note] = text.trim().match(/^(\S+)\s*(.*)$/);
+          return `<b${cls ? ` class="${cls}"` : ""}>${n}${note ? `<small>${note}</small>` : ""}</b>`;
+        };
+        const sides = side(col.dataset.delta) + side(col.dataset.from && col.dataset.fromLabel, "base");
+        col.innerHTML = `<em>${col.dataset.label || v}</em><i></i><span>${name}</span>${sides}`;
       }
       desc.push(`${col.querySelector("span").textContent}: ${col.dataset.label || v}`);
     });
     c.setAttribute("role", "img");
     c.setAttribute("aria-label", desc.join(", "));
+  });
+  // crescita: --b = valore di partenza / valore di oggi
+  document.querySelectorAll(".growth").forEach((g) => {
+    const from = parseFloat(g.dataset.from || "0"), v = parseFloat(g.dataset.value || "0");
+    if (v > 0) g.style.setProperty("--b", Math.min(1, Math.max(0, from / v)));
   });
   // nuvola: posti attorno al titolo, riempiti in modo bilanciato (max 16)
   const SLOTS = [
@@ -282,7 +293,7 @@
     else img.addEventListener("error", fail, { once: true });
   });
   // numeri che contano fino al valore
-  const counters = [...document.querySelectorAll(".stats b, .num[data-count], .cloud b")].map((el) => {
+  const counters = [...document.querySelectorAll(".stats b, .num[data-count], .cloud b, .growth > p > b")].map((el) => {
     const m = el.textContent.match(/^(\D*)(\d[\d.,\s  ]*\d|\d)(.*)$/s);
     // decimali ("3,8/5", "4.5") restano fermi: niente conteggio
     if (!m || /^\d{1,3}[.,]\d{1,2}$/.test(m[2].trim())) return null;

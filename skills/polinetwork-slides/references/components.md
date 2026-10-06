@@ -310,6 +310,17 @@ ogni colonna `data-label`, sotto il nome (max ~3 parole). `data-from` sull'ultim
 solo la parte cresciuta rispetto a quel valore, e `data-delta` la scrive accanto. **Solo cifre
 date dall'utente.** Per tante voci o percentuali c'è `div.bars`.
 
+Per una crescita sola basta **una colonna**: una seconda colonna con il valore di partenza
+ripeterebbe la parte chiara. `data-from-label` scrive il valore di partenza accanto alla parte
+chiara. In `data-delta` e `data-from-label` la prima parola è la cifra grande e il resto del
+testo va piccolo sotto (max ~4 parole):
+```html
+<div class="columns glass">
+  <div class="col" data-value="7500" data-label="7.500" data-from="5000"
+       data-from-label="5.000 alla scorsa assemblea" data-delta="+2.500 in più da allora">Follower oggi</div>
+</div>
+```
+
 ### Timeline: `ol.timeline`
 ```html
 <ol class="timeline">
