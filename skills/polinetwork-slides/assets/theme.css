@@ -1253,6 +1253,97 @@ table.status td small {
   }
 }
 
+/* numero grande dentro .lead: la parola che segue gli sta accanto, sulla stessa riga di base */
+.lead > b.num {
+  display: inline-block;
+  margin-right: 14px;
+}
+.lead:has(> b.num) {
+  margin-bottom: 30px;
+}
+
+/* compare con un'icona grande: il riquadro resta alto quanto il suo contenuto, tutto centrato */
+.compare:has(> .bigicon) {
+  grid-template-columns: minmax(0, 600px) 140px auto;
+  justify-content: center;
+  align-items: center;
+}
+
+/* due elementi .bigicon a confronto (numero → icona): colonne strette, nessuna opacità ridotta */
+.compare:has(> .bigicon:first-child) {
+  grid-template-columns: minmax(0, 1fr) 140px minmax(0, 1fr);
+  width: min(100%, 1100px);
+  margin-inline: auto;
+  align-self: center;
+  align-items: start;
+}
+/* freccia all'altezza del numero e dell'icona (centro della prima riga, 260px), non delle didascalie */
+.compare:has(> .bigicon:first-child)::before {
+  align-self: start;
+  margin-top: 98px;
+}
+.compare > .bigicon:first-child {
+  opacity: 1;
+}
+
+/* icona grande al posto di un'immagine: cerchio blu con anelli, didascalia sotto */
+.bigicon {
+  display: grid;
+  grid-template-rows: 260px auto; /* cerchio + anelli; un numero grande sta nella stessa riga */
+  justify-items: center;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+}
+/* al posto dell'icona un numero grande (conta fino al valore) */
+.bigicon > b.num {
+  font-size: 150px;
+}
+.bigicon > svg.ico {
+  box-sizing: content-box;
+  width: 92px;
+  height: 92px;
+  padding: 46px;
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(145deg, var(--blue-2), var(--pn-blue));
+  box-shadow:
+    0 0 0 18px rgb(17 86 174 / 0.1),
+    0 0 0 38px rgb(17 86 174 / 0.05),
+    0 30px 60px -20px rgb(17 86 174 / 0.6);
+}
+.bigicon > figcaption {
+  font: 500 34px/1.2 var(--font-headline);
+  color: var(--title);
+}
+.bigicon > figcaption > .label {
+  display: block;
+  margin-bottom: 8px;
+}
+.bigicon > figcaption > small {
+  display: block;
+  max-width: 30ch;
+  margin: 8px auto 0;
+  text-wrap: balance;
+  font: 400 22px/1.35 var(--font-body);
+  color: var(--text-2);
+}
+
+/* fuochi d'artificio (data-fx="fireworks"): tela sopra la slide, disegnata da deck.js */
+.slide > canvas.fx {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 6;
+  pointer-events: none;
+}
+@media print {
+  .slide > canvas.fx {
+    display: none;
+  }
+}
+
 /* ================= Crescita: un numero grande e una barra da "prima" a "oggi" ================= */
 /* --b = parte "prima" (data-from / data-value), calcolata da deck.js */
 .growth {
@@ -1441,6 +1532,19 @@ table.status td small {
 .split.media-left > :first-child {
   order: 2;
 }
+/* split fit: la colonna dell'immagine è larga quanto l'immagine, il testo prende il resto */
+.split.fit {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+/* split fit: card alte quanto l'immagine, righe uguali, contenuto al centro */
+.split.fit > .cards {
+  align-self: stretch;
+  grid-auto-rows: 1fr;
+}
+.split.fit > .cards > * {
+  justify-content: center;
+  align-content: center;
+}
 .media {
   display: flex;
   gap: 22px;
@@ -1531,6 +1635,20 @@ table.status td small {
   color: var(--text-3);
   text-align: center;
 }
+/* QR in alto a destra, all'altezza del titolo, con un invito breve sotto ("Provalo!") */
+.slide > .qr.corner {
+  position: absolute;
+  top: 74px;
+  right: 120px;
+  width: 150px;
+  z-index: 3;
+  rotate: 3deg;
+}
+.slide > .qr.corner > figcaption {
+  margin-top: 10px;
+  font: 600 22px/1 var(--font-headline);
+  color: var(--pn-blue);
+}
 
 /* inclinazione per telefono e immagini scontornate (rotate non tocca le animazioni con transform) */
 .tilt {
@@ -1561,6 +1679,11 @@ table.status td small {
 }
 .glass > * + .has-qr {
   margin-top: 26px;
+}
+/* riquadro QR da solo sotto un altro elemento (es. timeline): largo quanto serve, centrato */
+.body > .has-qr {
+  width: fit-content;
+  margin-inline: auto;
 }
 
 /* ================= Galleria ================= */
@@ -1603,6 +1726,22 @@ table.status td small {
 .gallery > figure:nth-child(even) {
   rotate: 1deg;
   translate: 0 18px;
+}
+/* mosaico: 4 foto, la prima grande a sinistra, a destra due affiancate e una larga sotto */
+.gallery.mosaic {
+  grid-auto-flow: row;
+  grid-template-columns: 3fr 1fr 1fr;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+.gallery.mosaic > figure {
+  rotate: none;
+  translate: none;
+}
+.gallery.mosaic > figure:first-child {
+  grid-row: span 2;
+}
+.gallery.mosaic > figure:nth-child(4) {
+  grid-column: span 2;
 }
 
 /* ================= Schermate di un'app: telefoni in fila ================= */
@@ -1951,6 +2090,10 @@ table.status td small {
 }
 .sticker.small {
   height: 240px;
+}
+/* sticker intero (non tagliato in basso): staccato dal fondo, all'altezza del contenuto */
+.sticker.lift {
+  bottom: 90px;
 }
 /* specchiato, per farlo guardare verso il contenuto (scale non tocca l'animazione con transform) */
 .sticker.flip {

@@ -74,7 +74,7 @@
     if (!centered && !s.querySelector(":scope > .body")) {
       const body = document.createElement("div");
       body.className = "body";
-      const keep = (el) => el.matches("h1, .kicker, .sub, .notes, .sticker, script");
+      const keep = (el) => el.matches("h1, .kicker, .sub, .notes, .sticker, .qr.corner, script");
       [...s.children].filter((el) => !keep(el)).forEach((el) => body.appendChild(el));
       // il .sub resta in alto solo se segue il titolo
       s.insertBefore(body, s.querySelector(":scope > .sticker, :scope > .notes"));
@@ -350,6 +350,64 @@
     if (wire) wire.style.transform = `translate(${Math.sin(i * 0.6) * 2}%, ${Math.cos(i * 0.5) * 1.5}%) rotate(${Math.sin(i * 0.4) * 3}deg)`;
   }
 
+  // fuochi d'artificio: <section class="slide" data-fx="fireworks">, quando si arriva sulla slide
+  const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const FX_COLORS = ["#1156ae", "#0369a1", "#0284c7", "#38bdf8", "#ffffff"]; // blu del tema e bianco
+  // [x, y dell'esplosione, ms dall'arrivo sulla slide]: in alto, lontano dal titolo
+  const FX_BURSTS = [[1180, 230, 500], [760, 300, 1000], [1400, 360, 1450], [980, 170, 1900], [560, 260, 2400]];
+  function fireworks(slide) {
+    if (STATIC || REDUCED || slide.dataset.fx !== "fireworks") return;
+    slide.querySelector(":scope > canvas.fx")?.remove();
+    const cv = document.createElement("canvas");
+    cv.className = "fx";
+    cv.width = 1600;
+    cv.height = 900;
+    slide.appendChild(cv);
+    const ctx = cv.getContext("2d");
+    const sparks = [];
+    const t0 = performance.now();
+    let fired = 0;
+    const frame = (t) => {
+      if (!slide.classList.contains("active")) return cv.remove();
+      const el = t - t0;
+      ctx.clearRect(0, 0, 1600, 900);
+      // razzi che salgono dal basso nei 500 ms prima di esplodere
+      FX_BURSTS.forEach(([x, y, at], k) => {
+        const p = (el - at + 500) / 500;
+        if (k < fired || p < 0 || p >= 1) return;
+        const ry = 900 - (900 - y) * (1 - Math.pow(1 - p, 2));
+        ctx.globalAlpha = 0.9;
+        ctx.fillStyle = "#1156ae";
+        ctx.fillRect(x - 1.5, ry, 3, 18);
+      });
+      while (fired < FX_BURSTS.length && el >= FX_BURSTS[fired][2]) {
+        const [x, y] = FX_BURSTS[fired++];
+        const main = FX_COLORS[fired % FX_COLORS.length];
+        for (let k = 0; k < 90; k++) {
+          const a = (k / 90) * Math.PI * 2 + Math.random() * 0.2, v = 3 + Math.random() * 4.5;
+          sparks.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 1, c: Math.random() < 0.7 ? main : FX_COLORS[(k + fired) % FX_COLORS.length] });
+        }
+      }
+      for (const s of sparks) {
+        s.vx *= 0.965;
+        s.vy = s.vy * 0.965 + 0.06;
+        s.x += s.vx;
+        s.y += s.vy;
+        s.life -= 0.011;
+        if (s.life <= 0) continue;
+        ctx.globalAlpha = Math.min(1, s.life * 1.4);
+        ctx.fillStyle = s.c;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, 3.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      for (let k = sparks.length - 1; k >= 0; k--) if (sparks[k].life <= 0) sparks.splice(k, 1);
+      if (fired < FX_BURSTS.length || sparks.length) requestAnimationFrame(frame);
+      else cv.remove();
+    };
+    requestAnimationFrame(frame);
+  }
+
   function go(i, fromEnd = false) {
     i = Math.max(0, Math.min(total - 1, i));
     const changed = i !== cur || !slides[i].classList.contains("active");
@@ -362,6 +420,7 @@
       revealsOf(slides[i]).forEach((r) => r.classList.toggle("shown", fromEnd || STATIC));
       moveBg(i);
       runCounters(slides[i]);
+      fireworks(slides[i]);
     }
     document.getElementById("pn-counter").textContent = `${i + 1} / ${total}`;
     document.getElementById("pn-progress").style.width = `${((i + 1) / total) * 100}%`;

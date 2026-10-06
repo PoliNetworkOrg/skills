@@ -105,7 +105,8 @@ Un nome sbagliato fa fallire `build.py`, che suggerisce i nomi più vicini.
   per fargli spazio. Varianti: `sticker left`, `sticker small` (240 px, non sposta il contenuto), `sticker flip` (specchiato, per
   farlo guardare verso il contenuto),
   `sticker edge` (attaccato al bordo laterale, per i lati tagliati, vedi sotto),
-  `sticker top`. Al massimo uno per slide, e non in tutte; mai su bilancio, votazioni e 5x1000.
+  `sticker top`, `sticker lift` (staccato dal fondo: per i gatti interi, non tagliati in basso,
+  che appoggiati al bordo sembrano tagliati). Al massimo uno per slide, e non in tutte; mai su bilancio, votazioni e 5x1000.
   **Alterna i lati:** più o meno metà `sticker`, metà `sticker left`, mescolati lungo la
   presentazione. `sticker left` sposta il contenuto a destra; `sticker small` non sposta niente,
   quindi a sinistra copre il testo in basso (per esempio un `p.small`): lascialo a destra, a meno
@@ -322,6 +323,31 @@ testo va piccolo sotto (max ~4 parole):
 </div>
 ```
 
+### Icona grande: `figure.bigicon`
+```html
+<figure class="bigicon"><i data-icon="layout-dashboard"></i>
+  <figcaption><span class="label">In futuro</span>Admin dashboard<small>Il censimento sarà lì</small></figcaption></figure>
+```
+Al posto di una foto o di una card quando non c'è un'immagine da mostrare: l'icona in un cerchio
+blu con due anelli, la didascalia sotto. Per esempio come secondo elemento di `div.compare` (la
+freccia resta in mezzo) o in `.media` accanto a un riquadro. Meglio di una card con una riga sola.
+Al posto dell'icona può esserci un numero grande, `<b class="num" data-count>150+</b>`: in un
+`div.compare` usa `bigicon` da tutti e due i lati (numero → icona), mai un riquadro glass da una
+parte e niente dall'altra.
+
+### Fuochi d'artificio: `data-fx="fireworks"`
+`<section class="slide" data-fx="fireworks">`: quando si arriva sulla slide partono cinque
+fuochi d'artificio bianchi e blu, per circa tre secondi, sopra il contenuto. Solo per un
+risultato da festeggiare (un record, un evento andato benissimo), al massimo una o due slide
+per presentazione. Non partono nel PDF, nell'anteprima del presentatore, in `?check` né per chi
+ha chiesto meno animazioni nel sistema.
+
+### Numero grande in un riquadro: `b.num`
+In un `glass` accanto a una foto, il numero chiave in grande (conta fino al valore come in
+`div.stats`) dà al riquadro lo stesso peso della foto:
+`<p class="lead"><b class="num" data-count>1.800+</b>iscrizioni</p>`.
+La parola dopo il numero sta accanto, in piccolo, sulla stessa riga; poi 2-3 punti brevi.
+
 ### Crescita: `div.growth`
 ```html
 <div class="split">
@@ -382,7 +408,10 @@ Foto quadrate, ritagliate in cerchio da sole. Max 3 persone.
 ### Testo + immagini: `div.split`
 ```html
 <div class="split">
-  <div class="glass"><ul><li>…</li></ul></div>
+  <div class="cards" data-cols="1">
+    <div><i data-icon="layers"></i><h3>Primo punto</h3><p>Una frase.</p></div>
+    …
+  </div>
   <div class="media">
     <img src="img/foto-1.jpg" alt="" style="width: 300px; height: 380px">
     <div class="phone"><img src="img/screenshot.png" alt=""></div>
@@ -390,7 +419,22 @@ Foto quadrate, ritagliate in cerchio da sole. Max 3 persone.
   </div>
 </div>
 ```
-Varianti: `split even` (metà e metà), `split media-left` (immagini a sinistra).
+Varianti: `split even` (metà e metà), `split media-left` (immagini a sinistra), `split fit` (la
+colonna dell'immagine è larga quanto l'immagine: per una foto verticale accanto a 4-6 card).
+Con `split fit` le card diventano alte quanto l'immagine, con righe tutte uguali; senza `fit`
+restano alte quanto il loro contenuto.
+**Mai un elenco puntato da solo dentro un riquadro** (`div.glass` con dentro solo `<ul>`): ogni
+punto diventa una card, in `div.cards` con `data-cols="1"` (2-3 punti, una sotto l'altra) o
+`data-cols="2"` (4 punti, 2×2; con un'etichetta sopra il titolo se ogni punto ha una data o un
+contesto). Il titolo della card è la parte in grassetto del punto, il testo il resto. Un solo
+riquadro `glass` va bene quando contiene altro: un testo unico, una spiegazione, un numero grande
+con due righe sotto, una scheda `dl.facts`.
+**Rinomine (vecchio → nuovo):** non una tabella con le pill, ma una card per voce con il nome
+nuovo come titolo e il vecchio in piccolo sotto (`<p>Era: …</p>`); quello che sparisce va in una
+riga a parte sotto le card (`p.next`), non in una pill rossa.
+Le etichette delle card di una stessa slide sono dello stesso tipo: tutte date, tutte luoghi o
+tutte categorie, non mescolate. Eccezione utile: per cose già fatte il luogo o il contesto, per
+quelle future la data. L'anno comune a tutte va nel sottotitolo, non ripetuto nei titoli.
 In `.media`: foto (`img`, dimensioni con `style` se servono), cornice smartphone
 `.phone` (meglio con `tilt`), immagine scontornata `img.cutout`, QR `.qr`. La colonna di testo
 deve essere alta circa come l'immagine accanto: se resta bassa, uniscila in un solo riquadro con
@@ -417,6 +461,11 @@ dove lo metti, primo o ultimo):
 </div>
 ```
 Larghezza di default 170 px; se il testo accanto va a capo, stringilo con `style="width: 150px"`.
+Da solo sotto un altro elemento (per esempio una timeline: "provalo") va in un riquadro proprio,
+`<div class="glass has-qr">`, che resta largo quanto il contenuto e centrato. In alternativa, se il QR non si riferisce a un riquadro preciso (per esempio "provalo" su una slide con una
+timeline), mettilo in alto a destra all'altezza del titolo, con un invito di una parola sotto:
+`<figure class="qr corner"><img src="img/qr-app.png" alt="QR code per …"><figcaption>Provalo!</figcaption></figure>`
+come figlio diretto della `section`. Il titolo deve stare a sinistra senza arrivare fin lì.
 
 ### Galleria: `div.gallery`
 ```html
@@ -426,6 +475,12 @@ Larghezza di default 170 px; se il testo accanto va a capo, stringilo con `style
 </div>
 ```
 2-4 foto, didascalia facoltativa.
+
+Con 4 foto in fila i riquadri diventano strisce strette: per foto di gruppo usa il mosaico,
+`<div class="gallery mosaic">`. La prima foto va grande a sinistra (orizzontale, circa 3:2: è
+quella che si vede di più), la seconda e la terza piccole e quasi quadrate in alto a destra, la
+quarta larga sotto (circa 2:1, ritagliata al centro). Esattamente 4 foto. Se le foto vengono da
+eventi diversi, la didascalia dice quale.
 
 ### Schermate di un'app: `div.screens`
 ```html
