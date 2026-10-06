@@ -79,6 +79,9 @@ GUIDA.md                  guida all'installazione e all'uso per i membri
 - **Dopo ogni modifica** rigenera lo ZIP con `python3 scripts/package.py` (finisce in `dist/`
   nella radice della repo) e ricaricalo su claude.ai. Chi usa Git aggiorna con `git pull`, chi usa
   `npx skills` con `npx skills update polinetwork-slides`.
+- **Regressione dell'emblema di copertina:** `python3 scripts/test_orbit.py` verifica con
+  Chrome/Chromium che gli anelli ruotino senza isolare la sfocatura dello sfondo e che
+  la modalità statica fermi la rotazione.
 
 ## Licenze di terze parti
 
