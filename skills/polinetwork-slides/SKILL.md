@@ -28,7 +28,7 @@ standard di `references/brand.md` (codice fiscale, sito, link al recruiting, tes
 | `references/components.md` | Catalogo dei componenti con markup e limiti. **Leggilo prima di scrivere.** |
 | `references/brand.md` | Tono, dati fissi (codice 5x1000, link), testi standard IT/EN |
 | `scripts/build.py` | Compila il sorgente in un unico HTML autonomo |
-| `scripts/check.py` | Controlla il layout con Chrome headless e fa gli screenshot |
+| `scripts/check.py` | Controlla il layout con Chrome headless, fa gli screenshot e con `--pdf` controlla il PDF |
 
 ## 1. Chiedi prima di scrivere
 
@@ -218,12 +218,26 @@ l'utente fornirà dopo.
      in `components.md`);
    - ripetizioni (la stessa informazione nel riquadro "In breve", nel corpo e nel `.next`);
    - numeri e nomi diversi da come li ha dati l'utente, frasi che aggiungono cose non dette.
-4. **Animazioni (`data-fx`):** `check.py` e i suoi screenshot le spengono, quindi non le mostrano.
+4. **PDF:** la stampa ha regole sue e gli screenshot non la mostrano. Chrome non stampa il vetro
+   (`backdrop-filter`) e il tema lo simula con uno sfondo già sfocato; lo sfondo è fermo; le
+   parole in gradiente diventano a tinta piena; le animazioni si fermano nello stato finale (tutti
+   i passi visibili, numeri al valore vero), anche se si stampa mentre una slide si sta animando. Al giro finale, sempre per l'autoesplicativa (che
+   di solito si manda in PDF) e quando l'utente vuole il PDF, aggiungi `--pdf`:
+   ```bash
+   python3 "$SKILL_DIR/scripts/check.py" assemblea-2026-04-28.html --shots shots/ --pdf shots/assemblea-2026-04-28.pdf
+   ```
+   Il controllo segnala se le pagine non sono quante le slide e se il PDF è troppo pesante (in quel
+   caso riduci le foto più grandi). Poi guarda `shots/pdf-sheet.png` e qualche `shots/pdf-NN.png`:
+   sono rese con il motore di Evince e degli altri lettori Linux, il più severo. Cerca riquadri
+   bianchi e piatti al posto del vetro, rettangoli pieni sopra le parole, elementi spariti,
+   tagliati o a metà animazione (numeri diversi, cose spostate) rispetto agli screenshot. Se l'utente vuole il PDF, consegna una copia di questo fuori
+   da `shots/`: è identico a quello che si ottiene con il tasto S in Chrome.
+5. **Animazioni (`data-fx`):** `check.py` e i suoi screenshot le spengono, quindi non le mostrano.
    Per vederle apri l'HTML nel browser; alla consegna di' all'utente su quali slide ci sono e chiedi
    di guardarle in movimento.
-5. **Senza Chrome/Chromium:** se `check.py` non trova il browser, dillo all'utente e indica che il
-   layout non è stato verificato.
-6. **Pulizia:** cancella la cartella `shots/` prima di consegnare, a meno che l'utente non chieda
+6. **Senza Chrome/Chromium:** se `check.py` non trova il browser, dillo all'utente e indica che il
+   layout e il PDF non sono stati verificati.
+7. **Pulizia:** cancella la cartella `shots/` prima di consegnare, a meno che l'utente non chieda
    di tenere gli screenshot.
 
 ## 6. Consegna
@@ -238,8 +252,9 @@ Comunica all'utente:
   - F per lo schermo intero;
   - O per la panoramica;
   - P (o Ctrl+P) per la finestra presentatore con note e timer;
-  - S per stampare o esportare in PDF: Salva come PDF, margini "Nessuno", "Grafica di sfondo"
-    attiva (su Firefox "Stampa sfondi").
+  - S per stampare o esportare in PDF, meglio da Chrome, Edge o Brave: Salva come PDF, margini
+    "Nessuno", "Grafica di sfondo" attiva (su Firefox "Stampa sfondi", ma il vetro nel PDF è
+    verificato solo con Chrome).
 
 ## Versione autoesplicativa
 

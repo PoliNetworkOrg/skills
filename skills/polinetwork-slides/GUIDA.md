@@ -237,7 +237,9 @@ Nella finestra di stampa:
   spunta **Stampa sfondi** → Salva.
 
 Ogni slide diventa una pagina. Senza "Grafica di sfondo" / "Stampa sfondi" spariscono sfondo e
-card in vetro.
+card in vetro. Meglio esportare da Chrome, Edge o Brave: è lì che il PDF è verificato. Nel PDF
+lo sfondo è fermo, le animazioni spente e le parole in gradiente hanno una tinta sola, così si
+vedono in tutti i lettori PDF.
 
 ---
 

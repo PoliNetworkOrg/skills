@@ -200,6 +200,7 @@ Anche per "Domande?", con uno sticker.
     <li><i data-icon="globe"></i>polinetwork.org</li>
     <li><i data-icon="user-plus"></i>polinet.cc/recruiting</li>
     <li><i data-icon="instagram"></i>@account</li>   <!-- solo se l'utente lo indica -->
+    <li><a href="https://github.com/org/repo"><i data-icon="brand-github"></i>github.com/org/repo</a></li>  <!-- link cliccabile, anche nel PDF -->
   </ul>
   <figure class="qr"><img src="img/qr.png" alt=""><figcaption>Facoltativo</figcaption></figure>
 </section>
@@ -221,7 +222,8 @@ Max ~25 parole. Senza `h1`.
 ```
 Numerato da solo. Fino a 9 voci sono tessere col numero grande (4 o meno su una riga, 5-6 su
 tre colonne, 7-9 tessere più compatte su tre colonne; `data-cols` per forzare), oltre diventano
-righe su due colonne. Con 7-9 voci togli lo sticker dalla slide dell'indice. Max 10 voci,
+righe su due colonne. Su tre colonne l'ultima riga incompleta occupa da sola tutta la larghezza
+(con 5 e 8 voci le ultime due tessere a metà riga ciascuna, con 7 l'ultima per intero). Con 7-9 voci togli lo sticker dalla slide dell'indice. Max 10 voci,
 max ~5 parole per voce. Ogni tessera riprende da sola il sottotitolo della sua sezione.
 
 ### Righe con icona: `ul.irows`
@@ -315,6 +317,21 @@ sul contenitore: la voce più grande riempie la riga, le altre in proporzione, b
 valore in fondo a ogni barra, così si capisce a colpo d'occhio. Ordina le voci dalla più grande:
 `<div class="bars glass" data-scale="max">`.
 
+**Confronto con un riferimento** (noi e la media europea, quest'anno e l'anno scorso): metti
+`data-compare="Nome nostro|Nome del riferimento"` sul contenitore e su ogni voce `data-vs` con il
+valore di riferimento. Ogni voce ha due barre sulla stessa scala: la nostra in blu, sotto quella di
+riferimento più sottile e grigia, ognuna con il suo valore; in alto a destra compare la legenda.
+`data-label` e `data-vs-label` cambiano i testi dei valori (per esempio "0,6%").
+```html
+<div class="bars glass" data-compare="Il nostro survey|Europa, 2019">
+  <div class="bar" data-value="74" data-vs="37">Non le leggo</div>
+  <div class="bar" data-value="25" data-vs="47">Le leggo in parte</div>
+  <div class="bar" data-value="0.6" data-vs="13" data-label="0,6%">Le leggo per intero</div>
+</div>
+```
+Max 6 voci. Solo cifre date dall'utente o da una fonte che l'utente ha indicato, con la fonte
+scritta nella slide.
+
 ### Grafico a colonne: `div.columns`
 ```html
 <div class="columns glass">
@@ -369,6 +386,7 @@ guarda, oltre agli ingressi. Uno o più nomi separati da spazi:
 | `wings` | Ali bianche che battono ai lati dell'immagine: compaiono con lei, ne seguono inclinazione e movimento (con `float` vola) | Red Bull, "ti mette le ali" |
 | `snake` | Un verme di luce fa il giro di un riquadro (foto, card) e passa al successivo, su tutti | Hackathon, progetti, una slide "tech" |
 | `train` | Le persone delle righe `div.people` (es. 4 sopra, 3 sotto) scivolano su una pista ovale e ci girano sopra piano, a distanze uguali: sempre tutte visibili, mai sovrapposte | Ringraziamenti al Direttivo, a un team |
+| `wave` | Le persone di una riga `div.people` salgono e scendono a onda, a turno: la prima e la terza su mentre la seconda giù, poi il contrario | Un gruppo piccolo, 2-4 persone su una riga (il team di un progetto) |
 | `float` | Immagini, telefoni e sticker galleggiano piano | Slide con screenshot o foto scontornate |
 | `pulse` | Onde che partono dall'icona grande (`bigicon`) e dal QR | Un "in futuro", un "provalo" |
 | `flow` | Una luce percorre la timeline dalla prima all'ultima tappa | `ol.timeline` |
@@ -447,7 +465,29 @@ Per mostrare anche chi guida ogni team (al posto di una slide a parte), metti so
 </div>
 ```
 Foto quadrate, ritagliate in cerchio da sole. Max 3 persone.
-`div.people` si può usare anche da solo (es. il consiglio direttivo, fino a 6 persone).
+
+### Persone: `div.people` da solo
+Per presentare un gruppo di persone (il consiglio direttivo, il team del progetto, chi ha
+lavorato a un evento) le persone stanno da sole sulla slide, **senza riquadro `glass`**: le foto
+in cerchio sono già il contenuto. Con `data-fx="train"` sulla slide, dopo l'ingresso girano piano
+su una pista ovale (vedi "Animazioni sulla slide"); nel PDF e in `?static` restano ferme in riga.
+```html
+<section class="slide" data-fx="train">
+  <h1>Il Consiglio Direttivo</h1>
+  <div class="people">
+    <figure class="person"><img src="img/nome-cognome.jpg" alt=""><figcaption>Nome Cognome<small>ruolo facoltativo</small></figcaption></figure>
+    …
+  </div>
+  <div class="people">…</div>   <!-- facoltativa: seconda riga -->
+</section>
+```
+Una riga fino a 6 persone, oppure due righe (per esempio 4 sopra e 3 sotto). Quale animazione:
+- **`train`** con due righe o con 5 persone e più: la pista ovale si riempie e il giro si capisce;
+- **`wave`** con una riga sola di 2-4 persone (per esempio i tre membri di un gruppo di lavoro): su
+  una pista con così poche persone le si vede solo girare in tondo, l'onda invece le lascia al loro
+  posto.
+
+Valgono anche nella versione autoesplicativa quando si presenta un gruppo.
 
 ### Testo + immagini: `div.split`
 ```html
@@ -686,4 +726,4 @@ foto della galleria fanno uno zoom lento. Con "riduci movimento" del sistema le 
 → / Spazio / PagGiù avanti · ← indietro · Home/Fine · **F** schermo intero ·
 **O** panoramica di tutte le slide · **P** o **Ctrl+P** finestra presentatore (note, timer, slide
 successiva) · **S** stampa / PDF · `#7` nell'URL apre la slide 7 · `?static` senza animazioni.
-PDF: tasto S → Salva come PDF, margini "Nessuno", "Grafica di sfondo" (Firefox: "Stampa sfondi") attiva.
+PDF: tasto S da Chrome/Edge/Brave → Salva come PDF, margini "Nessuno", "Grafica di sfondo" (Firefox: "Stampa sfondi") attiva. Per controllarlo: `check.py --pdf` (vedi il punto 5 di SKILL.md).

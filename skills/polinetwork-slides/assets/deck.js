@@ -198,7 +198,23 @@
   // barre: data-value
   // data-scale="max" sul contenitore: la barra più lunga riempie la riga, le altre in proporzione
   // (per confrontare voci tra loro, non per un avanzamento su 100) e il valore sta in fondo alla barra
-  document.querySelectorAll(".bars").forEach((c) => {
+  // data-compare="Noi|Riferimento" sul contenitore: ogni voce ha due barre, data-value (la nostra) e
+  // data-vs (il riferimento, più sottile e grigia), sulla stessa scala; sopra la legenda
+  document.querySelectorAll(".bars[data-compare]").forEach((c) => {
+    const bars = [...c.querySelectorAll(":scope > .bar")];
+    const num = (x) => parseFloat(x || "0");
+    const max = Math.max(...bars.flatMap((b) => [num(b.dataset.value), num(b.dataset.vs)]), 1);
+    const [a, b2] = c.dataset.compare.split("|");
+    if (!c.querySelector(":scope > .key")) c.insertAdjacentHTML("afterbegin", `<p class="key"><span>${a}</span><span class="ref">${b2 || ""}</span></p>`);
+    bars.forEach((b) => {
+      if (b.querySelector(".pair")) return;
+      const v = num(b.dataset.value), r = num(b.dataset.vs);
+      b.innerHTML = `<span>${b.innerHTML}</span><span class="pair">` +
+        `<i style="--v:${(v / max) * 100}"><em>${b.dataset.label || v + "%"}</em></i>` +
+        `<i class="ref" style="--v:${(r / max) * 100}"><em>${b.dataset.vsLabel || r + "%"}</em></i></span>`;
+    });
+  });
+  document.querySelectorAll(".bars:not([data-compare])").forEach((c) => {
     const bars = [...c.querySelectorAll(":scope > .bar")];
     const rel = c.dataset.scale === "max";
     const max = Math.max(...bars.map((b) => parseFloat(b.dataset.value || "0")), 1);
@@ -315,6 +331,7 @@
       // i numeri piccoli si contano uno per uno, più in fretta; quelli grandi in 1,4 s
       const t0 = performance.now() + 250, dur = c.max < 10 ? 300 + c.max * 160 : 1400;
       const tick = (t) => {
+        if (printing) return (c.el.textContent = c.final);
         const p = Math.min(1, Math.max(0, (t - t0) / dur));
         const e = c.max < 10 ? p : 1 - Math.pow(1 - p, 3);
         c.el.textContent = p >= 1 ? c.final : c.parts.map((s, i) => (c.nums[i] ? c.nums[i].fmt(Math.floor(c.nums[i].value * e)) : s)).join("");
@@ -334,7 +351,7 @@
         const t0 = performance.now(), dur = 1700 + i * 130; // il riquadro entra dopo ~1 s: il rullo deve vedersi
         let last = 0;
         const tick = (t) => {
-          if (!slide.classList.contains("active") || t - t0 >= dur) return (sp.textContent = final);
+          if (printing || !slide.classList.contains("active") || t - t0 >= dur) return (sp.textContent = final);
           if (t - last > 55) (last = t), (sp.textContent = String(Math.floor(Math.random() * 10)));
           requestAnimationFrame(tick);
         };
@@ -342,6 +359,16 @@
       });
     });
   }
+  // stampa / PDF: la pagina è ferma, quindi numeri e cifre vanno al valore finale anche se si
+  // stampa mentre stanno ancora girando (le animazioni CSS le spegne @media print)
+  let printing = false;
+  function settleForPrint() {
+    printing = true;
+    counters.forEach((c) => (c.el.textContent = c.final));
+    document.querySelectorAll(".fivex .code > b > span[data-d]").forEach((sp) => (sp.textContent = sp.dataset.d));
+  }
+  addEventListener("beforeprint", settleForPrint);
+  addEventListener("afterprint", () => (printing = false));
 
   /* ---------- Interfaccia ---------- */
   document.body.insertAdjacentHTML(
@@ -378,7 +405,7 @@
   /* ---------- animazioni sulla slide: data-fx="…" (uno o più nomi separati da spazi) ----------
      Su tela (disegnate qui): fireworks, confetti (una volta, all'arrivo); network, code, wings (dietro al
      contenuto); pizza, emoji (in mezzo: sopra le foto, sotto le scritte); likes, questions, snake (davanti). train: le persone si
-     scambiano di posto in giro. Solo CSS (theme.css): float, pulse,
+     scambiano di posto in giro. Solo CSS (theme.css): float, wave, pulse,
      flow, shine, wiggle. Spente in ?check/?static/anteprima, nel PDF e con "riduci movimento". */
   const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const FX_COLORS = ["#1156ae", "#0369a1", "#0284c7", "#38bdf8", "#ffffff"]; // blu del tema e bianco

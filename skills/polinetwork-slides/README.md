@@ -58,9 +58,11 @@ assets/theme.css          tema: token del sito, glass, layout, animazioni, stamp
 assets/deck.js            motore: navigazione, animazioni, panoramica, presentatore, ?check
 assets/fonts/             DM Sans, Poppins, Red Hat Text (woff2, latin + latin-ext)
 assets/icons/             icone Lucide (+ alcune Simple Icons) incluse nel file finale
-assets/shapes/, logo.*    forme di sfondo e logo, presi dai repo web e polinet.cc
+assets/shapes/, logo.*    forme di sfondo e logo, presi dai repo web e polinet.cc;
+                          print-*.jpg sono gli sfondi già pronti per la stampa
 scripts/build.py          compila il sorgente in un HTML autonomo (solo libreria standard)
-scripts/check.py          controllo del layout e screenshot con Chrome headless
+scripts/check.py          controllo del layout, screenshot e PDF (--pdf) con Chrome headless
+scripts/render_print_bg.py  rigenera assets/shapes/print-*.jpg (solo manutenzione)
 scripts/package.py        crea lo ZIP da caricare su claude.ai (in dist/ nella radice della repo)
 GUIDA.md                  guida all'installazione e all'uso per i membri
 ```
@@ -74,8 +76,22 @@ GUIDA.md                  guida all'installazione e all'uso per i membri
 - **Nuovo componente:**
   1. aggiungi il CSS in `theme.css`;
   2. se serve, aggiungi il suo selettore all'elenco `ANIM` in `deck.js`, per farlo animare;
-  3. documentalo in `components.md`, con markup e limiti;
-  4. provalo nel template parlato con `check.py`.
+  3. se è di vetro (`backdrop-filter`), aggiungilo alle regole di stampa in fondo a `theme.css`:
+     Chrome non stampa `backdrop-filter`, quindi lì va spento e la faccia va messa sopra
+     `var(--bg-frost)` (lo sfondo già sfocato), come per `.next`. Niente testo in gradiente con
+     `background-clip: text` senza una tinta piena per la stampa: Evince lo mostra come un
+     rettangolo pieno;
+  4. se si anima, il PDF deve mostrare lo stato finale anche se si stampa a metà animazione.
+     In stampa `theme.css` spegne tutte le animazioni CSS, quindi lo stile di base (senza
+     `.slide.active`) dev'essere quello finale, non quello di partenza. Quello che anima
+     `deck.js` (testi, `style` in linea) va portato al valore finale in `settleForPrint()` o
+     annullato nelle regole di stampa, come i numeri che contano e il treno delle persone;
+  5. documentalo in `components.md`, con markup e limiti;
+  6. provalo nel template parlato con `check.py --shots shots/ --pdf shots/prova.pdf`.
+- **Sfondo di stampa:** se cambiano forme, colori del fondo, `--glass-blur` o la composizione
+  (`PRINT_SHAPES` e `PRINT_LOOPERS` in `build.py`), rigenera gli sfondi raster con
+  `python3 scripts/render_print_bg.py` (serve Chrome). Sono raster apposta: Chrome rasterizza
+  gli SVG con i filtri a ogni pagina, e il PDF arrivava a 1 MB a slide.
 - **Dati fissi** (codice fiscale, link): tienili aggiornati in `references/brand.md`.
 - **Nuovo meme:** PNG scontornato in `assets/memes/`, nome in PascalCase che dice l'espressione
   e finisce in `Cat` (`SadThumbsUpCat.png`). Controlla che non ci sia già, anche ruotato o

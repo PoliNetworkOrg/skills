@@ -85,29 +85,44 @@ def wire_paths() -> str:
     return "".join(d)
 
 
-def vars_css() -> str:
-    sh = ASSETS / "shapes"
-    uri = {n: b64(sh / f"{n}.svg", "image/svg+xml") for n in ("looper", "big-blue", "big-teal", "small-blue")}
-    # sfondo statico per stampa/panoramica: stessa composizione di .bg nel palco 1600×900
-    wire = svg_uri(
+# sfondo statico per stampa/panoramica: stessa composizione di .bg nel palco 1600×900.
+# (forma, x, y, larghezza) dal basso verso l'alto; l'altezza segue le proporzioni dell'SVG.
+# Le forme sfocate sono già pronte in shapes/print-bg.jpg e il vetro di stampa in
+# shapes/print-frost.jpg: se cambi questa composizione, rigenerali con scripts/render_print_bg.py.
+PRINT_SHAPES = [("small-blue", 1088, 480, 576), ("big-teal", -352, 224, 1184), ("big-blue", 800, -576, 1280)]
+PRINT_LOOPERS = [("looper", 640, 64, 1440), ("looper", -416, -640, 1664)]
+
+
+def wire_svg() -> str:
+    return (
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">'
         f'<g fill="none" stroke="#fff" stroke-width="1.4" opacity=".55">{wire_paths()}</g></svg>'
     )
+
+
+def vars_css() -> str:
+    sh = ASSETS / "shapes"
+    uri = {n: b64(sh / f"{n}.svg", "image/svg+xml") for n in ("looper", "big-blue", "big-teal", "small-blue")}
+    # Le forme sfocate sono un JPEG unico e non SVG: Chrome rasterizza gli SVG con i filtri a ogni
+    # pagina (circa 1 MB a slide nel PDF), mentre la stessa immagine raster la incorpora una volta
+    # sola. Curve e fili restano vettoriali, sopra.
     bg_print = (
-        f'url("{wire}") 0 0 / 1600px 900px no-repeat, '
-        f'url("{uri["looper"]}") -416px -640px / 1664px auto no-repeat, '
-        f'url("{uri["looper"]}") 640px 64px / 1440px auto no-repeat, '
-        f'url("{uri["big-blue"]}") 800px -576px / 1280px 1280px no-repeat, '
-        f'url("{uri["big-teal"]}") -352px 224px / 1184px 1184px no-repeat, '
-        f'url("{uri["small-blue"]}") 1088px 480px / 576px 576px no-repeat, '
+        f'url("{svg_uri(wire_svg())}") 0 0 / 1600px 900px no-repeat, '
+        + "".join(f'url("{uri[n]}") {x}px {y}px / {w}px auto no-repeat, ' for n, x, y, w in reversed(PRINT_LOOPERS))
+        + f'url("{b64(sh / "print-bg.jpg", "image/jpeg")}") 0 0 / 1600px 900px no-repeat, '
         "var(--bg)"
     )
+    # vetro in stampa: Chrome non stampa backdrop-filter, quindi sotto i riquadri di vetro va lo
+    # sfondo già sfocato e saturato come --glass-blur. "fixed" lo aggancia alla pagina, che in
+    # stampa coincide con la slide, così combacia con lo sfondo che c'è dietro al riquadro.
+    bg_frost = f'url("{b64(sh / "print-frost.jpg", "image/jpeg")}") 0 0 / 1600px 900px no-repeat fixed'
     return (
         ":root{"
         f'--logo:url("{b64(ASSETS / "logo.svg", "image/svg+xml")}");'
         f'--arrow:url("{svg_uri(ARROW)}");'
         + "".join(f'--shape-{n}:url("{u}");' for n, u in uri.items())
         + f"--bg-print:{bg_print};"
+        + f"--bg-frost:{bg_frost};"
         "}"
     )
 
