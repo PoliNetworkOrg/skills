@@ -38,6 +38,14 @@ nella slide senza rimpicciolirsi: se il contenuto è di più, dividilo in due sl
   stesso riquadro, con i bordi sinistri allineati: niente blocchi separati di peso diverso
   impilati uno sotto l'altro.
 - `data-footer="off"` sulla section toglie footer e numero.
+- Link nel testo (una fonte, un documento): `<a href="https://…">PDF dello studio</a>` in un
+  paragrafo, una voce o un `<small>`. Si vede sottolineato e si clicca anche nel PDF.
+- **Rimando a un'altra slide:** `id="fonti"` sulla section di arrivo e
+  `<a data-ref="fonti"></a>` dove serve il numero: diventa "12" e porta lì (anche nel PDF). Mai
+  scrivere il numero a mano: se si aggiunge o toglie una slide, i numeri scritti a mano sbagliano.
+- **Serie di slide uguali** (una per team, progetto, evento): `data-align="top"` sulla
+  section fa partire il contenuto subito sotto il titolo, così passando da una all'altra niente
+  si sposta.
 - Copertina, divisori e chiusura non hanno il numero di pagina; nelle slide con uno sticker
   a destra il numero viene nascosto.
 
@@ -161,6 +169,12 @@ Un nome sbagliato fa fallire `build.py`, che suggerisce i nomi più vicini.
 L'emblema con il logo negli anelli di vetro viene aggiunto da solo a destra, e sotto il titolo
 compare da sola una barra a gradiente. Per evidenziare una parte del titolo (in gradiente blu):
 `<h1>Da studenti, <mark>per studenti</mark></h1>`; al massimo 2-3 parole, facoltativo.
+Una nota in fondo alla copertina (per esempio la fonte dei numeri con l'asterisco):
+`<p class="small">* Dal sondaggio ai soci di marzo 2026.</p>`, figlio della section.
+Al posto dell'emblema a destra può andare una finestra finta (`div.window`, vedi "Interfacce
+finte"), quando l'argomento è un'interfaccia: l'emblema allora non compare, il logo in alto a
+sinistra resta.
+
 Variante solo logo, per aprire o chiudere:
 ```html
 <section class="slide cover brand-only">
@@ -184,13 +198,14 @@ in alto nell'autoesplicativa).
 ### Divisore di sezione: `section`
 ```html
 <section class="slide section">
-  <p class="kicker">Parte 2</p>          <!-- facoltativo -->
   <h1>I nostri team</h1>                 <!-- max ~6 parole -->
-  <p class="sub">Facoltativo</p>
-  <span class="n">02</span>              <!-- facoltativo: numero grande in trasparenza -->
+  <p class="sub">Facoltativo: una frase su cosa c'è in questa parte</p>  <!-- max ~14 parole -->
 </section>
 ```
-Anche per "Domande?", con uno sticker.
+Titolo in basso a sinistra, con davanti il numero della parte a contorno (01, 02…), messo da solo
+nell'ordine dei divisori: non scrivere "Parte 2" né il numero. `data-n="off"` sull'`h1` toglie il
+numero, `data-n="A"` lo cambia. Anche per "Domande?", con uno sticker a destra: un divisore che non
+ha slide di contenuto dopo di sé (prima della chiusura) non prende il numero.
 
 ### Chiusura: `thanks`
 ```html
@@ -243,7 +258,24 @@ slide di fila. Per passi numerati c'è `ol.points`, per chi/quando/dove `dl.fact
   …
 </div>
 ```
-2 o 4 card → 2 colonne; 3, 5, 6 → 3 colonne; 7-8 → 4. Forzare: `data-cols="3"`.
+2 o 4 card → 2 colonne; 3, 5, 6 → 3 colonne; 7-8 → 4. Forzare: `data-cols="3"`. Fino a 10 card
+brevi (un'etichetta, un nome, una parola: i referenti dei team) stanno su due righe con
+`data-cols="5"`.
+**A gruppi** (per priorità, per tipo, per scadenza): un `<p class="group">` apre ogni fila e le card del gruppo si
+dividono la riga (3 card → tre per riga, 2 → metà ciascuna; max 4 per gruppo). `group muted` per i
+gruppi meno importanti: intestazione e icone grigie. L'intestazione dice già il gruppo: non
+ripeterlo in una pill dentro ogni card.
+```html
+<div class="cards">
+  <p class="group">Entro settembre</p>
+  <div><i data-icon="globe"></i><h3>Nuovo sito</h3><p>Una frase.</p><ul class="meta"><li><b>3 su 5</b> pagine pronte</li><li><b>2</b> persone dell'IT</li></ul></div>
+  …
+  <p class="group muted">Più avanti</p>
+  <div>…</div><div>…</div>
+</div>
+```
+`ul.meta` in fondo alla card: una o due righe con il numero in grassetto, allineate tra le card
+della stessa fila. Va bene anche senza gruppi.
 **Stato dei progetti:** una card per progetto con lo stato sotto il nome, ordinate dal più avanti
 al più indietro (pill come in `table.status`), più bella e leggibile della tabella quando i
 progetti sono 4-6:
@@ -265,6 +297,9 @@ stare su una riga: se vanno a capo, usa meno colonne (2×2 invece di 4 in fila).
 ```
 Parola chiave facoltativa, ben visibile tra numero e descrizione:
 `<div><b>150+</b><h3>Admin</h3><span>moderano i gruppi</span></div>`.
+Etichetta facoltativa sopra il numero, per la fonte o il contesto del dato:
+`<div><span class="label">Sondaggio 2026*</span><b>74%</b><h3>Usano il bot</h3><span>…</span></div>`
+(l'asterisco rimanda alla nota sotto, vedi "Fonti e note").
 2-4 numeri (max 5). Con soli 2 numeri la slide resta vuota: aggiungi un `<p class="lead">`
 sopra, oppure usa la nuvola "Chi siamo". I numeri contano fino al valore quando la slide compare;
 il testo in `<b>` resta quello scritto (es. "20 000+", "3,8/5", "1000+").
@@ -323,10 +358,10 @@ valore di riferimento. Ogni voce ha due barre sulla stessa scala: la nostra in b
 riferimento più sottile e grigia, ognuna con il suo valore; in alto a destra compare la legenda.
 `data-label` e `data-vs-label` cambiano i testi dei valori (per esempio "0,6%").
 ```html
-<div class="bars glass" data-compare="Il nostro survey|Europa, 2019">
-  <div class="bar" data-value="74" data-vs="37">Non le leggo</div>
-  <div class="bar" data-value="25" data-vs="47">Le leggo in parte</div>
-  <div class="bar" data-value="0.6" data-vs="13" data-label="0,6%">Le leggo per intero</div>
+<div class="bars glass" data-compare="Quest'anno|L'anno scorso">
+  <div class="bar" data-value="68" data-vs="52">Usano i gruppi Telegram</div>
+  <div class="bar" data-value="41" data-vs="30">Seguono Instagram</div>
+  <div class="bar" data-value="0.6" data-vs="1.3" data-label="0,6%" data-vs-label="1,3%">Si candidano nei team</div>
 </div>
 ```
 Max 6 voci. Solo cifre date dall'utente o da una fonte che l'utente ha indicato, con la fonte
@@ -481,7 +516,9 @@ su una pista ovale (vedi "Animazioni sulla slide"); nel PDF e in `?static` resta
   <div class="people">…</div>   <!-- facoltativa: seconda riga -->
 </section>
 ```
-Una riga fino a 6 persone, oppure due righe (per esempio 4 sopra e 3 sotto). Quale animazione:
+Una riga fino a 6 persone, oppure due righe (per esempio 4 sopra e 3 sotto). Con 2 o 3 persone
+su una riga sola le foto e i nomi diventano grandi da soli, così la slide non resta vuota.
+Quale animazione:
 - **`train`** con due righe o con 5 persone e più: la pista ovale si riempie e il giro si capisce;
 - **`wave`** con una riga sola di 2-4 persone (per esempio i tre membri di un gruppo di lavoro): su
   una pista con così poche persone le si vede solo girare in tondo, l'onda invece le lascia al loro
@@ -504,7 +541,8 @@ Valgono anche nella versione autoesplicativa quando si presenta un gruppo.
 </div>
 ```
 Varianti: `split even` (metà e metà), `split media-left` (immagini a sinistra), `split fit` (la
-colonna dell'immagine è larga quanto l'immagine: per una foto verticale accanto a 4-6 card).
+colonna dell'immagine è larga quanto l'immagine: per una foto verticale o un documento
+`figure.sheet` accanto a 3-6 card; si combina con `media-left`).
 Con `split fit` le card diventano alte quanto l'immagine, con righe tutte uguali; senza `fit`
 restano alte quanto il loro contenuto.
 **Mai un elenco puntato da solo dentro un riquadro** (`div.glass` con dentro solo `<ul>`): ogni
@@ -554,7 +592,7 @@ come figlio diretto della `section`. Il titolo deve stare a sinistra senza arriv
 ### Galleria: `div.gallery`
 ```html
 <div class="gallery">
-  <figure><img src="img/evento-1.jpg" alt=""><figcaption>Welcome drink · settembre</figcaption></figure>
+  <figure><img src="img/evento-1.jpg" alt=""><figcaption>Welcome drink, settembre</figcaption></figure>
   …
 </div>
 ```
@@ -565,6 +603,8 @@ Con 4 foto in fila i riquadri diventano strisce strette: per foto di gruppo usa 
 quella che si vede di più), la seconda e la terza piccole e quasi quadrate in alto a destra, la
 quarta larga sotto (circa 2:1, ritagliata al centro). Esattamente 4 foto. Se le foto vengono da
 eventi diversi, la didascalia dice quale.
+Per 6-8 foto dello stesso momento, tutte uguali e dritte: `<div class="gallery grid">` (vedi "Foto in
+griglia e riquadro riassuntivo").
 
 ### Schermate di un'app: `div.screens`
 ```html
@@ -629,6 +669,204 @@ cifra, come sul modulo della dichiarazione.
 </div>
 ```
 
+## Persone, documenti, collegamenti
+
+Componenti per raccontare chi ha detto cosa, mostrare la cosa vera invece di descriverla e far
+vedere come le cose sono collegate. Valgono in tutte e due le versioni.
+
+### Citazione con chi la dice: `div.quote`
+```html
+<div class="quote">
+  <img src="img/nome.jpg" alt="Nome">              <!-- oppure <i data-icon="user"></i> -->
+  <p class="who"><b>Nome</b>Ruolo, in poche parole</p>
+  <blockquote>«La frase, con le sue parole»</blockquote>
+  <p class="note">Facoltativo: dove e quando l'ha detto</p>
+</div>
+```
+Per una testimonianza, il feedback di un socio o di una matricola, la frase di un ospite. La foto
+è tonda; chi non si mostra ha l'icona `user` in un cerchio e un'etichetta generica al posto del
+nome ("Una matricola"). Max ~45 parole nella frase. `quote big` per una frase sola che regge mezza
+slide (max ~15 parole): accanto a un `ul.panel` in `split even`, con sotto un `<p>` di contesto
+(a che domanda rispondeva). Sopra un `div.cols` o un `div.cards` diventa l'attacco di una slide su
+una persona.
+
+### Scheda di una persona: `div.profile`
+```html
+<div class="profile">
+  <div class="photos">
+    <figure><img src="img/ospite.jpg" alt="Nome"><figcaption>Il talk del 6 marzo</figcaption></figure>
+    <span class="label">Con lei sul palco</span>                               <!-- facoltativo -->
+    <figure class="small"><img src="img/a.jpg" alt="Nome"><figcaption>Modera<b>Nome</b></figcaption></figure>
+    <figure class="small"><img src="img/b.jpg" alt="Nome"><figcaption>Presenta<b>Nome</b></figcaption></figure>
+  </div>
+  <div class="glass">
+    <span class="label">Ospite della serata</span>
+    <h2>Ricercatrice in robotica</h2>
+    <p>Chi è e cosa fa, in una o due frasi.</p>
+    <blockquote>«Una sua frase che la racconta»</blockquote>
+    <span class="label">Con PoliNetwork</span><p>Una frase.</p>             <!-- facoltativo -->
+    <p class="note"><i data-icon="clock"></i>Talk di 40 minuti, con le domande del pubblico.</p>
+  </div>
+</div>
+```
+Per presentare **una** persona importante per il racconto (un ospite, un relatore, il nuovo
+presidente) meglio di una `dl.facts`: foto grande a sinistra (2:1), chi è a destra. Le foto
+piccole sono facoltative (chi c'era con lei). Max ~80 parole nel riquadro.
+
+### Un documento vero: `figure.sheet`
+```html
+<div class="split fit media-left">
+  <div class="cards" data-cols="1">…3 card…</div>
+  <figure class="sheet"><img src="img/statuto-p1.jpg" alt="Prima pagina dello statuto"><figcaption>Lo statuto in vigore</figcaption></figure>
+</div>
+```
+Quando la slide parla di un documento (statuto, regolamento, verbale, volantino), mostrane la
+pagina invece di descriverla: un foglio appoggiato e un po' storto, largo 380 px, con la
+didascalia sotto. `sheet straight` (dritto, angoli arrotondati) per un **estratto** da leggere,
+con le parti importanti evidenziate nell'immagine, più largo (`style="width: 560px"`), accanto a
+card su due colonne che spiegano le parti evidenziate. La pagina si ricava dal PDF con
+`pdftoppm -f 1 -l 1 -r 110 -jpeg doc.pdf img/doc` (poi ritaglia i margini bianchi).
+
+### Foto in griglia e riquadro riassuntivo: `.gallery.grid` e `div.recap`
+```html
+<div class="split">
+  <div class="recap">
+    <p class="lead"><b class="num" data-count>400+</b>persone al Welcome Day</p>
+    <p><i data-icon="calendar"></i>26 settembre, Campus Leonardo</p>
+    <p><i data-icon="clock"></i>Dalle 17 alle 22</p>
+    <ol>
+      <li><i data-icon="ticket"></i>Accoglienza ai banchetti</li>
+      <li><i data-icon="mic"></i>Presentazione dei team</li>
+      <li><i data-icon="pizza"></i>Aperitivo</li>
+    </ol>
+  </div>
+  <div class="gallery grid">
+    <figure><img src="img/welcome-1.jpg" alt=""></figure>
+    …
+  </div>
+</div>
+```
+Un'attività raccontata con le sue foto (un evento, un workshop, un hackathon): a sinistra il
+riquadro con il numero, quando e dove (1-2 righe con icona) e i momenti in ordine (3-4, una
+riga ciascuno); a destra le foto tutte uguali e dritte in una griglia regolare: 4 → 2×2, 6 → 3×2,
+8 → 4×2. Metti le foto nell'ordine dei momenti. Il riquadro può stare anche a destra (ultimo).
+`.gallery.grid` va bene anche da sola, per 6-8 foto di un evento.
+
+### Punti in un pannello: `ul.panel`
+```html
+<ul class="panel">
+  <li><i data-icon="triangle-alert"></i><b>Titolo del punto</b><p>Una frase che lo spiega.</p></li>
+  …
+</ul>
+```
+3-4 punti, ognuno con un titolo (~5 parole) e una frase (~20 parole), in un riquadro solo e
+separati da un filo. È il modo giusto di mettere più punti in un riquadro: accanto a una
+citazione (`quote big`), a un'immagine o a un numero, dove quattro card separate sarebbero troppo
+pesanti. Da solo nella slide meglio `div.cards`.
+
+### Interfacce finte: `div.window`, `div.banner`
+Quando la slide parla di un'interfaccia (la schermata per entrare in un gruppo, un avviso del sito,
+il messaggio di un bot), ricostruiscila in HTML invece di descriverla: si anima come se qualcuno
+la usasse (il testo scorre, la casella si spunta, il pulsante viene premuto, i numeri compaiono).
+Nel PDF e in `?static` è già ferma nello stato finale.
+```html
+<div class="window" aria-hidden="true">
+  <p class="bar">Regolamento dei gruppi</p>
+  <div class="scroll">
+    <p><b>1. Rispetto.</b> Testo lungo che scorre…</p>
+    …
+    <p><b>5. Annunci.</b> <mark class="flash">La regola da notare</mark></p>
+    <p>…</p>
+  </div>
+  <div class="actions">
+    <p class="check">Ho <del>letto</del> e accetto il regolamento</p>
+    <span class="btn primary">Entra nel gruppo</span>
+  </div>
+  <div class="callout"><b>20 000+</b>studenti nei gruppi</div>
+  <div class="callout light"><b>150+</b>admin che li moderano</div>
+</div>
+```
+- `.scroll`: 5-8 paragrafi brevi; il testo scorre e si ferma con il `mark.flash` al centro, che
+  poi si evidenzia. Senza `mark.flash` si ferma sull'ultimo paragrafo.
+- `p.check` diventa una casella che si spunta; `<del>` cancella una parola con un tratto.
+- `.btn` (contorno) e `.btn primary` (pieno); `.btn click`: arriva un puntatore e lo preme.
+- `.callout` (scuro, in alto a destra) e `.callout light` (chiaro, in basso a destra): al massimo
+  due numeri appoggiati alla finestra.
+- Al posto di `.scroll` e `.actions` va bene anche un `<p class="body">` di testo normale.
+
+In copertina, figlia della section, la finestra sta a destra al posto dell'emblema (il logo
+PoliNetwork resta in alto a sinistra). Nelle altre slide va in `.media` o in uno `split`. Il
+banner, una riga in fondo a un altro componente:
+```html
+<div class="banner" aria-hidden="true">
+  <p><b>Novità:</b> il bot ti ricorda le scadenze degli appelli.</p>
+  <span class="btn">Più tardi</span><span class="btn primary click">Attiva</span>
+</div>
+```
+Una per presentazione, due al massimo: è un effetto che funziona perché è raro. Il testo della
+finestra può essere un esempio (le righe di un regolamento tipo): numeri e fatti sono sempre quelli
+dell'utente. `aria-hidden="true"`: è un'illustrazione, non contenuto da leggere ad alta voce.
+
+### Mappa a colonne: `div.map`
+```html
+<div class="map">
+  <div class="col">
+    <h4>Chi</h4>
+    <div class="node" data-id="matricole" data-to="orientarsi materiali"><i data-icon="graduation-cap"></i><span class="label">Matricole</span><b>Appena arrivate</b><small>primo anno</small></div>
+    …
+  </div>
+  <div class="col fill">
+    <h4>Cosa serve</h4>
+    <div class="node" data-id="orientarsi" data-track="1" data-to="guida"><b>Orientarsi al Poli</b></div>
+    …
+  </div>
+  <div class="col">
+    <h4>Come</h4>
+    <div class="node" data-id="guida" data-track="1" data-to="inserirsi"><b>Guida matricole</b></div>
+    …
+  </div>
+  …
+</div>
+```
+Colonne di riquadri collegati da frecce, per far vedere come le cose si collegano: persone →
+bisogni → servizi → obiettivi, problemi → progetti → risultati, team → attività. Le frecce le
+disegna il motore: ogni riquadro ha un `data-id` (una parola, unica nella mappa) e in `data-to`
+gli id dei riquadri della colonna dopo a cui porta. Si disegnano colonna per colonna, poi una
+luce le percorre. `data-track="1"`…`"4"` dà a un riquadro e alle sue frecce il colore di un filone
+(blu, verde acqua, viola, grigio): nella colonna `fill` i riquadri sono pieni del loro colore,
+nelle altre hanno una barra del colore a sinistra. Riquadri: icona e `.label` facoltative, `<b>`
+max ~5 parole, `<small>` facoltativo. 3-4 colonne, max ~8 riquadri per colonna, `h4` di una o
+due parole. `check.py` segnala i `data-to` che non trovano il loro `data-id`; guarda lo screenshot:
+se le frecce si incrociano troppo, riordina i riquadri.
+
+### Percorso a serpente: `ol.road`
+```html
+<ol class="road">
+  <li><h3>Raccogliere le idee</h3><p>Un form aperto a tutti i soci.</p></li>
+  …
+</ol>
+```
+4-6 passi in sequenza, senza date (i prossimi passi di un progetto, le fasi di un lavoro): una
+strada che va da sinistra a destra, curva e torna indietro, con i passi numerati sopra. Con un
+numero dispari di passi la seconda fila è sfalsata di mezzo passo. Titolo ~3 parole, frase ~8
+parole. La strada si disegna e i passi compaiono quando la strada li raggiunge. Con le date
+meglio `ol.timeline`.
+
+### Fonti e note
+Un dato che viene da un'altra fonte (un sondaggio, uno studio, un report) porta un asterisco
+(nell'etichetta o nel testo: "Sondaggio 2026*") e sotto il componente una nota: `<p class="small">*
+Riferimenti completi nella slide <a data-ref="fonti"></a>, «Fonti».</p>` (solo nella versione da
+leggere; a voce la fonte va nelle note). In fondo una slide `id="fonti"` con una riga per fonte:
+```html
+<section class="slide" id="fonti" data-crumb="off">
+  <h1>Fonti</h1>
+  <ul class="irows">
+    <li><i data-icon="book-open"></i><p><b>Autore o ente (anno)</b><small><i>Titolo</i>. Cosa misura, in una frase.<br><a href="https://…">PDF del report</a></small></p></li>
+  </ul>
+</section>
+```
+Solo fonti date dall'utente, con il link che ha dato o verificato (`curl -sI`).
+
 ## Versione autoesplicativa (`mode: lettura`)
 
 Con `mode: lettura` nel commento in testa al file tutti i componenti sopra restano validi, con
@@ -652,7 +890,8 @@ più corto: usali per variare i layout.
 ```
 Una o due frasi, in cima alla slide, subito sotto il titolo. Max ~35 parole.
 Solo se aggiunge qualcosa: la chiave per leggere un corpo denso (colonne, tabella, bilancio) o
-un'informazione che non sta altrove. Se ripete il titolo o le card sotto, toglilo.
+un'informazione che non sta altrove. Se ripete il titolo o le card sotto, toglilo. Spesso la stessa cosa la dice meglio un componente: la frase di chi l'ha detta
+(`div.quote`), un numero (`b.num`), il documento vero (`figure.sheet`).
 
 ### Colonne di spiegazione: `div.cols`
 ```html
@@ -668,7 +907,10 @@ un'informazione che non sta altrove. Se ripete il titolo o le card sotto, toglil
 ```html
 <p class="next"><i data-icon="arrow-right"></i><b>Prossimo passo</b>Lancio con l'evento matricole, a settembre.</p>
 ```
-Una riga in fondo alla slide. Altre etichette: "Cosa ti chiediamo", "Scadenza", "Contatto".
+Una riga in fondo alla slide. Altre etichette: "Cosa ti chiediamo", "Scadenza", "Contatto". Anche
+senza etichetta, con `lightbulb`, per la conclusione di una slide ("cosa ne ricaviamo"). Due `p.next`
+uno sotto l'altro vanno bene per due informazioni di contorno diverse (come sono stati scelti i
+partecipanti, quali materiali).
 
 ### Scheda dei fatti: `dl.facts`
 ```html

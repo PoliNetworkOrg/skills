@@ -377,6 +377,13 @@ mark,
   font-size: 19px;
   color: var(--text-3);
 }
+/* link nel testo (una fonte, un documento): si vede che si clicca, anche nel PDF */
+.body :is(p, li, dd, td, small, blockquote):not(.links > li) > a[href] {
+  color: var(--blue-ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
+}
 
 /* elenchi puntati: puntino blu del brand */
 .slide ul:not([class]),
@@ -414,7 +421,10 @@ ul.dots > li::before {
 .agenda > li,
 .cols > *,
 ol.points > li,
-dl.terms > div {
+dl.terms > div,
+.quote,
+.recap,
+.panel {
   position: relative;
   background: var(--glass-bg);
   -webkit-backdrop-filter: var(--glass-blur);
@@ -634,10 +644,12 @@ dl.terms > div {
 }
 
 /* ================= Divisore di sezione ================= */
+/* titolo in basso a sinistra, con davanti il numero della parte a contorno che si traccia, come i
+   numeri dell'indice. deck.js lo mette nell'h1 (01, 02… nell'ordine dei divisori, o data-n) */
 .slide.section {
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding-bottom: 210px;
 }
 .slide.section > h1 {
   font-size: 104px;
@@ -645,38 +657,29 @@ dl.terms > div {
   letter-spacing: -0.03em;
   max-width: 1250px;
 }
-.slide.section > .sub {
-  margin-top: 26px;
-  font-size: 30px;
+.slide.section > h1 > .n {
+  position: relative;
+  display: inline-block;
+  margin-right: 0.3em;
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  color: rgb(116 212 255 / 0.3);
+  -webkit-text-stroke: 2px var(--blue);
 }
-.slide.section > .n {
-  position: absolute;
-  right: 96px;
-  bottom: 70px;
-  font: 600 260px/0.85 var(--font-display);
-  letter-spacing: -0.06em;
-  color: transparent;
-  -webkit-text-stroke: 2px rgb(255 255 255 / 0.95);
-  text-shadow: 0 20px 60px rgb(17 86 174 / 0.12);
+.slide.section > .sub {
+  margin-top: 22px;
+  max-width: 900px;
+  font-size: 30px;
 }
 .slide.section > .kicker {
   margin-bottom: 22px;
 }
-.slide.section::after {
-  content: "";
-  width: 140px;
-  height: 4px;
-  margin-top: 40px;
-  border-radius: 4px;
-  background: linear-gradient(90deg, var(--blue-3), var(--blue));
-  transform-origin: center;
+/* sticker a sinistra: il titolo si sposta a destra, così il gatto non lo copre */
+.slide.section:has(> .sticker.left:not(.small)) {
+  padding-left: 480px;
 }
-.slide.section.active::after {
-  animation: barIn 1.1s var(--ease) 0.6s both;
-}
-.slide.section:has(> .sticker:not(.small)) > h1,
-.slide.section:has(> .sticker:not(.small)) > .sub {
-  margin-right: 0;
+.slide.section:has(> .sticker:not(.left, .small)) > :is(h1, .sub) {
+  max-width: 980px;
 }
 
 /* ================= Frase a effetto ================= */
@@ -917,11 +920,15 @@ dl.terms > div {
 .stats:has(> :nth-child(4)) b {
   font-size: 70px;
 }
-.stats span {
+.stats > * > span:not(.label) {
   display: block;
   margin-top: 14px;
   font: 400 23px/1.3 var(--font-headline);
   color: var(--text-2);
+}
+/* etichetta facoltativa sopra il numero: la fonte o il contesto del dato ("Studio 2020*") */
+.stats > * > .label {
+  margin-bottom: 16px;
 }
 /* parola chiave facoltativa tra numero e descrizione */
 .stats > * > h3 {
@@ -1096,6 +1103,14 @@ table.status td small {
   display: grid;
   gap: 22px;
   padding: 38px 44px;
+}
+/* barre dentro un riquadro insieme ad altro (per esempio la domanda sopra, in .lead): il riquadro
+   è quello esterno, niente secondo margine */
+.glass > .bars:not(.glass) {
+  padding: 0;
+}
+.glass > * + .bars {
+  margin-top: 30px;
 }
 .bars > .bar {
   display: grid;
@@ -1800,6 +1815,27 @@ table.status td small {
 .person.tbd > .ph {
   border-style: dashed;
 }
+/* poche persone (fino a 3, una riga sola) da sole sulla slide: foto e nomi grandi, altrimenti
+   tre cerchi piccoli restano persi in mezzo al vuoto */
+.body:not(:has(> .people ~ .people)) > .people:not(:has(> figure:nth-of-type(4))) {
+  gap: 30px 90px;
+}
+.body:not(:has(> .people ~ .people)) > .people:not(:has(> figure:nth-of-type(4))) > .person {
+  gap: 24px;
+}
+.body:not(:has(> .people ~ .people)) > .people:not(:has(> figure:nth-of-type(4))) > .person > :is(img, .ph) {
+  width: 290px;
+  height: 290px;
+  border-width: 6px;
+  box-shadow: 0 26px 56px -26px rgb(17 86 174 / 0.5);
+}
+.body:not(:has(> .people ~ .people)) > .people:not(:has(> figure:nth-of-type(4))) > .person figcaption {
+  font-size: 32px;
+}
+.body:not(:has(> .people ~ .people)) > .people:not(:has(> figure:nth-of-type(4))) > .person figcaption small {
+  margin-top: 4px;
+  font-size: 21px;
+}
 
 /* ================= Testo + media ================= */
 .split {
@@ -1817,6 +1853,10 @@ table.status td small {
 /* split fit: la colonna dell'immagine è larga quanto l'immagine, il testo prende il resto */
 .split.fit {
   grid-template-columns: minmax(0, 1fr) auto;
+}
+/* con l'immagine a sinistra le colonne si scambiano: quella larga quanto l'immagine passa a sinistra */
+.split.fit.media-left {
+  grid-template-columns: auto minmax(0, 1fr);
 }
 /* split fit: card alte quanto l'immagine, righe uguali, contenuto al centro */
 .split.fit > .cards {
@@ -2356,6 +2396,949 @@ table.status td small {
   margin-top: 36px;
 }
 
+/* ================= Citazione con chi la dice: div.quote ================= */
+/* foto (o icona, per chi non si mostra) a sinistra; nome e ruolo, la frase, una nota facoltativa */
+.quote {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  align-items: center;
+  column-gap: 30px;
+  padding: 26px 36px;
+}
+.quote:not(:has(> img, > svg.ico, > .ph)) {
+  grid-template-columns: minmax(0, 1fr);
+}
+.quote > :is(img, svg.ico, .ph) {
+  grid-row: 1 / span 3;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid rgb(255 255 255 / 0.95);
+  box-shadow: 0 18px 40px -22px rgb(17 86 174 / 0.5);
+}
+.quote > svg.ico {
+  padding: 24px;
+  background: linear-gradient(145deg, rgb(116 212 255 / 0.4), rgb(81 162 255 / 0.18));
+  color: var(--blue-2);
+  stroke-width: 1.6;
+}
+.quote > p.who {
+  font: 400 18px/1.3 var(--font-body);
+  color: var(--text-3);
+}
+.quote > p.who > b {
+  margin-right: 12px;
+  font: 500 23px/1.3 var(--font-headline);
+  color: var(--title);
+}
+.quote > blockquote {
+  margin-top: 6px;
+  font: 400 25px/1.45 var(--font-headline);
+  color: var(--title);
+  text-wrap: pretty;
+}
+.quote > p.note {
+  margin-top: 8px;
+  font: 400 17px/1.3 var(--font-body);
+  color: var(--text-3);
+  text-align: right;
+}
+/* la frase in grande: una citazione sola che regge la slide (o mezza) */
+.quote.big > blockquote {
+  font: 500 34px/1.3 var(--font-display);
+  letter-spacing: -0.01em;
+}
+/* contesto sotto la citazione, fuori dal riquadro */
+.quote + p {
+  margin: 20px 8px 0;
+  color: var(--text-2);
+}
+html.read .quote > blockquote {
+  font-size: 22px;
+}
+html.read .quote.big > blockquote {
+  font-size: 30px;
+}
+html.read .quote > p.who > b {
+  font-size: 22px;
+}
+
+/* ================= Scheda di una persona: div.profile ================= */
+/* a sinistra la foto (e facoltative le foto piccole di chi c'era), a destra chi è, in un riquadro */
+.profile {
+  display: grid;
+  grid-template-columns: 510px minmax(0, 1fr);
+  gap: 44px;
+  align-items: stretch;
+}
+.profile > .photos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: center;
+  gap: 12px 18px;
+  min-width: 0;
+}
+.profile > .photos > :is(figure:not(.small), .label) {
+  grid-column: 1 / -1;
+}
+.profile > .photos > .label {
+  margin: 18px 0 0;
+  color: var(--text-2);
+}
+.profile > .photos > figure > :is(img, .ph) {
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  height: auto;
+  object-fit: cover;
+  border: 5px solid rgb(255 255 255 / 0.86);
+  border-radius: 24px;
+  box-shadow: 0 28px 54px -30px rgb(17 86 174 / 0.65);
+}
+.profile > .photos > figure.small > :is(img, .ph) {
+  border: 0;
+  border-radius: 16px;
+  box-shadow: 0 15px 32px -22px rgb(17 86 174 / 0.5);
+}
+.profile > .photos > figure > figcaption {
+  margin-top: 12px;
+  font: 500 17px/1.3 var(--font-body);
+  color: var(--text-2);
+}
+.profile > .photos > figure.small > figcaption {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 8px;
+  font-weight: 400;
+}
+.profile > .photos > figure.small > figcaption > b {
+  font-weight: 600;
+}
+.profile > .glass {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 32px 40px;
+}
+.profile > .glass > .label {
+  margin-bottom: 10px;
+  color: var(--text-2);
+}
+.profile > .glass > h2 {
+  margin-bottom: 22px;
+  font-size: 42px;
+}
+.profile > .glass > p {
+  font-size: 21px;
+  line-height: 1.45;
+}
+.profile > .glass > blockquote {
+  margin: 22px 0;
+  font: 600 24px/1.4 var(--font-body);
+  color: var(--title);
+}
+.profile > .glass > .label:not(:first-child) {
+  margin: 6px 0 4px;
+}
+.profile > .glass > p.note {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 20px;
+  font-size: 18px;
+}
+.profile > .glass > p.note > svg.ico {
+  width: 22px;
+  height: 22px;
+  color: var(--text-2);
+}
+html.read .profile > .glass > p:not(.note) {
+  font-size: 19px;
+}
+html.read .profile > .glass > p.note {
+  font-size: 17px;
+}
+
+/* ================= Un documento vero: figure.sheet ================= */
+/* la pagina di un documento (statuto, regolamento, verbale, volantino) come un foglio appoggiato,
+   un po' storto; "straight" per un estratto da leggere (evidenziato), dritto */
+figure.sheet {
+  flex: none;
+  width: 380px;
+}
+figure.sheet > :is(img, .ph) {
+  width: 100%;
+  height: auto;
+  max-height: none;
+  border-radius: 4px;
+  rotate: -2.5deg;
+  box-shadow:
+    0 2px 4px rgb(15 23 42 / 0.08),
+    0 30px 60px -24px rgb(17 86 174 / 0.45);
+}
+figure.sheet > .ph {
+  aspect-ratio: 1 / 1.414;
+}
+figure.sheet.straight > :is(img, .ph) {
+  rotate: none;
+  border-radius: 12px;
+}
+figure.sheet > figcaption {
+  margin-top: 26px;
+  font: 400 18px/1.4 var(--font-body);
+  color: var(--text-3);
+  text-align: center;
+}
+figure.sheet.straight > figcaption {
+  margin-top: 18px;
+}
+
+/* ================= Foto in griglia e riquadro riassuntivo: .gallery.grid, div.recap ================= */
+/* foto tutte uguali, dritte, in una griglia regolare (4 → 2×2, 6 → 3×2, 8 → 4×2) */
+.gallery.grid {
+  grid-auto-flow: row;
+  grid-template-columns: repeat(var(--gc, 3), minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+  gap: 16px;
+}
+.gallery.grid:not(:has(> figure:nth-child(5))) {
+  --gc: 2;
+}
+.gallery.grid:has(> figure:nth-child(7)) {
+  --gc: 4;
+}
+.gallery.grid > figure {
+  rotate: none;
+  translate: none;
+  border: 0;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px -24px rgb(17 86 174 / 0.55);
+}
+/* il riquadro accanto alle foto: un numero, quando e dove, i momenti in ordine */
+.recap {
+  display: flex;
+  flex-direction: column;
+  padding: 34px 32px 36px;
+}
+.split:has(> .recap) {
+  grid-template-columns: 390px minmax(0, 1fr);
+  align-items: stretch;
+  gap: 32px;
+}
+.split:has(> .recap:last-child) {
+  grid-template-columns: minmax(0, 1fr) 390px;
+}
+.recap > p.lead {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 14px;
+  font-size: 24px;
+  line-height: 1.2;
+  color: var(--title);
+}
+.recap > p.lead > .num {
+  font-size: 68px;
+  color: var(--blue-2);
+}
+.recap > p:not(.lead) {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: 500 19px/1.3 var(--font-body);
+  color: var(--blue-2);
+}
+.recap > p:not(.lead) + p {
+  margin-top: 8px;
+}
+.recap > p > svg.ico {
+  width: 22px;
+  height: 22px;
+}
+.recap > ol {
+  flex: 1;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: 14px;
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1.5px solid rgb(255 255 255 / 0.9);
+}
+.recap > ol > li {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  align-items: center;
+  column-gap: 16px;
+  font: 500 21px/1.3 var(--font-headline);
+  color: var(--title);
+}
+.recap > ol > li > svg.ico {
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, rgb(116 212 255 / 0.4), rgb(81 162 255 / 0.18));
+  color: var(--blue-2);
+}
+html.read .recap > ol > li {
+  font-size: 20px;
+}
+
+/* ================= Card a gruppi: .cards con p.group ================= */
+/* un'intestazione per ogni fila (per esempio la priorità); deck.js divide la riga tra le card del
+   gruppo (3 → tre per riga, 2 → metà ciascuna). "muted" per i gruppi meno importanti */
+.cards.grouped {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  row-gap: 16px;
+}
+.cards.grouped > * {
+  grid-column: span var(--span, 4);
+}
+.cards.grouped > p.group {
+  grid-column: 1 / -1;
+  padding: 0;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  font: 500 19px/1.2 var(--font-body);
+  color: var(--blue-2);
+}
+.cards.grouped > p.group:not(:first-child) {
+  margin-top: 12px;
+}
+.cards.grouped > p.group.muted {
+  color: var(--text-3);
+}
+.cards > .muted > svg.ico {
+  color: var(--text-3);
+}
+/* due o tre righe di numeri in fondo alla card, allineate tra le card della stessa fila */
+.cards > :has(> ul.meta) {
+  grid-template-rows: auto auto 1fr;
+}
+.cards > * > ul.meta {
+  list-style: none;
+  display: grid;
+  align-content: end;
+  gap: 2px;
+  margin-top: auto;
+  padding-top: 10px;
+}
+.cards > * > ul.meta > li {
+  font-size: 19px;
+  line-height: 1.4;
+  color: var(--text-3);
+}
+.cards > * > ul.meta b {
+  font-weight: 600;
+  color: var(--title);
+}
+html.read .cards > * > ul.meta > li {
+  font-size: 17px;
+}
+
+/* ================= Punti in un pannello: ul.panel ================= */
+/* 3-4 punti con un titolo e una frase, in un riquadro solo, separati da un filo */
+.panel {
+  list-style: none;
+  padding: 6px 36px;
+}
+.panel > li {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  column-gap: 20px;
+  padding: 24px 0;
+}
+.panel > li + li {
+  border-top: 1.5px solid rgb(255 255 255 / 0.9);
+}
+.panel > li > svg.ico {
+  grid-row: 1 / span 2;
+  width: 30px;
+  height: 30px;
+  margin-top: 2px;
+  color: var(--blue-2);
+}
+.panel > li > b {
+  font: 500 25px/1.3 var(--font-headline);
+  color: var(--title);
+}
+.panel > li > p {
+  margin-top: 4px;
+  font-size: 21px;
+  line-height: 1.45;
+}
+html.read .panel > li > b {
+  font-size: 23px;
+}
+html.read .panel > li > p {
+  font-size: 18px;
+}
+
+/* ================= Interfacce finte: .window, .banner, .btn, .callout ================= */
+/* un pezzo dell'interfaccia di cui si parla (una finestra, un banner, un dialogo), ricostruito in
+   HTML e animato come se qualcuno lo usasse. Senza animazione (PDF, ?static) è già nello stato
+   finale: testo scorso, casella spuntata, pulsante premuto, numeri visibili */
+.window,
+.banner {
+  position: relative;
+  background: var(--glass-bg);
+  border: 1.5px solid var(--glass-border);
+  border-radius: var(--r-rect);
+  box-shadow: var(--glass-shadow);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+}
+.window {
+  width: 560px;
+}
+.window > .bar {
+  padding: 22px 30px;
+  border-bottom: 1.5px solid rgb(255 255 255 / 0.85);
+  font: 500 21px/1.3 var(--font-headline);
+  color: var(--title);
+}
+/* testo lungo che scorre (un regolamento, delle condizioni): deck.js lo ferma sul <mark class="flash">, se c'è */
+.window > .scroll {
+  position: relative;
+  height: 280px;
+  overflow: hidden;
+  padding: 0 30px;
+  -webkit-mask-image: linear-gradient(transparent, #000 14%, #000 80%, transparent);
+  mask-image: linear-gradient(transparent, #000 14%, #000 80%, transparent);
+}
+.window > .scroll > div {
+  transform: translateY(var(--scroll, 0px));
+}
+.window > .scroll p {
+  margin: 16px 0;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--text-3);
+}
+.window > .scroll b {
+  color: var(--text-2);
+}
+.window > .actions {
+  display: grid;
+  justify-items: start;
+  gap: 18px;
+  padding: 22px 30px 26px;
+  border-top: 1.5px solid rgb(255 255 255 / 0.85);
+}
+.window > p.body {
+  padding: 22px 30px;
+  font-size: 19px;
+}
+mark.flash {
+  color: var(--text);
+  background: var(--blue-soft);
+  border-radius: 4px;
+  box-shadow: 0 0 0 3px var(--blue-soft);
+}
+/* casella che si spunta: deck.js aggiunge il quadratino */
+p.check {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font: 400 19px/1.3 var(--font-headline);
+  color: var(--text);
+}
+p.check > .box {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--blue);
+}
+p.check > .box > svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+}
+/* parola cancellata con un tratto */
+del {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+}
+del::after {
+  content: "";
+  position: absolute;
+  left: -3px;
+  right: -3px;
+  top: 54%;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--blue-ink);
+  transform-origin: left;
+}
+.btn {
+  position: relative;
+  display: inline-block;
+  flex: none;
+  padding: 12px 24px;
+  border-radius: var(--r-btn);
+  border: 1.5px solid rgb(17 86 174 / 0.25);
+  font: 500 18px/1 var(--font-headline);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.btn.primary {
+  border-color: transparent;
+  background: var(--blue);
+  color: var(--text);
+}
+/* puntatore finto che arriva e clicca il pulsante "click" (deck.js lo aggiunge) */
+.btn > .cursor {
+  position: absolute;
+  left: 58%;
+  top: 46%;
+  width: 30px;
+  height: 30px;
+  filter: drop-shadow(0 3px 5px rgb(15 23 42 / 0.35));
+}
+.btn > .cursor path {
+  fill: #fff;
+  stroke: var(--title);
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+}
+/* banner in fondo alla slide (un avviso, un invito): testo e pulsanti su una riga */
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px 16px 30px;
+}
+.banner > p {
+  flex: 1;
+  margin-right: 12px;
+  font: 400 19px/1.4 var(--font-headline);
+  color: var(--text-2);
+}
+.banner > p > b {
+  font-weight: 500;
+}
+html.read .banner > p {
+  font-size: 18px;
+}
+/* numeri appoggiati alla finestra: scuro in alto a destra, chiaro ("light") in basso a destra */
+.callout {
+  position: absolute;
+  right: -44px;
+  top: -62px;
+  z-index: 2;
+  max-width: 250px;
+  padding: 14px 22px;
+  border-radius: var(--r-rect);
+  background: var(--title);
+  box-shadow: var(--glass-shadow);
+  font: 400 18px/1.35 var(--font-headline);
+  color: #fff;
+}
+.callout > b {
+  display: block;
+  font: 600 36px/1.1 var(--font-display);
+  color: var(--blue);
+}
+.callout.light {
+  top: auto;
+  bottom: -96px;
+  right: -34px;
+  background: #fff;
+  color: var(--text);
+}
+.callout.light > b {
+  color: var(--blue-ink);
+}
+/* in copertina la finestra prende il posto dell'emblema, a destra, centrata in verticale senza
+   translate: in stampa la pagina si spezza dove l'elemento sta prima dello spostamento */
+.cover > .window {
+  position: absolute;
+  right: 120px;
+  top: 0;
+  bottom: 0;
+  height: fit-content;
+  margin-block: auto;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .slide.active .window {
+    animation: pop 0.9s var(--ease) 0.2s both;
+  }
+  .slide.active .window > .scroll > div {
+    animation: winScroll 3.4s cubic-bezier(0.5, 0, 0.2, 1) 0.5s both;
+  }
+  .slide.active p.check > .box {
+    animation: boxIn 0.3s ease 1.3s both;
+  }
+  .slide.active p.check > .box path {
+    animation: tick 0.35s ease 1.4s both;
+  }
+  .slide.active del::after {
+    animation: barIn 0.45s var(--ease) 2s both;
+  }
+  .slide.active .window .btn.primary,
+  .slide.active .btn.click {
+    animation: press 0.5s ease 2.4s both;
+  }
+  .slide.active .callout {
+    animation: pop 0.7s var(--ease) 2.9s both;
+  }
+  .slide.active .callout.light {
+    animation-delay: 4.4s;
+  }
+  .slide.active mark.flash {
+    animation: flash 0.8s ease 4.1s both;
+  }
+  .slide.active .banner {
+    animation: rise 0.8s var(--ease) 1s both;
+  }
+  .slide.active .btn > .cursor {
+    animation:
+      cursorIn 1.1s cubic-bezier(0.3, 0, 0.2, 1) 1.2s both,
+      cursorClick 0.3s ease 2.35s;
+  }
+}
+@keyframes winScroll {
+  from {
+    transform: translateY(0);
+  }
+}
+@keyframes boxIn {
+  from {
+    background: transparent;
+    box-shadow: inset 0 0 0 2px var(--text-3);
+  }
+}
+@keyframes tick {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+@keyframes press {
+  40% {
+    transform: scale(0.94);
+    box-shadow: 0 0 0 0 var(--blue-soft);
+  }
+  100% {
+    box-shadow: 0 0 0 18px transparent;
+  }
+}
+@keyframes flash {
+  from {
+    color: var(--text-3);
+    background: transparent;
+    box-shadow: 0 0 0 3px transparent;
+  }
+}
+@keyframes cursorIn {
+  from {
+    opacity: 0;
+    transform: translate(-260px, 120px);
+  }
+  25% {
+    opacity: 1;
+  }
+}
+@keyframes cursorClick {
+  50% {
+    transform: scale(0.82);
+  }
+}
+
+/* ================= Mappa a colonne: div.map ================= */
+/* colonne di riquadri (chi → cosa serve → come → obiettivi) collegati da frecce. deck.js disegna le
+   frecce da data-to (gli id dei riquadri a destra, in data-id) e le colora con data-track (1-4) */
+.map {
+  --t1: #1d6fe0;
+  --t2: #0e9fb3;
+  --t3: #5b5bd6;
+  --t4: #5f7189;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 76px;
+  flex: 1;
+  max-height: 640px;
+  min-height: 0;
+}
+.map:has(> .col > h4) {
+  padding-top: 46px;
+}
+.map > .col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 14px;
+  min-width: 0;
+}
+/* intestazione della colonna: sopra, ferma, anche se i riquadri sotto si distribuiscono */
+.map > .col > h4 {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -46px;
+  font: 600 17px/1.2 var(--font-body);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  text-align: center;
+}
+.map .node {
+  --t: var(--blue-2);
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 14px;
+  padding: 14px 22px;
+  border-radius: 16px;
+  background: rgb(255 255 255 / 0.62);
+  border: 1.5px solid rgb(255 255 255 / 0.95);
+  box-shadow: 0 10px 18px -8px rgb(17 86 174 / 0.18);
+}
+.map .node:not(:has(> svg.ico)) {
+  grid-template-columns: minmax(0, 1fr);
+}
+.map .node[data-track="1"] {
+  --t: var(--t1);
+}
+.map .node[data-track="2"] {
+  --t: var(--t2);
+}
+.map .node[data-track="3"] {
+  --t: var(--t3);
+}
+.map .node[data-track="4"] {
+  --t: var(--t4);
+}
+.map .node > svg.ico {
+  grid-row: 1 / span 3;
+  width: 40px;
+  height: 40px;
+  padding: 9px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--blue-2) 12%, white);
+  color: var(--blue-2);
+}
+.map .node > .label {
+  margin: 0 0 2px;
+  font: 600 17px/1.2 var(--font-body);
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--blue-2);
+}
+.map .node > b {
+  font: 500 19px/1.3 var(--font-headline);
+  color: var(--title);
+}
+.map .node > small {
+  font: 400 17px/1.3 var(--font-body);
+  color: var(--text-3);
+}
+/* colonna "fill": riquadri pieni del colore del filone */
+.map > .col.fill .node {
+  background: var(--t);
+  border-color: transparent;
+  box-shadow: 0 10px 16px -6px color-mix(in srgb, var(--t) 45%, transparent);
+}
+.map > .col.fill .node > b {
+  font-weight: 600;
+  color: #fff;
+}
+/* riquadro con un filone ma non pieno: una barra del suo colore a sinistra */
+.map > .col:not(.fill) .node[data-track] {
+  border-left: 6px solid var(--t);
+}
+.map > svg.links {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.map > svg.links path {
+  fill: none;
+  stroke: var(--t, var(--blue-2));
+  stroke-width: 1.8;
+  stroke-opacity: 0.55;
+}
+.map > svg.links path.tip {
+  fill: var(--t, var(--blue-2));
+  fill-opacity: 0.9;
+  stroke: none;
+}
+.map > svg.links path.pulse {
+  stroke-width: 3.5;
+  stroke-opacity: 0;
+  stroke-linecap: round;
+  stroke-dasharray: 0.045 0.955;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .slide.active .map .node {
+    animation: nodeIn 0.65s var(--ease) both;
+    animation-delay: var(--d, 0ms);
+  }
+  .slide.active .map > svg.links path.line,
+  .slide.active .road > svg path.track {
+    stroke-dasharray: 1;
+    animation: drawLine var(--dur, 800ms) cubic-bezier(0.45, 0, 0.2, 1) both;
+    animation-delay: var(--d, 0ms);
+  }
+  .slide.active .map > svg.links path.tip,
+  .slide.active .road > svg path.tip {
+    animation: fade 0.3s ease-out both;
+    animation-delay: var(--d, 0ms);
+  }
+  .slide.active .map > svg.links path.pulse,
+  .slide.active .road > svg path.pulse {
+    animation: pulseLine 3.4s linear infinite;
+    animation-delay: var(--d, 0ms);
+  }
+}
+@keyframes drawLine {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+@keyframes nodeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+}
+@keyframes pulseLine {
+  0% {
+    stroke-dashoffset: 1;
+    stroke-opacity: 0;
+  }
+  12%,
+  85% {
+    stroke-opacity: 0.95;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    stroke-opacity: 0;
+  }
+}
+
+/* ================= Percorso a serpente: ol.road ================= */
+/* 4-6 passi su due file: la prima da sinistra a destra, una curva, la seconda da destra a sinistra.
+   deck.js mette i passi nella griglia, aggiunge i numeri e disegna la strada */
+.road {
+  position: relative;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(var(--rc, 6), minmax(0, 1fr));
+  row-gap: 60px;
+  align-content: center;
+  padding: 0 150px 0 40px;
+}
+.road > li {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 10px;
+}
+.road > li > .dot {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 22px;
+  border-radius: 50%;
+  background: var(--blue-2);
+  box-shadow:
+    0 0 0 10px rgb(255 255 255 / 0.7),
+    0 10px 18px rgb(17 86 174 / 0.35);
+  font: 600 26px/1 var(--font-headline);
+  color: #fff;
+}
+.road > li > h3 {
+  margin-bottom: 6px;
+  font-size: 27px;
+}
+.road > li > p {
+  font-size: 20px;
+  line-height: 1.35;
+  text-wrap: balance;
+}
+.road > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.road > svg path.track {
+  fill: none;
+  stroke: url(#road-grad);
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke-opacity: 0.7;
+}
+.road > svg path.tip {
+  fill: var(--blue-2);
+}
+.road > svg path.pulse {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-opacity: 0;
+  stroke-dasharray: 0.03 0.97;
+}
+.slide.active .road > svg path.pulse {
+  animation-duration: 6s;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .slide.active .road > li {
+    animation: nodeIn 0.65s var(--ease) both;
+    animation-delay: var(--d, 0ms);
+  }
+}
+html.read .road > li > p {
+  font-size: 18px;
+}
+
+/* ================= Rimandi e serie ================= */
+/* serie di slide con la stessa struttura (una per persona, team, progetto): il contenuto parte in
+   alto, così passando da una all'altra niente si sposta */
+.slide[data-align="top"] > .body {
+  justify-content: flex-start;
+}
+
+/* ================= Nota in copertina ================= */
+/* in fondo a sinistra: la fonte dei numeri, con l'asterisco */
+.cover > .small {
+  position: absolute;
+  left: var(--pad-x);
+  bottom: 40px;
+  font-size: 17px;
+}
+
 /* ================= Sticker (meme scontornati) ================= */
 .sticker {
   position: absolute;
@@ -2539,12 +3522,9 @@ table.status td small {
   stroke-dasharray: 6em;
   paint-order: stroke;
 }
-.slide.section > .n.outlined > svg.draw {
-  filter: drop-shadow(0 20px 60px rgb(17 86 174 / 0.12));
-}
-.slide.section > .n.outlined text {
-  fill: transparent;
-  stroke: rgb(255 255 255 / 0.95);
+.slide.section > h1 > .n.outlined text {
+  fill: rgb(116 212 255 / 0.3);
+  stroke: var(--blue);
   stroke-width: 2px;
 }
 .agenda > li > .num.outlined text {
@@ -2561,7 +3541,7 @@ table.status td small {
     calc(var(--i, 0) * var(--anim-step) + var(--anim-base) + 1.2s);
 }
 .slide.active.section .outlined text {
-  animation-delay: 0.45s, 1.4s;
+  animation-delay: 0.2s, 1.1s;
 }
 @keyframes trace {
   from {
@@ -2624,9 +3604,19 @@ html.read .slide > .body {
   gap: 24px;
   padding-top: 32px;
 }
-html.read :is(p, li, dt, dd, td) {
+/* testo corrente da leggere. Frase a effetto, paragrafo grande e riga piccola hanno la loro misura:
+   :where() nel :not() li esclude senza alzare la specificità, così i componenti la battono ancora */
+html.read :is(p, li, dt, dd, td):not(:where(.statement, .lead, .small)) {
   font-size: 21px;
   line-height: 1.5;
+}
+html.read .lead {
+  font-size: 26px;
+  line-height: 1.4;
+}
+html.read .small {
+  font-size: 18px;
+  line-height: 1.45;
 }
 html.read .summary > p {
   font-size: 25px;
@@ -2660,18 +3650,21 @@ html.read .teams > * > .lead p {
   font-size: 19px;
 }
 html.read table.status td {
-  padding: 12px 10px;
+  padding-block: 12px;
   font-size: 21px;
 }
 /* sticker ammessi anche da leggere (se l'utente vuole i meme), ma più piccoli */
 html.read .sticker {
   height: 280px;
 }
+html.read .slide.section {
+  padding-bottom: 210px;
+}
 html.read .slide.section > h1 {
   font-size: 88px;
 }
 html.read .slide.section > .sub {
-  max-width: 1000px;
+  max-width: 900px;
   font-size: 26px;
 }
 html.read {
@@ -3017,7 +4010,7 @@ html.overview .slide * {
   animation-play-state: paused;
 }
 html.overview .slide .glass,
-html.overview .slide :is(.irows > li > .tile, .irows > li > p, .cards > *, .stats > *, .teams > *, .timeline > li, .agenda > li, .cols > *, ol.points > li, dl.terms > div, .summary, .next) {
+html.overview .slide :is(.irows > li > .tile, .irows > li > p, .cards > *, .stats > *, .teams > *, .timeline > li, .agenda > li, .cols > *, ol.points > li, dl.terms > div, .summary, .next, .quote, .recap, .panel, .window, .banner) {
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }
@@ -3207,7 +4200,12 @@ html.presenter .progress {
   .links > li,
   .cover .meta > span,
   .stamp,
-  .gallery figcaption {
+  .gallery figcaption,
+  .quote,
+  .recap,
+  .panel,
+  .window,
+  .banner {
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
   }
@@ -3224,7 +4222,12 @@ html.presenter .progress {
   .agenda > li,
   .cols > *,
   ol.points > li,
-  dl.terms > div {
+  dl.terms > div,
+  .quote,
+  .recap,
+  .panel,
+  .window,
+  .banner {
     background: var(--glass-bg), var(--bg-frost);
   }
   .glass.tint,

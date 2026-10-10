@@ -82,12 +82,24 @@ GUIDA.md                  guida all'installazione e all'uso per i membri
      `background-clip: text` senza una tinta piena per la stampa: Evince lo mostra come un
      rettangolo pieno;
   4. se si anima, il PDF deve mostrare lo stato finale anche se si stampa a metà animazione.
-     In stampa `theme.css` spegne tutte le animazioni CSS, quindi lo stile di base (senza
+     In stampa `theme.css` spegne tutte le animazioni CSS e `deck.js` mette prima la pagina in
+     modalità statica (Firefox fotograferebbe le animazioni a metà), quindi lo stile di base (senza
      `.slide.active`) dev'essere quello finale, non quello di partenza. Quello che anima
      `deck.js` (testi, `style` in linea) va portato al valore finale in `settleForPrint()` o
      annullato nelle regole di stampa, come i numeri che contano e il treno delle persone;
-  5. documentalo in `components.md`, con markup e limiti;
-  6. provalo nel template parlato con `check.py --shots shots/ --pdf shots/prova.pdf`.
+  5. niente `translate`/`transform` per centrare un elemento assoluto (`top: 50%; translate: 0
+     -50%`): in stampa Chrome spezza la pagina dove l'elemento sta prima dello spostamento, e la
+     parte sotto finisce staccata. Centra con `top: 0; bottom: 0; height: fit-content; margin-block:
+     auto`, come `.cover > .window`;
+  6. se dipende dalla posizione di altri elementi (le frecce di `.map`, la strada di `.road`),
+     `deck.js` lo disegna con `offsetLeft`/`offsetTop` (non `getBoundingClientRect`, che cambia
+     con la scala del palco e con le animazioni in corso) a font caricati e a ogni `go()`;
+  7. documentalo in `components.md`, con markup e limiti;
+  8. provalo nelle due versioni (parlata e `mode: lettura`) con `check.py --shots shots/ --pdf
+     shots/prova.pdf`. In lettura la regola generica del testo (`html.read :is(p, li, …)`) vale per
+     tutti i paragrafi: il componente che ha una misura sua la scrive con un selettore più
+     specifico (`.quote > p.who`), oppure si aggiunge a quelli esclusi lì (`.statement`, `.lead`,
+     `.small`).
 - **Sfondo di stampa:** se cambiano forme, colori del fondo, `--glass-blur` o la composizione
   (`PRINT_SHAPES` e `PRINT_LOOPERS` in `build.py`), rigenera gli sfondi raster con
   `python3 scripts/render_print_bg.py` (serve Chrome). Sono raster apposta: Chrome rasterizza

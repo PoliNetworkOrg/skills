@@ -163,15 +163,16 @@ Con Git: `cd ~/polinetwork-skills && git pull`. Con `npx skills`: `npx skills up
 3. **Lingua:** italiano o inglese.
 4. **Occasione:** che incontro è, data e luogo.
 5. **Contenuti:** argomenti, numeri, persone, eventi, scadenze.
-6. **Immagini:** foto, screenshot (delle app meglio in tema chiaro). Per i link da aprire in sala
-   l'assistente propone un QR.
+6. **Immagini:** foto, screenshot (delle app meglio in tema chiaro) e i documenti di cui parli
+   (lo statuto, un regolamento, un volantino in PDF): invece di descriverli, la slide ne mostra la
+   pagina. Per i link da aprire in sala l'assistente propone un QR.
 7. **Con sticker meme o senza?** In tutte e due le versioni. Se li vuoi, l'assistente propone dove
    metterli e usa i tuoi oppure i gatti meme già pronti nella skill; se no, la presentazione non ne ha.
 8. **Animazioni sulla slide?** Oltre agli ingressi, effetti che si muovono mentre la slide è aperta:
    fuochi d'artificio, coriandoli, cuori che escono dal telefono, numeri che contano, una luce che
    corre sui bordi delle card, persone che girano in cerchio… L'assistente propone quale effetto su
    quale slide. Nel PDF e nella finestra del presentatore restano ferme.
-9. **Struttura:** se vuoi l'indice, i divisori di sezione ("Parte 1") e il nome della sezione in
+9. **Struttura:** se vuoi l'indice, i divisori di sezione (con il numero della parte, 01, 02…) e il nome della sezione in
    alto a destra. Di default tutti e tre nella parlata, solo il nome della sezione
    nell'autoesplicativa.
 
@@ -236,8 +237,10 @@ Nella finestra di stampa:
 - **Firefox:** Destinazione **Salva come PDF**, in **Altre impostazioni** Margini **Nessuno** e
   spunta **Stampa sfondi** → Salva.
 
-Ogni slide diventa una pagina. Senza "Grafica di sfondo" / "Stampa sfondi" spariscono sfondo e
-card in vetro. Meglio esportare da Chrome, Edge o Brave: è lì che il PDF è verificato. Nel PDF
+Ogni slide diventa una pagina. Prima di aprire la stampa la presentazione si ferma un attimo:
+porta ogni animazione al suo stato finale e aspetta che sfondo, vetro e foto siano pronti, così
+puoi stampare anche mentre una slide sta ancora entrando. Senza "Grafica di sfondo" / "Stampa
+sfondi" spariscono sfondo e card in vetro. Il PDF è verificato con Chrome e Firefox. Nel PDF
 lo sfondo è fermo, le animazioni spente e le parole in gradiente hanno una tinta sola, così si
 vedono in tutti i lettori PDF.
 

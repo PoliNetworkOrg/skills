@@ -52,7 +52,8 @@ che l'utente ha già detto.
 4. **Occasione:** che cosa è (Assemblea dei Soci, General Meeting…), data e luogo.
 5. **Contenuti:** argomenti, numeri, persone, eventi, scadenze, oppure materiale da cui partire
    (appunti, verbale, documento, vecchia presentazione).
-6. **Immagini:** foto e screenshot che vuole usare. Vanno messi nella cartella `img/`. Gli
+6. **Immagini:** foto e screenshot che vuole usare, e i documenti di cui si parla (PDF di uno
+   statuto, di un regolamento, di un volantino: se ne mostra la pagina). Vanno messi nella cartella `img/`. Gli
    screenshot di app meglio in tema chiaro. Per ogni progetto o app chiedi 2-4 schermate diverse
    (elenco, filtri, dettaglio, mappa…), non una sola. Per i link da aprire in sala (sito,
    iscrizione, recruiting) proponi un QR.
@@ -126,13 +127,23 @@ Lavora nella cartella indicata dall'utente. Se non ne indica una, lavora in quel
   - Quando correggi una ripetizione, non spostare tutto su un altro componente: distribuisci. Variare
     non vuol dire eliminare un componente, ma usarne tanti, ognuno poche volte.
 
+  **Eccezione, le serie:** più slide parallele (una per team, per progetto, per evento) hanno
+  tutte la stessa struttura, nello stesso ordine, con `data-align="top"`: chi legge le confronta e
+  ritrova ogni cosa allo stesso posto. Il titolo inizia con il nome e dice la conclusione
+  ("IT: il nuovo sito è online"). Prima e dopo la serie, varia come sempre.
+
   Scegli in base alla forma del contenuto: elenco di punti con icona → `ul.irows`, numeri →
   `stats`, un confronto anno per anno → `columns` (un grafico si capisce subito, tre numeri vanno
   letti), una crescita sola accanto a un'immagine → `growth`, passi → `ol.points`, tappe con data
   → `timeline`, oggi/domani → `compare` (con `bigicon` da tutti e due i lati se manca un'immagine),
   rinomine vecchio → nuovo → `cards` con "Era: …",
   perché/cosa/risultato → `cols`, chi/quando/dove → `dl.facts`, voci affiancate → `cards`, un
-  evento con foto → `split`, più schermate di un'app → `screens`, un messaggio → frase a effetto. Già nella scaletta (punto 2) indica il
+  evento con foto → `split`, più schermate di un'app → `screens`, un messaggio → frase a effetto,
+  quello che ha detto una persona → `quote`, una persona da presentare → `profile`, un documento →
+  `figure.sheet`, un'attività con tante foto → `recap` + `gallery grid`, voci con una priorità o una
+  categoria → `cards` a gruppi, punti con titolo accanto a una citazione → `ul.panel`, come si
+  collegano persone, bisogni e soluzioni → `map`, passi futuri senza date → `road`, l'interfaccia di
+  cui si parla → `window` o `banner`. Già nella scaletta (punto 2) indica il
   componente di ogni slide, il lato dell'immagine o dello sticker se c'è, e controlla che nessuno
   si ripeta troppo.
 - **Componi con cura.** Ogni slide deve essere bilanciata, non solo corretta:
@@ -145,7 +156,8 @@ Lavora nella cartella indicata dall'utente. Se non ne indica una, lavora in quel
   - niente decorazioni senza significato: pallini colorati che non indicano niente, riquadri
     azzurri (`glass tint`) su contenuti normali;
   - **mai un elenco puntato da solo dentro un riquadro:** ogni punto diventa una card
-    (`div.cards`, una colonna accanto a un'immagine, 2×2 se sono quattro). Un solo riquadro va bene
+    (`div.cards`, una colonna accanto a un'immagine, 2×2 se sono quattro), oppure, se ogni punto
+    ha un titolo e una frase, una riga di `ul.panel`. Un solo riquadro va bene
     per un testo, una spiegazione, un numero grande con due righe, una scheda `dl.facts`;
   - **simmetria nei confronti:** i due lati di un prima/dopo si costruiscono uguali (mai un riquadro
     glass da una parte e niente dall'altra) e il gruppo sta al centro;
@@ -155,6 +167,31 @@ Lavora nella cartella indicata dall'utente. Se non ne indica una, lavora in quel
     (`b.num`) con la parola accanto, così il riquadro pesa quanto la foto;
   - **foto ritagliate al centro:** screenshot e foto con margini uguali a destra e a sinistra, senza
     barre del browser, finestre in sovrimpressione o dati personali (nomi di chi segue un account).
+- **Mostra la cosa vera.** Se la slide parla di un documento, di un'interfaccia, di un luogo o di
+  una persona, falla vedere: la pagina del documento (`figure.sheet`), l'interfaccia ricostruita
+  (`window`, `banner`), le foto (`gallery grid`), la persona con le sue parole (`quote`, `profile`).
+  Card che descrivono una cosa che si potrebbe mostrare sono la scelta più debole. Chiedi
+  all'utente il materiale (PDF, screenshot, foto) già nella domanda del punto 1.
+- **Le parole delle persone restano loro.** Le citazioni si riportano tra « » come sono state
+  dette, anche se sono parlato e non scritto, e sempre con chi le ha dette (nome o codice, ruolo).
+  Chi non vuole comparire ha un'etichetta generica ("Una matricola", "Un socio") e l'icona al
+  posto della foto. Dopo una citazione in una card, chi l'ha detta tra parentesi: «…» (Giulia, IT).
+- **Testi puliti:**
+  - niente "·" come separatore nelle etichette e nei testi: virgole o parentesi ("Lead (IT)",
+    "Studentessa di Ingegneria, secondo anno", "IT, HR, Eventi");
+  - il sottotitolo dice qualcosa a chi legge, non come è stata fatta la slide ("Dati raccolti dal
+    form e raggruppati per team" non serve);
+  - ogni informazione una volta sola: se le card stanno sotto l'intestazione "Priorità alta",
+    niente pill "Alta" in ogni card; se il titolo dice già il dato, la card non lo ripete;
+  - i numeri con il loro riferimento: "7 team su 10", "61% dei soci nel sondaggio", non "7" e "61%";
+  - stessi termini dall'inizio alla fine ("soci" ovunque, non a volte "soci" e a volte "membri").
+- **Fonti:** un dato che viene da uno studio o da una fonte esterna ha l'asterisco, una nota sotto
+  e la slide "Fonti" in fondo con i link (vedi "Fonti e note" nel catalogo). Per citare un'altra
+  slide usa sempre `<a data-ref="id"></a>`, mai il numero scritto a mano.
+- **Interfacce finte e diagrammi** (`window`, `banner`, `map`, `road`): sono i momenti che si
+  ricordano, quindi pochi. Al massimo una o due finestre finte per presentazione, e solo quando
+  l'argomento è proprio quell'interfaccia. Il testo dentro una finestra finta può essere un esempio
+  (righe di un regolamento tipo); i numeri sui riquadri (`callout`) sono sempre quelli dell'utente.
 - **Immagini e QR** (dettagli nella sezione "Immagini" del catalogo): una foto per riquadro,
   ritagliata sul soggetto e nel formato del riquadro; le altre in una galleria. Telefono e
   immagini scontornate inclinati (`tilt`); gli scontornati dentro la slide (`img.cutout`), non
@@ -217,6 +254,9 @@ l'utente fornirà dopo.
      `check.py` non li segnala, guarda una per una le slide con uno sticker (rimedi in "Sticker"
      in `components.md`);
    - ripetizioni (la stessa informazione nel riquadro "In breve", nel corpo e nel `.next`);
+   - mappe e percorsi (`map`, `road`): frecce che si incrociano troppo (riordina i riquadri),
+     riquadri che vanno a capo su tre righe (accorcia), passi con le frasi di lunghezza molto diversa;
+   - serie (una slide per persona o progetto): stessa struttura e stesso ordine in tutte;
    - numeri e nomi diversi da come li ha dati l'utente, frasi che aggiungono cose non dette.
 4. **PDF:** la stampa ha regole sue e gli screenshot non la mostrano. Chrome non stampa il vetro
    (`backdrop-filter`) e il tema lo simula con uno sfondo già sfocato; lo sfondo è fermo; le
@@ -253,8 +293,8 @@ Comunica all'utente:
   - O per la panoramica;
   - P (o Ctrl+P) per la finestra presentatore con note e timer;
   - S per stampare o esportare in PDF, meglio da Chrome, Edge o Brave: Salva come PDF, margini
-    "Nessuno", "Grafica di sfondo" attiva (su Firefox "Stampa sfondi", ma il vetro nel PDF è
-    verificato solo con Chrome).
+    "Nessuno", "Grafica di sfondo" attiva (su Firefox "Stampa sfondi"). Il pulsante prima ferma le
+    animazioni e aspetta immagini e font, poi apre la stampa: il PDF esce uguale anche a metà animazione.
 
 ## Versione autoesplicativa
 

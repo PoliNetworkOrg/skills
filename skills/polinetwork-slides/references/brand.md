@@ -88,14 +88,15 @@ lo fornisce l'utente ogni volta, perché cambia. Non riprenderlo da presentazion
 | In breve | In short |
 | In sintesi | Key points |
 | Indice | Contents |
-| Parte 1, Parte 2… | Part 1, Part 2… |
+| Fonti | Sources |
+| Riferimenti completi nella slide 12, «Fonti» | Full references on slide 12, "Sources" |
 | Perché · Cosa abbiamo fatto · Risultato | Why · What we did · Outcome |
 | Prossimo passo · Cosa ti chiediamo · Scadenza · Contatto | Next step · What we ask you · Deadline · Contact |
 | Quando · Dove · Chi · Com'è andata | When · Where · Who · How it went |
 | Cosa puoi fare tu | What you can do |
 | Glossario | Glossary |
 | Per domande e contatti | Questions and contacts |
-| Verde: completato · Blu: in corso · Grigio: da iniziare | Green: done · Blue: in progress · Grey: not started |
+| Verde: completato. Blu: in corso. Grigio: da iniziare. | Green: done. Blue: in progress. Grey: not started. |
 
 ### Definizioni standard per il glossario
 

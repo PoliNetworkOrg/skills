@@ -62,10 +62,12 @@
     ".team > *", ".split > *", ".budget > .glass", ".fivex > *", ".vote > *", ".gallery > figure", ".screens > figure", ".people > .person",
     ".links > li", ".cover .meta > span", ".cover .brand", ".lockup", ".media > *", ".legend > li", "table.status tr",
     ".bars > .bar", ".body > .columns", ".cloud > span", ".thanks .qr", ".body > .summary", ".body > .next", ".body > dl", ".cols > *",
-    "ol.points > li", "dl.terms > div", ".cover .intro",
+    "ol.points > li", "dl.terms > div", ".cover .intro", ".cover > .small", ".body > .quote", ".split > * > .quote", ".profile > *",
+    ".panel > li", ".recap > ol > li",
   ].join(",");
 
   let sectionTitle = "";
+  let partNo = 0;
   slides.forEach((s, idx) => {
     const centered = CENTERED.some((c) => s.classList.contains(c));
     if (s.classList.contains("section")) sectionTitle = (s.querySelector(":scope > h1")?.textContent || "").trim();
@@ -106,8 +108,22 @@
         walk(h);
       });
     }
+    // divisori: il numero della parte davanti al titolo. Da data-n sull'h1 ("off" lo toglie), dal
+    // vecchio <span class="n"> o dall'ordine. Solo se il divisore apre davvero una parte: "Domande?"
+    // prima della chiusura non ha slide dopo di sé, quindi niente numero
+    if (s.classList.contains("section")) {
+      const h = s.querySelector(":scope > h1");
+      const old = s.querySelector(":scope > .n");
+      const after = slides.slice(idx + 1).find((x) => !x.classList.contains("section"));
+      const opens = after && !after.classList.contains("thanks") && !after.classList.contains("cover");
+      if (opens) partNo++;
+      const n = h?.dataset.n ?? old?.textContent.trim() ?? (opens ? String(partNo).padStart(2, "0") : "");
+      old?.remove();
+      if (h && n && n !== "off" && !h.querySelector(":scope > .n")) h.insertAdjacentHTML("afterbegin", `<span class="n">${n}</span>`);
+    }
     // emblema copertina
-    if (s.classList.contains("cover") && !s.classList.contains("brand-only") && !s.querySelector(".orbit")) {
+    // (non se la copertina ha già un'immagine sua a destra: una finestra finta)
+    if (s.classList.contains("cover") && !s.classList.contains("brand-only") && !s.querySelector(".orbit, :scope > .window")) {
       s.insertAdjacentHTML("beforeend", '<div class="orbit" aria-hidden="true"><i class="ring r1"></i><i class="ring r2"></i><i class="ring r3"></i><span class="logo"></span></div>');
     }
     // footer e numero
@@ -162,6 +178,10 @@
   // numeri a contorno (divisori, indice): un SVG sopra il testo, così il contorno si può tracciare.
   // Il testo resta (trasparente) per l'impaginazione; la linea di base si misura con un elemento sonda.
   document.fonts.ready.then(() => {
+    // disegni che dipendono dall'impaginazione (posizioni dei riquadri): a font caricati
+    document.querySelectorAll(".map").forEach(drawMap);
+    document.querySelectorAll(".road").forEach(drawRoad);
+    document.querySelectorAll(".window > .scroll").forEach(settleScroll);
     // <mark> diviso in parole: un solo gradiente su tutta l'evidenziazione (vedi theme.css)
     document.querySelectorAll("mark").forEach((m) => {
       const ws = [...m.querySelectorAll(".w")];
@@ -171,7 +191,7 @@
       m.style.setProperty("--gw", `${right - left}px`);
       ws.forEach((w) => w.style.setProperty("--gx", `${w.offsetLeft - left}px`));
     });
-    document.querySelectorAll(".slide.section > .n, .agenda > li > .num").forEach((el) => {
+    document.querySelectorAll(".slide.section > h1 > .n, .agenda > li > .num").forEach((el) => {
       if (el.querySelector("svg.draw")) return;
       const probe = document.createElement("i");
       probe.style.cssText = "display:inline-block;width:0;height:0;vertical-align:baseline";
@@ -193,7 +213,7 @@
   });
   document.addEventListener("click", (e) => {
     const li = e.target.closest("[data-goto]");
-    if (li && !root.classList.contains("overview")) go(+li.dataset.goto);
+    if (li && !root.classList.contains("overview")) (e.preventDefault(), go(+li.dataset.goto));
   });
   // barre: data-value
   // data-scale="max" sul contenitore: la barra più lunga riempie la riga, le altre in proporzione
@@ -267,6 +287,157 @@
   document.querySelectorAll(".growth").forEach((g) => {
     const from = parseFloat(g.dataset.from || "0"), v = parseFloat(g.dataset.value || "0");
     if (v > 0) g.style.setProperty("--b", Math.min(1, Math.max(0, from / v)));
+  });
+  // card a gruppi: ogni p.group apre una fila; le card del gruppo si dividono la riga (12 colonne)
+  document.querySelectorAll(".cards").forEach((c) => {
+    if (!c.querySelector(":scope > .group")) return;
+    c.classList.add("grouped");
+    let group = [], muted = false;
+    const flush = () => {
+      const per = Math.min(group.length, 4) || 1;
+      group.forEach((el) => el.style.setProperty("--span", 12 / per));
+      group = [];
+    };
+    [...c.children].forEach((el) => {
+      if (el.matches(".group")) return flush(), (muted = el.classList.contains("muted"));
+      if (muted) el.classList.add("muted");
+      group.push(el);
+    });
+    flush();
+  });
+  // interfacce finte: il testo che scorre in un contenitore, la casella da spuntare, il puntatore
+  document.querySelectorAll(".window > .scroll").forEach((sc) => {
+    if (sc.querySelector(":scope > div")) return;
+    const inner = document.createElement("div");
+    inner.append(...sc.childNodes);
+    sc.append(inner);
+  });
+  document.querySelectorAll("p.check").forEach((p) => {
+    if (p.querySelector(".box")) return;
+    const text = document.createElement("span");
+    text.append(...p.childNodes);
+    p.append(text);
+    p.insertAdjacentHTML("afterbegin", '<span class="box"><svg viewBox="0 0 16 16" aria-hidden="true"><path pathLength="1" d="M3 8.5 6.5 12 13 4.5"/></svg></span>');
+  });
+  document.querySelectorAll(".btn.click").forEach((b) => {
+    if (!b.querySelector(".cursor")) b.insertAdjacentHTML("beforeend", '<svg class="cursor" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 2.5 4 19.5 8.6 15.2 11.6 22 14.7 20.6 11.8 14 18 14Z"/></svg>');
+  });
+  // il testo che scorre si ferma con il <mark class="flash"> (o l'ultimo paragrafo) al centro
+  function settleScroll(sc) {
+    const inner = sc.firstElementChild;
+    const m = inner?.querySelector("mark.flash") || inner?.lastElementChild;
+    if (!m || sc.dataset.scroll === "manual") return;
+    const max = Math.max(0, inner.offsetHeight - sc.clientHeight);
+    const want = m.offsetTop + m.offsetHeight / 2 - sc.clientHeight / 2;
+    sc.style.setProperty("--scroll", `${-Math.round(Math.max(0, Math.min(max, want)))}px`);
+  }
+  // percorso a serpente: prima fila da sinistra a destra, seconda da destra a sinistra (sfalsata di
+  // mezzo passo se ha un passo in meno); numeri nei pallini
+  document.querySelectorAll(".road").forEach((road) => {
+    const items = [...road.querySelectorAll(":scope > li")];
+    const top = Math.ceil(items.length / 2), bot = items.length - top;
+    road.style.setProperty("--rc", top * 2);
+    items.forEach((li, i) => {
+      if (!li.querySelector(":scope > .dot")) li.insertAdjacentHTML("afterbegin", `<span class="dot">${i + 1}</span>`);
+      const j = i - top;
+      const col = i < top ? 2 * i + 1 : bot === top ? 2 * (top - 1 - j) + 1 : 2 * (top - 1 - j);
+      li.style.gridColumn = `${col} / span 2`;
+      li.style.gridRow = i < top ? 1 : 2;
+    });
+  });
+  const SVGNS = "http://www.w3.org/2000/svg";
+  const TIP = "M-11,-5.5 L0,0 L-11,5.5 Q-8,0 -11,-5.5 z";
+  function drawRoad(road) {
+    const items = [...road.querySelectorAll(":scope > li")];
+    if (!items.length) return;
+    const dots = items.map((li) => {
+      const d = li.querySelector(":scope > .dot");
+      return { li, x: li.offsetLeft + d.offsetLeft + d.offsetWidth / 2, y: li.offsetTop + d.offsetTop + d.offsetHeight / 2 };
+    });
+    const top = Math.ceil(items.length / 2);
+    const y1 = dots[0].y, x0 = dots[0].x - 150;
+    let d, total, at, end, dir;
+    if (dots.length > top) {
+      const y2 = dots[top].y, r = (y2 - y1) / 2;
+      const xr = Math.max(...dots.map((p) => p.x)) + 40;
+      const xe = dots.at(-1).x - 130;
+      d = `M${x0},${y1} L${xr},${y1} A${r},${r} 0 0 1 ${xr},${y2} L${xe},${y2}`;
+      total = xr - x0 + Math.PI * r + (xr - xe);
+      at = (p, i) => (i < top ? p.x - x0 : xr - x0 + Math.PI * r + (xr - p.x));
+      (end = [xe, y2]), (dir = 180);
+    } else {
+      const xe = dots.at(-1).x + 130;
+      d = `M${x0},${y1} L${xe},${y1}`;
+      total = xe - x0;
+      at = (p) => p.x - x0;
+      (end = [xe, y1]), (dir = 0);
+    }
+    const T0 = 300, DUR = 2400;
+    dots.forEach((p, i) => p.li.style.setProperty("--d", `${Math.round(T0 + (DUR * at(p, i)) / total - 120)}ms`));
+    let svg = road.querySelector(":scope > svg");
+    if (!svg) {
+      svg = document.createElementNS(SVGNS, "svg");
+      svg.setAttribute("aria-hidden", "true");
+      road.prepend(svg);
+    }
+    svg.innerHTML =
+      '<defs><linearGradient id="road-grad" x1="0" x2="1"><stop offset="0" style="stop-color:var(--blue-3)"/><stop offset="1" style="stop-color:var(--blue-2)"/></linearGradient></defs>' +
+      `<path class="track" pathLength="1" style="--d:${T0}ms;--dur:${DUR}ms" d="${d}"/>` +
+      `<path class="tip" style="--d:${T0 + DUR - 100}ms" transform="translate(${end[0] - (dir ? 12 : -12)},${end[1]}) rotate(${dir}) scale(2)" d="${TIP}"/>` +
+      `<path class="pulse" pathLength="1" style="--d:${T0 + DUR + 400}ms" d="${d}"/>`;
+  }
+  // mappa a colonne: una freccia per ogni id in data-to; le frecce che escono da un riquadro (o ci
+  // entrano) si aprono a ventaglio, ordinate per non incrociarsi; colore dal filone (data-track)
+  function drawMap(map) {
+    const nodes = [...map.querySelectorAll(":scope > .col > .node")];
+    const cols = [...map.querySelectorAll(":scope > .col")];
+    const byId = new Map(nodes.filter((n) => n.dataset.id).map((n) => [n.dataset.id, n]));
+    const box = new Map(nodes.map((n) => {
+      const c = n.parentElement, x = c.offsetLeft + n.offsetLeft, y = c.offsetTop + n.offsetTop;
+      return [n, { l: x, r: x + n.offsetWidth, h: n.offsetHeight, cy: y + n.offsetHeight / 2, col: cols.indexOf(c) }];
+    }));
+    const STEP = 700;
+    nodes.forEach((n) => n.style.setProperty("--d", `${box.get(n).col * STEP + [...n.parentElement.children].indexOf(n) * 60}ms`));
+    const links = [];
+    nodes.forEach((a) => (a.dataset.to || "").split(/\s+/).forEach((id) => byId.has(id) && links.push({ a, b: byId.get(id) })));
+    const fan = (key, other, end) => {
+      nodes.forEach((n) => {
+        const own = links.filter((l) => l[key] === n).sort((p, q) => box.get(p[other]).cy - box.get(q[other]).cy);
+        const bx = box.get(n), step = Math.min(18, (bx.h * 0.6) / Math.max(own.length - 1, 1));
+        own.forEach((l, i) => (l[end] = bx.cy + (i - (own.length - 1) / 2) * step));
+      });
+    };
+    fan("a", "b", "y1");
+    fan("b", "a", "y2");
+    let svg = map.querySelector(":scope > svg.links");
+    if (!svg) {
+      svg = document.createElementNS(SVGNS, "svg");
+      svg.setAttribute("class", "links");
+      svg.setAttribute("aria-hidden", "true");
+      map.prepend(svg);
+    }
+    const last = (cols.length - 1) * STEP;
+    svg.innerHTML = links.map((l, i) => {
+      const A = box.get(l.a), B = box.get(l.b);
+      const x1 = A.r, x2 = B.l - 10, mx = (x1 + x2) / 2;
+      const track = l.a.dataset.track || l.b.dataset.track;
+      const t = track ? `--t:var(--t${track});` : "";
+      const d = `M${x1},${l.y1} C${mx},${l.y1} ${mx},${l.y2} ${x2},${l.y2}`;
+      const d0 = A.col * STEP + 250;
+      return `<path class="line" pathLength="1" style="${t}--d:${d0}ms;--dur:${STEP}ms" d="${d}"/>` +
+        `<path class="tip" style="${t}--d:${d0 + STEP - 120}ms" transform="translate(${B.l},${l.y2})" d="${TIP}"/>` +
+        `<path class="pulse" pathLength="1" style="${t}--d:${last + 900 + i * 290}ms" d="${d}"/>`;
+    }).join("");
+  }
+  // rimandi: <a data-ref="id"></a> diventa il numero della slide che contiene l'id e ci porta
+  // (anche nel PDF: il link punta all'id)
+  document.querySelectorAll("[data-ref]").forEach((el) => {
+    const target = document.getElementById(el.dataset.ref);
+    const i = slides.indexOf(target?.closest(".slide"));
+    if (i < 0) return el.classList.add("ref-missing");
+    if (!el.textContent.trim()) el.textContent = String(i + 1);
+    el.dataset.goto = i;
+    if (el.tagName === "A") el.setAttribute("href", `#${el.dataset.ref}`);
   });
   // nuvola: posti attorno al titolo, riempiti in modo bilanciato (max 16)
   const SLOTS = [
@@ -359,16 +530,45 @@
       });
     });
   }
-  // stampa / PDF: la pagina è ferma, quindi numeri e cifre vanno al valore finale anche se si
-  // stampa mentre stanno ancora girando (le animazioni CSS le spegne @media print)
+  // stampa / PDF. Firefox fotografa la pagina con le animazioni ferme dove sono (titoli sbiaditi,
+  // riquadri a metà ingresso) prima di applicare @media print; e sfondo e vetro di stampa
+  // (--bg-print, --bg-frost) sono immagini che a schermo non si usano: se il browser non le ha
+  // ancora decodificate, nel PDF mancano. Quindi prima di stampare: modalità statica (tutto al suo
+  // stato finale), numeri e cifre al valore finale, immagini pronte. Dopo, la modalità di prima.
   let printing = false;
+  let wasStatic;
   function settleForPrint() {
     printing = true;
+    if (wasStatic === undefined) wasStatic = root.classList.contains("static");
+    root.classList.add("static");
     counters.forEach((c) => (c.el.textContent = c.final));
     document.querySelectorAll(".fivex .code > b > span[data-d]").forEach((sp) => (sp.textContent = sp.dataset.d));
+    void document.body.offsetHeight; // applica gli stili prima che il browser acquisisca la pagina
+    // animazioni sopravvissute alla modalità statica (non CSS): allo stato finale
+    document.getAnimations?.().forEach((a) => a.effect?.getComputedTiming().endTime !== Infinity && a.finish());
   }
-  addEventListener("beforeprint", settleForPrint);
-  addEventListener("afterprint", () => (printing = false));
+  function restoreAfterPrint() {
+    printing = false;
+    if (wasStatic === undefined) return;
+    root.classList.toggle("static", wasStatic);
+    wasStatic = undefined;
+  }
+  addEventListener("beforeprint", settleForPrint); // anche la stampa dal menu del browser
+  addEventListener("afterprint", restoreAfterPrint);
+  // le immagini della stampa si decodificano una volta sola, a pagina caricata: pronte anche per
+  // la stampa dal menu. Restano in printImgs, se no il browser le butta.
+  let printImgs, printReady;
+  function preparePrint() {
+    if (printReady) return printReady;
+    const css = getComputedStyle(root);
+    const urls = ["--bg-print", "--bg-frost"].flatMap((v) => [...css.getPropertyValue(v).matchAll(/url\((["']?)(.*?)\1\)/g)].map((m) => m[2]));
+    printImgs = [...urls.map((src) => Object.assign(new Image(), { src })), ...document.images];
+    return (printReady = Promise.all(printImgs.map((img) => img.decode().catch(() => {}))).then(() => document.fonts.ready));
+  }
+  if (!EMBED && !PRESENTER) {
+    const idle = () => (window.requestIdleCallback || setTimeout)(preparePrint);
+    document.readyState === "complete" ? idle() : addEventListener("load", idle, { once: true });
+  }
 
   /* ---------- Interfaccia ---------- */
   document.body.insertAdjacentHTML(
@@ -920,6 +1120,8 @@
       s.classList.toggle("before", k < i);
     });
     if (changed) {
+      slides[i].querySelectorAll(".map").forEach(drawMap);
+      slides[i].querySelectorAll(".road").forEach(drawRoad);
       revealsOf(slides[i]).forEach((r) => r.classList.toggle("shown", fromEnd || STATIC));
       moveBg(i);
       runCounters(slides[i]);
@@ -1028,9 +1230,17 @@
       openPresenter();
     } else if ((k === "s" || k === "S") && !e.ctrlKey && !e.metaKey && !e.altKey) printDeck();
   });
-  // stampa / PDF: tasto S o pulsante nella barra (Ctrl+P apre il presentatore)
-  function printDeck() {
+  // stampa / PDF: tasto S o pulsante nella barra (Ctrl+P apre il presentatore). Prima porta la
+  // pagina allo stato da stampare e aspetta immagini e font (al massimo 4 s), poi apre la stampa.
+  let printQueued = false;
+  async function printDeck() {
+    if (printQueued) return;
+    printQueued = true;
     if (root.classList.contains("overview")) toggleOverview(false);
+    settleForPrint();
+    await Promise.race([preparePrint(), new Promise((r) => setTimeout(r, 4000))]);
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    printQueued = false;
     print();
   }
   document.getElementById("pn-prev").onclick = prev;
@@ -1053,14 +1263,21 @@
     hideT = setTimeout(() => document.body.classList.remove("show-ui"), 1800);
   });
   addEventListener("resize", fit);
+  // #7 apre la slide 7; #fonti la slide che contiene l'elemento con id="fonti"
+  const fromHash = () => {
+    const h = decodeURIComponent(location.hash.slice(1));
+    if (/^\d+$/.test(h)) return +h - 1;
+    const i = h ? slides.indexOf(document.getElementById(h)?.closest(".slide")) : -1;
+    return i >= 0 ? i : NaN;
+  };
   addEventListener("hashchange", () => {
-    const n = parseInt(location.hash.slice(1), 10);
-    if (Number.isFinite(n) && n - 1 !== cur) go(n - 1);
+    const i = fromHash();
+    if (Number.isFinite(i) && i !== cur) go(i);
   });
   fit();
-  const start = parseInt(location.hash.slice(1), 10);
+  const start = fromHash();
   cur = -1;
-  go(Number.isFinite(start) ? start - 1 : 0);
+  go(Number.isFinite(start) ? start : 0);
   if (CHECK) document.fonts.ready.then(() => setTimeout(runCheck, 300));
 
   /* ---------- ?check: testo fuori dai bordi, sovrapposizioni, font troppo piccoli ---------- */
@@ -1089,7 +1306,7 @@
           el.setAttribute("data-overflow", "");
         }
         const cs = getComputedStyle(el);
-        if ((el.scrollHeight > el.clientHeight + 2 && /hidden|clip|auto/.test(cs.overflowY) && !el.matches(".bars > .bar > i, .ph")) || (el.scrollWidth > el.clientWidth + 2 && /hidden|clip|auto/.test(cs.overflowX) && !el.matches(".ph"))) {
+        if ((el.scrollHeight > el.clientHeight + 2 && /hidden|clip|auto/.test(cs.overflowY) && !el.matches(".bars > .bar > i, .ph, .window > .scroll")) || (el.scrollWidth > el.clientWidth + 2 && /hidden|clip|auto/.test(cs.overflowX) && !el.matches(".ph"))) {
           issues.push(`contenuto tagliato dentro: ${name}`);
           el.setAttribute("data-overflow", "");
         }
@@ -1135,11 +1352,16 @@
       const ag = s.querySelector(".agenda");
       if (READ && ag && ag.children.length > sections.length) issues.push(`indice con ${ag.children.length} voci ma ${sections.length} sezioni: serve una slide con data-section per voce, altrimenti l'indice non è cliccabile`);
       if (!READ && s.querySelector(".body > p.small")) issues.push("riga piccola (p.small): da lontano non si legge, toglila e mettila nelle note");
+      s.querySelectorAll(".ref-missing").forEach((el) => issues.push(`rimando a una slide che non c'è: data-ref="${el.dataset.ref}" (manca id="${el.dataset.ref}")`));
+      s.querySelectorAll(".map .node[data-to]").forEach((n) => {
+        const ids = new Set([...n.closest(".map").querySelectorAll(".node[data-id]")].map((x) => x.dataset.id));
+        n.dataset.to.split(/\s+/).filter((id) => id && !ids.has(id)).forEach((id) => issues.push(`mappa: data-to="${id}" non corrisponde a nessun data-id`));
+      });
       if (s.querySelector(".ph")) issues.push(`immagini mancanti: ${[...s.querySelectorAll(".ph span:last-child")].map((x) => x.textContent).join(", ")}`);
       const todos = [...s.querySelectorAll(".todo")].map((x) => x.textContent.trim());
       if (todos.length) issues.push(`dati da completare (.todo): ${todos.join(" · ")}`);
       s.classList.toggle("active", idx === cur);
-      if (issues.length) report.push({ slide: idx + 1, title: (s.querySelector("h1")?.textContent || "").trim().slice(0, 60), issues: [...new Set(issues)] });
+      if (issues.length) report.push({ slide: idx + 1, title: [...(s.querySelector("h1")?.childNodes || [])].filter((n) => !n.classList?.contains("n")).map((n) => n.textContent).join("").trim().slice(0, 60), issues: [...new Set(issues)] });
     });
     const json = JSON.stringify({ slides: total, ok: report.length === 0, report }, null, 1);
     const out = document.createElement("script");
