@@ -156,6 +156,81 @@ Un nome sbagliato fa fallire `build.py`, che suggerisce i nomi più vicini.
 
 ## Tipi di slide
 
+L'inventario completo, con una slide per layout nei due template, è in
+[`templates.md`](templates.md). Gli esempi hanno lorem ipsum nello stile finale, non `.todo`.
+
+### Immagine a tutto schermo: `full-image`
+
+```html
+<section class="slide full-image" data-footer="off" data-crumb="off">
+  <img class="hero-image" src="img/foto.jpg" alt="Descrizione della foto">
+  <div class="glass solid image-caption">
+    <h1>Titolo breve</h1><p>Una frase che spiega la foto.</p>
+  </div>
+</section>
+```
+
+Immagine 16:9, ritagliata al centro; titolo massimo ~5 parole e didascalia ~15 parole a voce,
+~25 in lettura. Il riquadro opaco garantisce contrasto anche sulle foto. Nessun titolo fuori
+dal riquadro. La zona importante della foto deve restare sopra o a destra della didascalia.
+
+### Tabella di dati: `table.data-table`
+
+```html
+<table class="data-table glass">
+  <thead><tr><th scope="col">Voce</th><th scope="col">Periodo</th><th scope="col">Valore</th></tr></thead>
+  <tbody><tr><th scope="row">Nome</th><td>Ottobre</td><td>24</td></tr></tbody>
+</table>
+```
+
+3–4 colonne, 4–5 righe a voce, fino a 6 in lettura. Intestazioni di 1–3 parole, celle di
+1–5 parole, ultima colonna numerica allineata a destra. Per progetti e pill di stato usa
+`table.status`. Metti unità e periodo nel titolo, nel sottotitolo o nelle intestazioni.
+
+### Statistica singola: `div.metric`
+
+```html
+<div class="metric">
+  <div><b class="num" data-count>74%</b><span class="label">Periodo o fonte</span></div>
+  <div><h2>Cosa misura</h2><p>Una frase che spiega il dato.</p></div>
+</div>
+```
+
+Un numero protagonista di massimo ~5 caratteri, unità inclusa; a destra titolo di ~3–4 parole
+e spiegazione di ~15 parole a voce, ~30 in lettura. Per numeri più lunghi usa `div.stats`
+oppure `b.num` in un riquadro. Mantieni fonte e periodo solo se li ha dati l'utente.
+
+### Mockup dispositivi: `device-stage`, `laptop`, `phone`, `tablet`
+
+```html
+<!-- MacBook: screenshot 16:10, tagliato prima dell'inserimento -->
+<div class="device-stage">
+  <div class="laptop"><div class="display"><img src="img/sito.jpg" alt="Il sito"></div></div>
+</div>
+<!-- MacBook + iPhone: telefono sovrapposto al bordo destro del portatile -->
+<div class="device-stage combo">
+  <div class="laptop"><div class="display"><img src="img/sito.jpg" alt="Il sito"></div></div>
+  <div class="phone"><img src="img/app.jpg" alt="La versione mobile"></div>
+</div>
+<!-- Solo iPhone, dentro .media oppure .device-stage in uno .split -->
+<div class="device-stage"><div class="phone tilt"><img src="img/app.jpg" alt="L'app"></div></div>
+<!-- 2 o 3 iPhone: usa duo o trio e uno screenshot diverso per ogni telefono -->
+<div class="device-stage duo">
+  <div class="phone"><img src="img/elenco.jpg" alt="Elenco"></div>
+  <div class="phone"><img src="img/dettaglio.jpg" alt="Dettaglio"></div>
+</div>
+<!-- iPad orizzontale: screenshot 4:3 -->
+<div class="device-stage"><div class="tablet"><img src="img/tablet.jpg" alt="Interfaccia su tablet"></div></div>
+```
+
+Palco dispositivi alto 510 px. Non modificare proporzioni o dimensioni con CSS locale.
+Telefono: asset 9:19,2, con fascia libera in alto per la Dynamic Island; portatile: 16:10;
+tablet: 4:3 orizzontale. Il mockup usa `object-fit: cover`: prepara il ritaglio nella proporzione
+indicata per non perdere parti importanti. Le varianti `duo` e `trio` inclinano i telefoni da
+sole. In lettura può seguire una `.next` di ~20 parole; per descrivere un solo telefono usa
+`split even` con un riquadro di testo accanto. Il tablet serve per siti, dashboard e documenti
+consultati in orizzontale: non sceglierlo per un'app disponibile soltanto su smartphone.
+
 ### Copertina: `cover`
 ```html
 <section class="slide cover">
@@ -320,8 +395,8 @@ Max 16 parole o numeri attorno al titolo, posizionati da soli. `class="big"` per
 ### Prima / Dopo: `div.compare`
 ```html
 <div class="compare">
-  <div class="glass"><span class="label">Prima</span><ul><li>…</li></ul></div>
-  <div class="glass tint"><span class="label">Dopo</span><ul><li>…</li></ul></div>
+  <div class="glass"><span class="label">Prima</span><h3>Titolo</h3><p>Una frase.</p></div>
+  <div class="glass"><span class="label">Dopo</span><h3>Titolo</h3><p>Una frase.</p></div>
 </div>
 ```
 Freccia automatica in mezzo. Nel "Dopo" si possono usare etichette:
@@ -502,6 +577,10 @@ Per mostrare anche chi guida ogni team (al posto di una slide a parte), metti so
 Foto quadrate, ritagliate in cerchio da sole. Max 3 persone.
 
 ### Persone: `div.people` da solo
+
+Per una griglia di quattro persone usa `div.people.roster`: quattro colonne uguali e foto
+da 240 px. Nomi di ~2–3 parole e un ruolo breve sotto. Per più persone usa le righe standard
+qui sotto, senza `roster`, così si conserva lo spazio per nomi e ruoli.
 Per presentare un gruppo di persone (il consiglio direttivo, il team del progetto, chi ha
 lavorato a un evento) le persone stanno da sole sulla slide, **senza riquadro `glass`**: le foto
 in cerchio sono già il contenuto. Con `data-fx="train"` sulla slide, dopo l'ingresso girano piano
@@ -534,7 +613,7 @@ Valgono anche nella versione autoesplicativa quando si presenta un gruppo.
     …
   </div>
   <div class="media">
-    <img src="img/foto-1.jpg" alt="" style="width: 300px; height: 380px">
+    <img src="img/foto-1.jpg" alt="" style="width: 640px; height: 480px">
     <div class="phone"><img src="img/screenshot.png" alt=""></div>
     <figure class="qr"><img src="img/qr.png" alt=""><figcaption>@account</figcaption></figure>
   </div>

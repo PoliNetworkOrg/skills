@@ -13,7 +13,7 @@ pronti e non vanno modificati: tu impagini con i componenti del catalogo.
 **I contenuti li decide l'utente.** Titoli, argomenti, numeri, persone, date, eventi e scaletta
 vengono da quello che l'utente scrive o fornisce (appunti, verbali, documenti). Tu puoi riformulare,
 accorciare, tradurre e scegliere il layout. Non puoi aggiungere fatti, cifre, nomi o argomenti che
-l'utente non ha dato. I template contengono solo segnaposto e i testi negli esempi del catalogo
+l'utente non ha dato. I template contengono lorem ipsum e numeri dimostrativi nello stile finale; i testi negli esempi del catalogo
 sono illustrativi: non riusarli come contenuto. Le uniche eccezioni sono i dati fissi e i testi
 standard di `references/brand.md` (codice fiscale, sito, link al recruiting, testo del 5x1000).
 
@@ -21,8 +21,10 @@ standard di `references/brand.md` (codice fiscale, sito, link al recruiting, tes
 
 | File | A cosa serve |
 |---|---|
-| `templates/parlata.slides.html` | Base per la versione parlata (da proiettare), solo segnaposto |
-| `templates/autoesplicativa.slides.html` | Base per la versione da leggere da soli, solo segnaposto |
+| `templates/parlata.slides.html` | Catalogo completo di 55 layout da proiettare, con lorem ipsum |
+| `templates/autoesplicativa.slides.html` | Gli stessi 55 layout con densità da lettura |
+| `templates/img/` | Immagini neutre e screenshot con le proporzioni dei componenti |
+| `references/templates.md` | Inventario numerato, densità, proporzioni e scelta dei layout |
 | `assets/memes/` | Sticker meme pronti (gatti scontornati), da usare se l'utente vuole i meme |
 | `references/memes.md` | Catalogo dei meme: cosa esprime ogni gatto e su quali lati è tagliato. Leggilo se l'utente vuole i meme |
 | `references/components.md` | Catalogo dei componenti con markup e limiti. **Leggilo prima di scrivere.** |
@@ -80,6 +82,11 @@ La presentazione è lunga quanto servono i contenuti: con pochi contenuti vengon
 bene così. Se mancano informazioni per capire un argomento (soprattutto nell'autoesplicativa),
 chiedile. Non riempire i buchi da solo.
 
+**Aggiornamento dei template:** quando l'utente chiede di modificare il catalogo stesso, usa la
+copertura e i riferimenti che ha già indicato. I due template sono una libreria di layout, non
+una presentazione da conservare integralmente. Indice e divisore sono inclusi anche nel template
+autoesplicativo per documentarne il risultato: nelle presentazioni da leggere restano facoltativi.
+
 ## 2. Proponi la scaletta
 
 Prima di scrivere l'HTML, mostra all'utente la scaletta: un elenco numerato con il titolo di ogni
@@ -97,6 +104,7 @@ Lavora nella cartella indicata dall'utente. Se non ne indica una, lavora in quel
    ```bash
    cp "$SKILL_DIR/templates/parlata.slides.html" assemblea-2026-04-28.slides.html
    mkdir -p img
+   cp "$SKILL_DIR/templates/img/"* img/
    ```
 2. Aggiorna il commento in testa al file con `title:` (titolo della scheda del browser) e
    `lang: it` oppure `lang: en`. Cancella il secondo commento, quello che inizia con
@@ -109,8 +117,9 @@ Lavora nella cartella indicata dall'utente. Se non ne indica una, lavora in quel
   inventate o script. Lo stile in linea serve solo per le dimensioni (`width`, `height`) di foto e
   QR: per inclinare, affiancare un QR o impaginare ci sono le classi del catalogo (`tilt`,
   `cutout`, `has-qr`).
-- **Segui la scaletta confermata.** Sostituisci ogni segnaposto `.todo` del template con i contenuti
-  dell'utente, togli le slide che non servono e aggiungi quelle che mancano copiandole dal catalogo.
+- **Segui la scaletta confermata.** Scegli i layout da `references/templates.md`, sostituisci il
+  lorem ipsum, i numeri dimostrativi e le immagini neutre con i contenuti dell'utente, togli le
+  slide che non servono e aggiungi quelle che mancano copiandole dal catalogo.
   Il template è solo una base di layout, non uno schema obbligato.
 - **Un'idea per slide.** Rispetta i limiti "max" del catalogo: se il contenuto è di più, dividilo in
   due slide invece di stringerlo.
@@ -230,8 +239,13 @@ python3 "$SKILL_DIR/scripts/check.py" assemblea-2026-04-28.html --shots shots/
 
 Il primo comando crea `assemblea-2026-04-28.html` con immagini e font incorporati. Il secondo
 segnala testo fuori dalla slide o dalle card, contenuto che copre il titolo, font troppo piccoli,
-segnaposto `.todo` rimasti e immagini mancanti. Tutti i `.todo` del template devono sparire: restano solo quelli dei dati che
+segnaposto `.todo` rimasti e immagini mancanti. Restano solo i `.todo` dei dati reali che
 l'utente fornirà dopo.
+
+I template non usano `.todo`: ogni esempio ha già lo stile definitivo. Prima di consegnare una
+presentazione reale cerca anche `Lorem`, `ipsum` e gli asset neutri `img/*.svg` del template:
+`check.py` non li interpreta come dati mancanti. `.todo` serve solo per informazioni reali ancora
+da ricevere, non per cambiare l'aspetto del catalogo.
 
 1. **Errori di `build.py`** (per esempio un'icona sconosciuta): correggi il sorgente e ricompila.
 2. **Problemi di layout segnalati da `check.py`:**

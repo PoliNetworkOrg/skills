@@ -1,203 +1,339 @@
 <!--
-title: [Titolo della presentazione]
+title: PoliNetwork, template autoesplicativo
 lang: it
 mode: lettura
 -->
+<!-- TEMPLATE AUTOESPLICATIVO: catalogo completo di layout, non scaletta obbligatoria.
+Testi lorem ipsum nello stile definitivo. Numeri e date sono esempi, non dati di PoliNetwork.
+Copia soltanto le slide necessarie, sostituisci i contenuti, mantieni classi e proporzioni.
+Indice e divisore sono inclusi per mostrare il layout anche in lettura; usali solo se richiesti.
+Le immagini neutre in img/ sono incorporate dalla build; sostituiscile con materiale reale. -->
 
-<!-- TEMPLATE AUTOESPLICATIVO: slide da LEGGERE senza chi presenta (da mandare dopo l'assemblea
-     o a chi non c'era). Ogni slide deve capirsi da sola: frasi complete, contesto, sigle spiegate.
-     Contiene solo segnaposto (.todo): ogni testo va sostituito con i contenuti dati dall'utente.
-     Il numero di slide lo decidono i contenuti. Densità: essenziale = una slide per argomento, solo
-     quello che serve per capire; dettagliata = ogni argomento con contesto, perché e risultati.
-     Sticker solo se l'utente ha detto sì ai meme (pochi, mai su slide formali).
-     Di default niente indice né divisori di sezione: una sezione inizia dalla slide con
-     data-section="Titolo" data-sub="frase" (serve al nome della sezione in alto a destra).
-     Se l'utente li vuole, si aggiungono come nella versione parlata.
-     Le slide che non servono si eliminano. Fissi: 5x1000. -->
-
-<section class="slide cover">
-  <div class="brand"><span class="logo"></span>PoliNetwork</div>
-  <p class="kicker"><span class="todo">[Tipo di incontro]</span></p>
-  <h1><span class="todo">[Titolo della presentazione]</span></h1>
-  <div class="meta"><span><i data-icon="calendar"></i><span class="todo">[data]</span></span><span><i data-icon="map-pin"></i><span class="todo">[luogo]</span></span></div>
-  <p class="intro"><span class="todo">[Una o due frasi: cos'è questo documento, per chi è e cosa si trova dentro]</span></p>
+<!-- 01. Copertina -->
+<section class="slide cover" id="copertina" data-layout="copertina">
+<div class="brand"><span class="logo"></span>PoliNetwork</div>
+<p class="kicker">Lorem ipsum dolor</p>
+<h1>Lorem ipsum <mark>dolor sit</mark></h1>
+<div class="meta"><span><i data-icon="calendar"></i>25 ottobre 2026</span><span><i data-icon="map-pin"></i>Lorem ipsum</span></div>
+<p class="intro">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
 </section>
 
-<!-- In sintesi: i punti da sapere anche se non si legge altro (4-6) -->
-<section class="slide">
-  <h1>In sintesi</h1>
-  <ol class="points">
-    <li><b><span class="todo">[punto chiave 1]</span></b><span class="todo">[una frase che lo spiega]</span></li>
-    <li><b><span class="todo">[punto chiave 2]</span></b><span class="todo">[una frase che lo spiega]</span></li>
-    <li><b><span class="todo">[punto chiave 3]</span></b><span class="todo">[una frase che lo spiega]</span></li>
-    <li><b><span class="todo">[punto chiave 4]</span></b><span class="todo">[una frase che lo spiega]</span></li>
-  </ol>
+<!-- 02. Agenda / indice -->
+<section class="slide" id="indice" data-layout="indice">
+<h1>Lorem ipsum dolor</h1>
+<ol class="agenda"><li>Lorem ipsum</li><li>Dolor sit</li><li>Amet elit</li><li>Sed eiusmod</li><li>Ut labore</li><li>Magna aliqua</li></ol>
 </section>
 
-<!-- ============ SEZIONE 1 ============ -->
-<!-- Spiegazione: in breve + colonne (perché / cosa / risultato) + prossimo passo -->
-<section class="slide" data-section="[Titolo della sezione 1]" data-sub="[Una frase: di cosa parla questa parte]">
-  <h1><span class="todo">[Titolo che dice già la conclusione]</span></h1>
-  <div class="summary"><span class="label">In breve</span><p><span class="todo">[La frase da leggere per prima: cosa è successo e perché conta]</span></p></div>
-  <div class="cols">
-    <div><h3><i data-icon="lightbulb"></i>Perché</h3><p><span class="todo">[il problema o l'obiettivo di partenza, in 2-3 frasi]</span></p></div>
-    <div><h3><i data-icon="wrench"></i>Cosa abbiamo fatto</h3><p><span class="todo">[le azioni concrete, in 2-3 frasi]</span></p></div>
-    <div><h3><i data-icon="trending-up"></i>Risultato</h3><p><span class="todo">[cosa è cambiato, con numeri se ci sono]</span></p></div>
-  </div>
-  <p class="next"><i data-icon="arrow-right"></i><b>Prossimo passo</b><span class="todo">[cosa succede dopo e quando]</span></p>
+<!-- 03. Divisore di sezione -->
+<section class="slide section" id="divisore" data-layout="divisore">
+<h1>Lorem ipsum</h1>
+<p class="sub">Lorem ipsum dolor sit amet consectetur</p>
 </section>
 
-<!-- Tabella di stato con spiegazione -->
-<section class="slide">
-  <h1><span class="todo">[Titolo]</span></h1>
-  <div class="summary"><span class="label">In breve</span><p><span class="todo">[a che punto siamo, in una frase]</span></p></div>
-  <table class="status glass">
-    <tr><td><span class="todo">[progetto 1]</span><small><span class="todo">[cos'è, in poche parole]</span></small></td><td><span class="pill wip"><span class="todo">[stato]</span></span></td></tr>
-    <tr><td><span class="todo">[progetto 2]</span><small><span class="todo">[cos'è, in poche parole]</span></small></td><td><span class="pill wip"><span class="todo">[stato]</span></span></td></tr>
-    <tr><td><span class="todo">[progetto 3]</span><small><span class="todo">[cos'è, in poche parole]</span></small></td><td><span class="pill wip"><span class="todo">[stato]</span></span></td></tr>
-  </table>
-  <p class="small">Verde: completato. Blu: in corso. Grigio: da iniziare.</p>
+<!-- 04. Titolo + paragrafo -->
+<section class="slide" id="paragrafo" data-layout="paragrafo">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
 </section>
 
-<!-- Evento: scheda dei fatti + foto -->
-<section class="slide">
-  <h1><span class="todo">[Nome dell'evento]</span></h1>
-  <div class="split">
-    <dl class="facts glass">
-      <dt>Quando</dt><dd><span class="todo">[data e orario]</span></dd>
-      <dt>Dove</dt><dd><span class="todo">[luogo]</span></dd>
-      <dt>Chi</dt><dd><span class="todo">[quante persone, con chi]</span></dd>
-      <dt>Com'è andata</dt><dd><span class="todo">[risultato o riscontri, in una frase]</span></dd>
-    </dl>
-    <div class="media">
-      <img src="img/evento-1.jpg" alt="Foto dell'evento" style="width: 300px; height: 380px">
-      <img src="img/evento-2.jpg" alt="Foto dell'evento" style="width: 300px; height: 380px">
-    </div>
-  </div>
+<!-- 05. Elenco puntato -->
+<section class="slide" id="elenco" data-layout="elenco">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<ul><li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</li><li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</li><li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</li><li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</li></ul>
 </section>
 
-<!-- ============ SEZIONE 2 ============ -->
-<!-- Team: chi fa cosa, con i compiti dati dall'utente -->
-<section class="slide" data-section="[Titolo della sezione 2]" data-sub="[Una frase: di cosa parla questa parte]">
-  <h1><span class="todo">[Titolo]</span></h1>
-  <div class="teams">
-    <div><span class="n">1</span><h3><span class="todo">[team]</span></h3><ul><li><span class="todo">[compito]</span></li><li><span class="todo">[compito]</span></li></ul></div>
-    <div><span class="n">2</span><h3><span class="todo">[team]</span></h3><ul><li><span class="todo">[compito]</span></li><li><span class="todo">[compito]</span></li></ul></div>
-    <div><span class="n">3</span><h3><span class="todo">[team]</span></h3><ul><li><span class="todo">[compito]</span></li><li><span class="todo">[compito]</span></li></ul></div>
-    <div><span class="n">4</span><h3><span class="todo">[team]</span></h3><ul><li><span class="todo">[compito]</span></li><li><span class="todo">[compito]</span></li></ul></div>
-  </div>
+<!-- 06. Due colonne -->
+<section class="slide" id="due-colonne" data-layout="due-colonne">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="cols"><div><h3>Lorem ipsum</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p></div><div><h3>Dolor sit amet</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p></div></div>
 </section>
 
-<!-- Dettaglio di un team con i referenti da contattare -->
-<section class="slide">
-  <h1><span class="todo">[Nome del team]</span></h1>
-  <div class="team">
-    <div class="glass">
-      <span class="label">Di cosa si occupa</span>
-      <ul><li><span class="todo">[compito 1, con una frase di spiegazione]</span></li><li><span class="todo">[compito 2, con una frase di spiegazione]</span></li><li><span class="todo">[compito 3, con una frase di spiegazione]</span></li></ul>
-    </div>
-    <div class="glass people">
-      <span class="label">Referenti</span>
-      <figure class="person"><img src="img/persona-1.jpg" alt=""><figcaption><span class="todo">[Nome Cognome]</span><small><span class="todo">[ruolo o contatto]</span></small></figcaption></figure>
-      <figure class="person"><img src="img/persona-2.jpg" alt=""><figcaption><span class="todo">[Nome Cognome]</span><small><span class="todo">[ruolo o contatto]</span></small></figcaption></figure>
-    </div>
-  </div>
+<!-- 07. Citazione -->
+<section class="slide" id="citazione" data-layout="citazione">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="quote"><i data-icon="user"></i><p class="who"><b>Lorem Ipsum</b>Dolor sit amet</p><blockquote>«Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.»</blockquote></div>
 </section>
 
-<!-- ============ SEZIONE 3 ============ -->
-<!-- Bilancio: SOLO cifre fornite dall'utente, con spiegazione -->
-<section class="slide" data-section="Bilancio e 5x1000" data-sub="[Una frase: cosa contiene questa parte]">
-  <h1>Bilancio <span class="todo">[anno]</span></h1>
-  <div class="summary"><span class="label">In breve</span><p><span class="todo">[da dove arrivano i soldi, dove vanno e com'è il saldo, in una frase]</span></p></div>
-  <div class="budget">
-    <div class="glass in">
-      <h3>Entrate</h3>
-      <dl>
-        <dt><span class="todo">[voce]</span></dt><dd><span class="todo">[€]</span></dd>
-        <dt><span class="todo">[voce]</span></dt><dd><span class="todo">[€]</span></dd>
-        <dt class="total">Totale</dt><dd class="total"><span class="todo">[€]</span></dd>
-      </dl>
-    </div>
-    <div class="glass out">
-      <h3>Uscite</h3>
-      <dl>
-        <dt><span class="todo">[voce]</span></dt><dd><span class="todo">[€]</span></dd>
-        <dt><span class="todo">[voce]</span></dt><dd><span class="todo">[€]</span></dd>
-        <dt class="total">Totale</dt><dd class="total"><span class="todo">[€]</span></dd>
-      </dl>
-    </div>
-  </div>
+<!-- 08. Testo + immagine a destra -->
+<section class="slide" id="testo-immagine-destra" data-layout="testo-immagine-destra">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="split even"><div class="glass"><h3>Lorem ipsum dolor</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div><div class="media"><img src="img/foto-4x3.svg" alt="Immagine neutra di esempio" style="width: 640px; height: 480px"></div></div>
 </section>
 
-<!-- Esito di una votazione (numeri finali, non cliccabili in lettura) -->
-<section class="slide">
-  <h1>Votazione: <span class="todo">[oggetto della delibera]</span></h1>
-  <p class="sub"><span class="todo">[cosa si è votato e perché, in una frase]</span></p>
-  <div class="vote">
-    <button class="yes"><span>Favorevoli</span><b><span class="todo">[n]</span></b></button>
-    <button class="no"><span>Contrari</span><b><span class="todo">[n]</span></b></button>
-    <button class="abs"><span>Astenuti</span><b><span class="todo">[n]</span></b></button>
-    <span class="stamp ok">Approvato</span>
-  </div>
+<!-- 09. Testo + immagine a sinistra -->
+<section class="slide" id="testo-immagine-sinistra" data-layout="testo-immagine-sinistra">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="split even media-left"><div class="glass"><h3>Lorem ipsum dolor</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div><div class="media"><img src="img/foto-4x3.svg" alt="Immagine neutra di esempio" style="width: 640px; height: 480px"></div></div>
 </section>
 
-<!-- 5x1000: testo standard (vedi brand.md) -->
-<section class="slide">
-  <h1>5x1000: non ti costa nulla</h1>
-  <p class="sub">Una quota IRPEF già trattenuta: non è una spesa in più, scegli tu dove va.</p>
-  <div class="fivex">
-    <ul class="irows">
-      <li><i data-icon="file-text"></i><p><b>Compila la dichiarazione</b><small>dei redditi, come ogni anno</small></p></li>
-      <li><i data-icon="pen-tool"></i><p><b>Firma nel riquadro</b><small>"Sostegno degli enti del Terzo Settore"</small></p></li>
-      <li><i data-icon="hand-coins"></i><p><b>Scrivi il codice fiscale</b><small>quello di PoliNetwork, qui accanto</small></p></li>
-    </ul>
-    <div class="glass tint code">
-      <span class="label">Il nostro codice fiscale</span>
-      <b>97927490157</b>
-      <p>Passalo anche ai tuoi familiari: anche loro possono farlo, a costo zero.</p>
-    </div>
-  </div>
+<!-- 10. Numero grande / statistica singola -->
+<section class="slide" id="statistica" data-layout="statistica">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="metric"><div><b class="num" data-count>74%</b><span class="label">Lorem ipsum</span></div><div><h2>Dolor sit amet</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div></div>
 </section>
 
-<!-- ============ SEZIONE 4 ============ -->
-<!-- Timeline: tappe CON data, con una frase ciascuna -->
-<section class="slide" data-section="[Titolo della sezione 4]" data-sub="[Una frase: di cosa parla questa parte]">
-  <h1>Prossimi passi</h1>
-  <ol class="timeline">
-    <li><span class="when"><span class="todo">[quando]</span></span><h3><span class="todo">[tappa 1]</span></h3><p><span class="todo">[cosa succede e chi è coinvolto]</span></p></li>
-    <li><span class="when"><span class="todo">[quando]</span></span><h3><span class="todo">[tappa 2]</span></h3><p><span class="todo">[cosa succede e chi è coinvolto]</span></p></li>
-    <li><span class="when"><span class="todo">[quando]</span></span><h3><span class="todo">[tappa 3]</span></h3><p><span class="todo">[cosa succede e chi è coinvolto]</span></p></li>
-  </ol>
+<!-- 11. Griglia di 3 KPI -->
+<section class="slide" id="kpi-3" data-layout="kpi-3">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="stats"><div><b>150+</b><h3>Lorem ipsum</h3><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</span></div><div><b>4</b><h3>Dolor sit amet</h3><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</span></div><div><b>74%</b><h3>Consectetur elit</h3><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</span></div></div>
 </section>
 
-<!-- Cosa chiediamo a chi legge: azioni concrete con il come -->
-<section class="slide" data-crumb="off">
-  <h1>Cosa puoi fare tu</h1>
-  <div class="cards">
-    <div><i data-icon="hand-coins"></i><h3><span class="todo">[azione 1]</span></h3><p><span class="todo">[come farla, con link o scadenza]</span></p></div>
-    <div><i data-icon="user-plus"></i><h3><span class="todo">[azione 2]</span></h3><p><span class="todo">[come farla, con link o scadenza]</span></p></div>
-    <div><i data-icon="share-2"></i><h3><span class="todo">[azione 3]</span></h3><p><span class="todo">[come farla, con link o scadenza]</span></p></div>
-    <div><i data-icon="refresh-cw"></i><h3><span class="todo">[azione 4]</span></h3><p><span class="todo">[come farla, con link o scadenza]</span></p></div>
-  </div>
+<!-- 12. Griglia di 4 KPI -->
+<section class="slide" id="kpi-4" data-layout="kpi-4">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="stats"><div><b>150+</b><h3>Lorem ipsum</h3><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</span></div><div><b>4</b><h3>Dolor sit amet</h3><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</span></div><div><b>74%</b><h3>Consectetur elit</h3><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</span></div><div><b>3,8/5</b><h3>Sed eiusmod</h3><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</span></div></div>
 </section>
 
-<!-- Glossario: sigle e nomi interni usati nel documento -->
-<section class="slide" data-crumb="off">
-  <h1>Glossario</h1>
-  <dl class="terms">
-    <div><dt><span class="todo">[sigla o termine]</span></dt><dd><span class="todo">[cosa vuol dire, in una frase]</span></dd></div>
-    <div><dt><span class="todo">[sigla o termine]</span></dt><dd><span class="todo">[cosa vuol dire, in una frase]</span></dd></div>
-    <div><dt><span class="todo">[sigla o termine]</span></dt><dd><span class="todo">[cosa vuol dire, in una frase]</span></dd></div>
-    <div><dt><span class="todo">[sigla o termine]</span></dt><dd><span class="todo">[cosa vuol dire, in una frase]</span></dd></div>
-  </dl>
+<!-- 13. Grafico a colonne -->
+<section class="slide" id="grafico" data-layout="grafico">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="columns glass"><div class="col" data-value="40" data-label="40">Lorem ipsum</div><div class="col" data-value="65" data-label="65">Dolor sit amet</div><div class="col" data-value="85" data-label="85">Consectetur elit</div></div><p class="small">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
 </section>
 
-<!-- Chiusura: dove trovare altre informazioni e a chi scrivere -->
-<section class="slide thanks">
-  <h1>Per domande e contatti</h1>
-  <p class="sub"><span class="todo">[a chi scrivere e come]</span></p>
-  <ul class="links">
-    <li><i data-icon="globe"></i>polinetwork.org</li>
-    <li><i data-icon="user-plus"></i>polinet.cc/recruiting</li>
-  </ul>
+<!-- 14. Tabella a quattro colonne -->
+<section class="slide" id="tabella" data-layout="tabella">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<table class="data-table glass"><thead><tr><th scope="col">Lorem</th><th scope="col">Ipsum</th><th scope="col">Dolor</th><th scope="col">Amet</th></tr></thead><tbody><tr><th scope="row">Lorem ipsum</th><td>Lorem ipsum</td><td>Dolor sit</td><td>24</td></tr><tr><th scope="row">Dolor sit amet</th><td>Lorem ipsum</td><td>Dolor sit</td><td>48</td></tr><tr><th scope="row">Consectetur elit</th><td>Lorem ipsum</td><td>Dolor sit</td><td>72</td></tr><tr><th scope="row">Sed eiusmod</th><td>Lorem ipsum</td><td>Dolor sit</td><td>96</td></tr></tbody></table><p class="small">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+</section>
+
+<!-- 15. Timeline con quattro tappe -->
+<section class="slide" id="timeline" data-layout="timeline">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<ol class="timeline"><li><span class="when">Ottobre</span><h3>Lorem ipsum</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></li><li><span class="when">Novembre</span><h3>Dolor sit amet</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></li><li><span class="when">Dicembre</span><h3>Consectetur elit</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></li><li><span class="when">Gennaio</span><h3>Sed eiusmod</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></li></ol>
+</section>
+
+<!-- 16. Confronto prima / dopo, opzione A / B -->
+<section class="slide" id="confronto" data-layout="confronto">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="compare"><div class="glass"><span class="label">Prima</span><h2>Lorem ipsum</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p></div><div class="glass"><span class="label">Dopo</span><h2>Dolor sit amet</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p></div></div>
+</section>
+
+<!-- 17. Griglia team con foto -->
+<section class="slide" id="team-foto" data-layout="team-foto" data-section="Dolor sit" data-sub="Lorem ipsum dolor sit amet">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="people roster"><figure class="person"><img src="img/ritratto.svg" alt="Immagine neutra di esempio"><figcaption>Lorem ipsum<small>Lorem ipsum dolor sit amet</small></figcaption></figure><figure class="person"><img src="img/ritratto.svg" alt="Immagine neutra di esempio"><figcaption>Dolor sit amet<small>Lorem ipsum dolor sit amet</small></figcaption></figure><figure class="person"><img src="img/ritratto.svg" alt="Immagine neutra di esempio"><figcaption>Consectetur elit<small>Lorem ipsum dolor sit amet</small></figcaption></figure><figure class="person"><img src="img/ritratto.svg" alt="Immagine neutra di esempio"><figcaption>Sed eiusmod<small>Lorem ipsum dolor sit amet</small></figcaption></figure></div>
+</section>
+
+<!-- 18. Singola persona con bio -->
+<section class="slide" id="persona-bio" data-layout="persona-bio">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="profile"><div class="photos"><figure><img src="img/foto-2x1.svg" alt="Immagine neutra di esempio"><figcaption>Lorem ipsum dolor</figcaption></figure></div><div class="glass"><span class="label">Lorem ipsum</span><h2>Dolor sit amet</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><blockquote>«Lorem ipsum dolor sit amet consectetur elit»</blockquote></div></div>
+</section>
+
+<!-- 19. Immagine a tutto schermo -->
+<section class="slide full-image" id="immagine-intera" data-layout="immagine-intera" data-footer="off" data-crumb="off" data-section="Amet elit" data-sub="Lorem ipsum dolor sit amet">
+<img src="img/foto-16x9.svg" alt="Immagine neutra di esempio" class="hero-image"><div class="glass solid image-caption"><h1>Lorem ipsum dolor</h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
+</section>
+
+<!-- 20. Galleria di tre immagini -->
+<section class="slide" id="galleria" data-layout="galleria">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="gallery"><figure><img src="img/foto-4x3.svg" alt="Immagine neutra di esempio"><figcaption>Lorem ipsum — Lorem ipsum dolor sit amet, consectetur adipiscing elit.</figcaption></figure><figure><img src="img/foto-4x3.svg" alt="Immagine neutra di esempio"><figcaption>Dolor sit amet — Lorem ipsum dolor sit amet, consectetur adipiscing elit.</figcaption></figure><figure><img src="img/foto-4x3.svg" alt="Immagine neutra di esempio"><figcaption>Consectetur elit — Lorem ipsum dolor sit amet, consectetur adipiscing elit.</figcaption></figure></div>
+</section>
+
+<!-- 21. Galleria a mosaico, quattro immagini -->
+<section class="slide" id="galleria-mosaico" data-layout="galleria-mosaico">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="gallery mosaic"><figure><img src="img/foto-4x3.svg" alt="Immagine neutra di esempio"><figcaption>Lorem ipsum</figcaption></figure><figure><img src="img/foto-4x3.svg" alt="Immagine neutra di esempio"><figcaption>Dolor sit amet</figcaption></figure><figure><img src="img/foto-4x3.svg" alt="Immagine neutra di esempio"><figcaption>Consectetur elit</figcaption></figure><figure><img src="img/foto-4x3.svg" alt="Immagine neutra di esempio"><figcaption>Sed eiusmod</figcaption></figure></div>
+</section>
+
+<!-- 22. Solo MacBook, sito web -->
+<section class="slide" id="macbook" data-layout="macbook" data-section="Sed eiusmod" data-sub="Lorem ipsum dolor sit amet">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="device-stage"><div class="laptop"><div class="display"><img src="img/web-16x10.svg" alt="Immagine neutra di esempio"></div></div></div><p class="next">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+</section>
+
+<!-- 23. MacBook + iPhone -->
+<section class="slide" id="macbook-iphone" data-layout="macbook-iphone">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="device-stage combo"><div class="laptop"><div class="display"><img src="img/web-16x10.svg" alt="Immagine neutra di esempio"></div></div><div class="phone"><img src="img/app-1.svg" alt="Immagine neutra di esempio"></div></div><p class="next">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+</section>
+
+<!-- 24. Solo iPhone -->
+<section class="slide" id="iphone" data-layout="iphone">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="split even"><div class="glass"><h2>Lorem ipsum</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p></div><div class="device-stage"><div class="phone tilt"><img src="img/app-1.svg" alt="Immagine neutra di esempio"></div></div></div>
+</section>
+
+<!-- 25. 2 iPhone affiancati -->
+<section class="slide" id="iphone-2" data-layout="iphone-2">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="device-stage duo"><div class="phone"><img src="img/app-1.svg" alt="Immagine neutra di esempio"></div><div class="phone"><img src="img/app-2.svg" alt="Immagine neutra di esempio"></div></div><p class="next">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+</section>
+
+<!-- 26. 3 iPhone affiancati -->
+<section class="slide" id="iphone-3" data-layout="iphone-3">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="device-stage trio"><div class="phone"><img src="img/app-1.svg" alt="Immagine neutra di esempio"></div><div class="phone"><img src="img/app-2.svg" alt="Immagine neutra di esempio"></div><div class="phone"><img src="img/app-3.svg" alt="Immagine neutra di esempio"></div></div><p class="next">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+</section>
+
+<!-- 27. Solo iPad, interfaccia orizzontale -->
+<section class="slide" id="ipad" data-layout="ipad">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="device-stage"><div class="tablet"><img src="img/tablet-4x3.svg" alt="Immagine neutra di esempio"></div></div><p class="next">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+</section>
+
+<!-- 28. Tre card di contenuto -->
+<section class="slide" id="card" data-layout="card" data-section="Ut labore" data-sub="Lorem ipsum dolor sit amet">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="cards"><div><h3>Lorem ipsum</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div><div><h3>Dolor sit amet</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div><div><h3>Consectetur elit</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div></div>
+</section>
+
+<!-- 29. Card per priorità / categoria -->
+<section class="slide" id="card-gruppi" data-layout="card-gruppi">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="cards"><p class="group">Lorem ipsum</p><div><h3>Lorem ipsum</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div><div><h3>Dolor sit amet</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div><div><h3>Consectetur elit</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div><p class="group muted">Dolor sit</p><div><h3>Lorem ipsum</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div><div><h3>Dolor sit amet</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div></div>
+</section>
+
+<!-- 30. Tabella di stato dei progetti -->
+<section class="slide" id="tabella-stato" data-layout="tabella-stato">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<table class="status glass"><tr><td>Lorem ipsum<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small></td><td><span class="pill ok">Completato</span></td></tr><tr><td>Dolor sit amet<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small></td><td><span class="pill wip">In corso</span></td></tr><tr><td>Consectetur elit<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small></td><td><span class="pill plan">Da iniziare</span></td></tr><tr><td>Sed eiusmod<small>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small></td><td><span class="pill warn">Da decidere</span></td></tr></table>
+</section>
+
+<!-- 31. Quattro righe con icona -->
+<section class="slide" id="righe-icona" data-layout="righe-icona">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<ul class="irows"><li><i data-icon="globe"></i><p><b>Lorem ipsum</b><small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</small></p></li><li><i data-icon="users"></i><p><b>Dolor sit amet</b><small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</small></p></li><li><i data-icon="calendar"></i><p><b>Consectetur elit</b><small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</small></p></li><li><i data-icon="target"></i><p><b>Sed eiusmod</b><small>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</small></p></li></ul>
+</section>
+
+<!-- 32. Sintesi / punti chiave -->
+<section class="slide" id="sintesi" data-layout="sintesi">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<ol class="points"><li><b>Lorem ipsum</b>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</li><li><b>Dolor sit amet</b>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</li><li><b>Consectetur elit</b>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</li><li><b>Sed eiusmod</b>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</li></ol>
+</section>
+
+<!-- 33. Tre colonne, sintesi e prossimo passo -->
+<section class="slide" id="spiegazione" data-layout="spiegazione">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="summary"><span class="label">In breve</span><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></div><div class="cols"><div><h3>Lorem ipsum</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p></div><div><h3>Dolor sit amet</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p></div><div><h3>Consectetur elit</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p></div></div><p class="next"><i data-icon="arrow-right"></i><b>Prossimo passo</b>Lorem ipsum dolor sit amet consectetur</p>
+</section>
+
+<!-- 34. Scheda evento con foto -->
+<section class="slide" id="scheda-evento" data-layout="scheda-evento">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="split even media-left"><dl class="facts glass"><dt>Quando</dt><dd>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</dd><dt>Dove</dt><dd>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</dd><dt>Chi</dt><dd>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</dd><dt>Risultato</dt><dd>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</dd></dl><div class="media"><img src="img/foto-4x3.svg" alt="Immagine neutra di esempio" style="width: 640px; height: 480px"></div></div>
+</section>
+
+<!-- 35. Panoramica dei team -->
+<section class="slide" id="team-panorama" data-layout="team-panorama">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="teams"><div><span class="n">1</span><h3>Lorem ipsum</h3><ul><li>Lorem ipsum dolor</li><li>Consectetur elit</li><li>Sed do eiusmod</li></ul></div><div><span class="n">2</span><h3>Dolor sit amet</h3><ul><li>Lorem ipsum dolor</li><li>Consectetur elit</li><li>Sed do eiusmod</li></ul></div><div><span class="n">3</span><h3>Consectetur elit</h3><ul><li>Lorem ipsum dolor</li><li>Consectetur elit</li><li>Sed do eiusmod</li></ul></div><div><span class="n">4</span><h3>Sed eiusmod</h3><ul><li>Lorem ipsum dolor</li><li>Consectetur elit</li><li>Sed do eiusmod</li></ul></div></div>
+</section>
+
+<!-- 36. Dettaglio team con referenti -->
+<section class="slide" id="team-dettaglio" data-layout="team-dettaglio">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="team"><div class="glass"><span class="label">Lorem ipsum</span><h2>Dolor sit amet</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><ul><li>Lorem ipsum dolor sit</li><li>Consectetur adipiscing elit</li></ul></div><div class="glass people"><span class="label">Lorem ipsum</span><figure class="person"><img src="img/ritratto.svg" alt="Immagine neutra di esempio"><figcaption>Lorem ipsum<small>Dolor sit amet</small></figcaption></figure><figure class="person"><img src="img/ritratto.svg" alt="Immagine neutra di esempio"><figcaption>Dolor sit amet<small>Dolor sit amet</small></figcaption></figure></div></div>
+</section>
+
+<!-- 37. Documento A4 con spiegazioni -->
+<section class="slide" id="documento" data-layout="documento">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="split fit media-left"><div class="cards" data-cols="1"><div><h3>Lorem ipsum</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div><div><h3>Dolor sit amet</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div><div><h3>Consectetur elit</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div></div><figure class="sheet"><img src="img/documento-a4.svg" alt="Immagine neutra di esempio"><figcaption>Lorem ipsum dolor</figcaption></figure></div>
+</section>
+
+<!-- 38. Bilancio con entrate, uscite e saldo -->
+<section class="slide" id="bilancio" data-layout="bilancio">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="budget"><div class="glass in"><h3>Entrate</h3><dl><dt>Lorem ipsum</dt><dd>800 €</dd><dt>Dolor sit</dt><dd>400 €</dd><dt class="total">Totale</dt><dd class="total">1200 €</dd></dl></div><div class="glass out"><h3>Uscite</h3><dl><dt>Lorem ipsum</dt><dd>500 €</dd><dt>Dolor sit</dt><dd>300 €</dd><dt class="total">Totale</dt><dd class="total">800 €</dd></dl></div><p class="glass result">Avanzo di gestione <b>400 €</b></p></div><p class="small">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+</section>
+
+<!-- 39. Votazione live / esito definitivo -->
+<section class="slide" id="votazione" data-layout="votazione">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<p class="sub">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><div class="vote"><button class="yes"><span>Favorevoli</span><b>24</b></button><button class="no"><span>Contrari</span><b>2</b></button><button class="abs"><span>Astenuti</span><b>3</b></button><span class="stamp ok">Approvato</span></div>
+</section>
+
+<!-- 40. 5×1000, testo standard PoliNetwork -->
+<section class="slide" id="cinque-per-mille" data-layout="cinque-per-mille">
+<h1>5x1000: non ti costa nulla</h1>
+<p class="sub">Una quota IRPEF già trattenuta: non è una spesa in più, scegli tu dove va.</p><div class="fivex"><ul class="irows"><li><i data-icon="file-text"></i><p><b>Compila la dichiarazione</b><small>dei redditi, come ogni anno</small></p></li><li><i data-icon="pen-tool"></i><p><b>Firma nel riquadro</b><small>“Sostegno degli enti del Terzo Settore”</small></p></li><li><i data-icon="hand-coins"></i><p><b>Scrivi il codice fiscale</b><small>quello di PoliNetwork, qui accanto</small></p></li></ul><div class="glass tint code"><span class="label">Il nostro codice fiscale</span><b>97927490157</b><p>Passalo anche ai tuoi familiari: anche loro possono farlo, a costo zero.</p></div></div>
+</section>
+
+<!-- 41. Barre di avanzamento -->
+<section class="slide" id="avanzamento" data-layout="avanzamento">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="bars glass"><div class="bar" data-value="80">Lorem ipsum</div><div class="bar" data-value="60">Dolor sit amet</div><div class="bar" data-value="40">Consectetur elit</div><div class="bar" data-value="20">Sed eiusmod</div></div><p class="small">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+</section>
+
+<!-- 42. Crescita singola con immagine -->
+<section class="slide" id="crescita" data-layout="crescita">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="split even"><div class="growth" data-from="250" data-value="370"><p><b>+48%</b>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><div class="track"><span>250<small>Lorem ipsum</small></span><span>370<small>Dolor sit</small></span></div></div><div class="media"><img src="img/foto-4x3.svg" alt="Immagine neutra di esempio" style="width: 640px; height: 480px"></div></div>
+</section>
+
+<!-- 43. Nuvola di parole -->
+<section class="slide" id="nuvola" data-layout="nuvola">
+<div class="cloud"><h2>Lorem ipsum</h2><span class="big">Dolor sit</span><span class="big">Amet elit</span><span class="big">Sed eiusmod</span><span>Ut labore</span><span>Magna aliqua</span><span>Ad minim</span><span>Quis nostrud</span><span>Ex commodo</span></div>
+</section>
+
+<!-- 44. Riepilogo con mosaico di quattro foto -->
+<section class="slide" id="recap-foto" data-layout="recap-foto">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="split"><div class="recap"><p class="lead"><b class="num" data-count>400+</b>Lorem ipsum</p><p><i data-icon="calendar"></i>Dolor sit amet</p><p><i data-icon="clock"></i>Consectetur elit</p><ol><li><i data-icon="target"></i>Lorem ipsum</li><li><i data-icon="target"></i>Dolor sit amet</li><li><i data-icon="target"></i>Consectetur elit</li></ol></div><div class="gallery grid"><figure><img src="img/foto-4x3.svg" alt="Immagine neutra di esempio"></figure><figure><img src="img/foto-4x3.svg" alt="Immagine neutra di esempio"></figure><figure><img src="img/foto-4x3.svg" alt="Immagine neutra di esempio"></figure><figure><img src="img/foto-4x3.svg" alt="Immagine neutra di esempio"></figure></div></div>
+</section>
+
+<!-- 45. Pannello di punti + citazione -->
+<section class="slide" id="pannello-citazione" data-layout="pannello-citazione">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="split even"><ul class="panel"><li><i data-icon="target"></i><b>Lorem ipsum</b><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></li><li><i data-icon="target"></i><b>Dolor sit amet</b><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></li><li><i data-icon="target"></i><b>Consectetur elit</b><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></li></ul><div class="quote big"><i data-icon="user"></i><p class="who"><b>Lorem Ipsum</b>Dolor sit</p><blockquote>«Lorem ipsum dolor sit amet consectetur adipiscing elit»</blockquote></div></div>
+</section>
+
+<!-- 46. Mappa di relazioni -->
+<section class="slide" id="mappa" data-layout="mappa">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="map"><div class="col"><h4>Lorem ipsum</h4><div class="node" data-id="n00" data-to="n10" data-track="1"><b>Lorem ipsum</b><small>Lorem ipsum dolor sit</small></div><div class="node" data-id="n01" data-to="n11" data-track="2"><b>Dolor sit amet</b><small>Lorem ipsum dolor sit</small></div></div><div class="col fill"><h4>Dolor sit amet</h4><div class="node" data-id="n10" data-to="n20" data-track="1"><b>Lorem ipsum</b><small>Lorem ipsum dolor sit</small></div><div class="node" data-id="n11" data-to="n21" data-track="2"><b>Dolor sit amet</b><small>Lorem ipsum dolor sit</small></div></div><div class="col"><h4>Consectetur elit</h4><div class="node" data-id="n20" data-track="1"><b>Lorem ipsum</b><small>Lorem ipsum dolor sit</small></div><div class="node" data-id="n21" data-track="2"><b>Dolor sit amet</b><small>Lorem ipsum dolor sit</small></div></div></div>
+</section>
+
+<!-- 47. Percorso senza date -->
+<section class="slide" id="percorso" data-layout="percorso">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<ol class="road"><li><h3>Lorem ipsum</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></li><li><h3>Dolor sit amet</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></li><li><h3>Consectetur elit</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></li><li><h3>Sed eiusmod</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></li></ol>
+</section>
+
+<!-- 48. Interfaccia web ricostruita -->
+<section class="slide" id="interfaccia" data-layout="interfaccia">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="split even"><div class="glass"><h2>Lorem ipsum</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div><div class="media"><div class="window" aria-hidden="true"><p class="bar">Lorem ipsum dolor</p><p class="body">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><div class="actions"><span class="btn primary">Lorem ipsum</span></div></div></div></div>
+</section>
+
+<!-- 49. Banner / avviso di interfaccia -->
+<section class="slide" id="banner" data-layout="banner">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><div class="banner" aria-hidden="true"><p><b>Lorem ipsum:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><span class="btn">Dolor sit</span><span class="btn primary click">Amet elit</span></div>
+</section>
+
+<!-- 50. Frase a effetto -->
+<section class="slide" id="messaggio" data-layout="messaggio">
+<p class="statement">Lorem ipsum dolor sit amet, <mark>consectetur adipiscing elit</mark>. Sed do eiusmod tempor.</p>
+</section>
+
+<!-- 51. Glossario -->
+<section class="slide" id="glossario" data-layout="glossario" data-section="Magna aliqua" data-sub="Lorem ipsum dolor sit amet">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<dl class="terms"><div><dt>Lorem ipsum</dt><dd>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</dd></div><div><dt>Dolor sit amet</dt><dd>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</dd></div><div><dt>Consectetur elit</dt><dd>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</dd></div><div><dt>Sed eiusmod</dt><dd>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</dd></div></dl>
+</section>
+
+<!-- 52. Fonti e rimandi -->
+<section class="slide" id="fonti" data-layout="fonti">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<ul class="irows"><li><i data-icon="file-text"></i><p><b>Lorem ipsum</b><small><a href="https://polinetwork.org">Lorem ipsum dolor</a>, <a data-ref="grafico"></a></small></p></li><li><i data-icon="file-text"></i><p><b>Dolor sit amet</b><small><a href="https://polinetwork.org">Lorem ipsum dolor</a>, <a data-ref="grafico"></a></small></p></li><li><i data-icon="file-text"></i><p><b>Consectetur elit</b><small><a href="https://polinetwork.org">Lorem ipsum dolor</a>, <a data-ref="grafico"></a></small></p></li></ul>
+</section>
+
+<!-- 53. Azioni / come contribuire -->
+<section class="slide" id="azioni" data-layout="azioni">
+<h1>Lorem ipsum dolor sit amet consectetur elit</h1>
+<div class="cards"><div><i data-icon="user-plus"></i><h3>Lorem ipsum</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div><div><i data-icon="mail"></i><h3>Dolor sit amet</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div><div><i data-icon="share-2"></i><h3>Consectetur elit</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div></div>
+</section>
+
+<!-- 54. Chiusura / contatti -->
+<section class="slide thanks" id="contatti" data-layout="contatti">
+<h1>Lorem ipsum dolor</h1>
+<p class="sub">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><ul class="links"><li><a href="https://polinetwork.org"><i data-icon="globe"></i>polinetwork.org</a></li><li><a href="https://polinet.cc/recruiting"><i data-icon="user-plus"></i>polinet.cc/recruiting</a></li></ul>
+</section>
+
+<!-- 55. Apertura / chiusura solo brand -->
+<section class="slide cover brand-only" id="solo-brand" data-layout="solo-brand">
+<div class="lockup"><span class="logo"></span>PoliNetwork</div>
 </section>

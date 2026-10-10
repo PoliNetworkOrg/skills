@@ -63,7 +63,7 @@
     ".links > li", ".cover .meta > span", ".cover .brand", ".lockup", ".media > *", ".legend > li", "table.status tr",
     ".bars > .bar", ".body > .columns", ".cloud > span", ".thanks .qr", ".body > .summary", ".body > .next", ".body > dl", ".cols > *",
     "ol.points > li", "dl.terms > div", ".cover .intro", ".cover > .small", ".body > .quote", ".split > * > .quote", ".profile > *",
-    ".panel > li", ".recap > ol > li",
+    ".panel > li", ".recap > ol > li", ".body > .device-stage", ".image-caption", ".metric > *",
   ].join(",");
 
   let sectionTitle = "";

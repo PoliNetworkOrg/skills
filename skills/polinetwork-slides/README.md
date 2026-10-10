@@ -4,7 +4,7 @@ Skill per agenti AI (Claude Code e Codex) che crea le presentazioni delle assemb
 PoliNetwork: un unico file HTML animato, con il tema del sito, che funziona offline e si
 esporta in PDF.
 
-I contenuti li decide sempre chi usa la skill: i template sono scalette con soli segnaposto e
+I contenuti li decide sempre chi usa la skill: i template sono cataloghi di 55 layout con lorem ipsum e
 l'agente non aggiunge fatti, numeri o nomi che l'utente non ha dato.
 
 All'avvio l'agente chiede:
@@ -31,25 +31,29 @@ Le istruzioni passo passo per Claude (sito e app), Claude Code e Codex sono in
 | Codex | `$skill-installer` con il link a questa cartella, oppure `npx skills add … -a codex -g` | `$polinetwork-slides` o chiedi |
 
 Requisiti: **Python 3.10+**. **Chrome o Chromium** serve per il controllo automatico del layout,
-che è facoltativo.
+obbligatorio prima della consegna secondo `SKILL.md`.
 
 ### Senza agente
 
 Dalla cartella della skill (`skills/polinetwork-slides/`):
 
 ```bash
-cp templates/parlata.slides.html ~/assemblea.slides.html # sostituisci i segnaposto
+cp templates/parlata.slides.html ~/assemblea.slides.html # scegli i layout e sostituisci il lorem ipsum
+mkdir -p ~/img
+cp templates/img/* ~/img/
 python3 scripts/build.py ~/assemblea.slides.html          # → ~/assemblea.html
 python3 scripts/check.py ~/assemblea.html --shots ~/shots # controllo + screenshot
 ```
 
 Il markup di ogni componente è in [references/components.md](references/components.md).
+L'elenco numerato dei due template, con densità e proporzioni, è in
+[references/templates.md](references/templates.md).
 
 ## Struttura
 
 ```
 SKILL.md                  istruzioni per l'agente (procedura, regole)
-templates/                parlata, autoesplicativa (.slides.html, basi con soli segnaposto)
+templates/                parlata, autoesplicativa (.slides.html, 55 layout ciascuna), img/ neutre
 assets/memes/             sticker meme pronti (gatti scontornati)
 references/memes.md       catalogo dei meme: espressione e lati tagliati di ognuno
 references/components.md  catalogo dei layout con markup e limiti

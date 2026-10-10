@@ -443,6 +443,169 @@ dl.terms > div,
   padding: 34px 38px;
 }
 
+/* ================= Layout del catalogo: immagini, tabelle e dispositivi ================= */
+/* Componenti condivisi dai due template: nessuno stile locale nel sorgente delle slide. */
+.metric {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 72px;
+  min-height: 340px;
+}
+.metric > :first-child { text-align: center; }
+.metric .num {
+  display: block;
+  font: 500 180px/1 var(--font-display);
+  letter-spacing: -0.05em;
+  color: var(--blue-2);
+}
+.metric .label { margin: 24px 0 0; }
+.metric h2 { margin-bottom: 24px; }
+.people.roster {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 32px;
+}
+.people.roster .person { min-width: 0; }
+.people.roster .person > img { width: 240px; height: 240px; }
+.data-table {
+  width: 100%;
+  border-spacing: 0;
+  border-collapse: separate;
+  overflow: hidden;
+  padding: 10px 30px;
+}
+.data-table :is(th, td) {
+  padding: 20px 22px;
+  text-align: left;
+  border-bottom: 1px solid rgb(17 86 174 / 0.14);
+}
+.data-table th {
+  font: 500 24px/1.3 var(--font-headline);
+  color: var(--title);
+}
+.data-table td:last-child,
+.data-table th:last-child {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.data-table tbody tr:last-child td { border-bottom: 0; }
+.slide.full-image > .body { padding: 0; }
+.full-image .hero-image {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.full-image .image-caption {
+  position: absolute;
+  left: var(--pad-x);
+  bottom: 110px;
+  width: 800px;
+}
+.full-image .image-caption h1 {
+  font: 500 68px/1.08 var(--font-display);
+  color: var(--title);
+  margin-bottom: 16px;
+}
+.full-image .image-caption p { font-size: 26px; }
+.device-stage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 64px;
+  height: 510px;
+  min-width: 0;
+  flex: none;
+}
+.laptop {
+  position: relative;
+  width: 820px;
+  flex: none;
+  padding-bottom: 24px;
+}
+.laptop > .display {
+  position: relative;
+  margin: 0 36px;
+  padding: 18px 12px 12px;
+  border: 2px solid #64748b;
+  border-radius: 20px 20px 8px 8px;
+  background: #111827;
+}
+.laptop > .display::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #475569;
+}
+.laptop > .display > img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 4px;
+}
+.laptop::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 26px;
+  border-radius: 3px 3px 40px 40px;
+  background: linear-gradient(#e2e8f0, #94a3b8);
+  box-shadow: 0 26px 40px -24px rgb(15 23 42 / 0.45);
+}
+.device-stage > .phone { width: 226px; }
+.device-stage.duo > .phone:first-child { rotate: -5deg; }
+.device-stage.duo > .phone:last-child { rotate: 5deg; }
+.device-stage.trio > .phone { width: 218px; }
+.device-stage.trio > .phone:first-child { rotate: -6deg; }
+.device-stage.trio > .phone:last-child { rotate: 6deg; }
+.device-stage.combo { gap: 0; }
+.device-stage.combo > .laptop { width: 790px; margin-right: 130px; }
+.device-stage.combo > .phone {
+  position: absolute;
+  width: 212px;
+  right: 140px;
+  bottom: 0;
+  rotate: 6deg;
+}
+.tablet {
+  width: 650px;
+  flex: none;
+  position: relative;
+  padding: 16px 22px;
+  border: 2px solid #64748b;
+  border-radius: 30px;
+  background: #111827;
+  box-shadow: 0 34px 50px -32px rgb(15 23 42 / 0.5);
+}
+.tablet > img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 14px;
+}
+.tablet::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #475569;
+}
+
 /* ================= Pill / tag ================= */
 .pill {
   display: inline-flex;
@@ -4135,6 +4298,13 @@ html.presenter .progress {
   margin: 0;
 }
 @media print {
+  /* Chrome/Poppler possono stampare la maschera SVG come un quadrato pieno.
+     La stessa freccia con un ritaglio vettoriale resta visibile nel PDF. */
+  .compare::before {
+    -webkit-mask: none;
+    mask: none;
+    clip-path: polygon(8% 45%, 64% 45%, 43% 24%, 50% 17%, 84% 50%, 50% 83%, 43% 76%, 64% 55%, 8% 55%);
+  }
   html,
   body {
     width: 1600px;
